@@ -7,7 +7,7 @@
 
 *⚠️ This program is very early on in development, and is still currently being built. Watch this space! ⚠️*
 
-Effortlessly bumps version numbers and checksums for MacPorts portfiles.
+Effortlessly bumps version numbers and checksums for MacPorts portfiles, and sends a PR to update them.
 
 ## 💻 Usage
 
@@ -16,11 +16,7 @@ Effortlessly bumps version numbers and checksums for MacPorts portfiles.
 🌊 seaport 🌊
 A more mighty port bump
 
-Usage:
-        seaport help            Display this message
-        seaport name            Bump the version and checksums for this port
-
-        seaport name [version]
+Usage: seaport -n name [--no-pr] [-v 1.2.0]
 ```
 
 ## 📨 How it works
