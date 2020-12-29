@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "seaport"
+version = "0.1.0"
+description = "A more mighty port bump"
+authors = ["harens <harensdeveloper@gmail.com>"]
+maintainers = ["harens <harensdeveloper@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+keywords = ["MacPorts", "Port", "Bump", "Checksums"]
+classifiers = [
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+]
+
+homepage = "https://github.com/harens/seaport"
+repository = "https://github.com/harens/seaport"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/harens/seaport/issues"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^7.1.2"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+seaport = "seaport.console:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
