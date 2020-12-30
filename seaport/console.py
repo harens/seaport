@@ -47,19 +47,7 @@ def clean(original_text: str, location: str, port_name: str) -> None:
     subprocess.run(["sudo", "port", "clean", "--all", port_name])
 
 
-def port_test(name: str) -> None:
-    """Runs port test"""
-    click.secho(f"🧪 Testing {name}", fg="cyan")
-    subprocess.run(["sudo", "port", "test", name])
-
-
-def port_lint(name: str) -> None:
-    """Runs port lint --nitpick"""
-    click.secho(f"🧐 Linting {name}", fg="cyan")
-    subprocess.run(["port", "lint", "--nitpick", name])
-
-
-def undo_revision(text: str) -> str:
+def undo_revision(text: str):
     """Make version numbers 0"""
     click.secho("⏪️ Changing revision numbers", fg="cyan")
 
@@ -81,11 +69,136 @@ def undo_revision(text: str) -> str:
         sys.exit(1)
     if need_changed == 1:
         # Takes the original revision as a string
-        original_revision = re.search(r"revision\s*[1-9]", text).group(0)
+        # We know original_revision will not be of type none (hence mypy ignore)
+        # This is ince need_changed is equal to 1
+        original_revision = re.search(r"revision\s*[1-9]", text).group(0)  # type: ignore
         # Replaces the number with 0
         new_revision = original_revision[:-1] + "0"
         click.echo("Revision number changed")
         return text.replace(original_revision, new_revision)
+
+
+def preliminary_checks(port: str, pull_request: Path) -> None:
+    """Checks to run before carrying out updating process"""
+    exists(port)
+    if not cmd_check("port"):
+        click.secho("❌ MacPorts not installed", fg="red")
+        click.echo("It can be installed from https://www.macports.org/")
+        sys.exit(1)
+    elif pull_request and not cmd_check("gh"):
+        # gh only required if sending pr
+        click.secho("❌ Github CLI not installed", fg="red")
+        if not click.confirm("Do you want to install this via MacPorts?"):
+            sys.exit(1)
+        subprocess.run(["sudo", "port", "install", "gh"])
+
+
+def new_version(port: str, stated: str, current: str) -> str:
+    """Determines livecheck version, and sees whether already up-to-date"""
+    # Determines new version number if none manually specified
+    if not stated:
+        # Take the last word of port livecheck, and then remove the bracket
+        stated = format_subprocess(["port", "livecheck", port]).split(" ")[-1][:-1]
+
+        # version == "" if livecheck doesn't output anything
+        # current_version used in output since version = ""
+        if stated == "":
+            click.secho(
+                f"{port} is either already up-to-date ({current}) or there is no livecheck available",
+                fg="red",
+            )
+            click.secho(f"Please manually specify the version using --bump", fg="red")
+            sys.exit(1)
+
+    if stated == current:
+        click.secho(f"{port} is already up-to-date ({current})", fg="red")
+        sys.exit(1)
+
+    return stated
+
+
+def current_checksums(port: str, current: str, new: str):
+    """Returns outdated checksums and the website to download the new files from"""
+
+    distfiles = (
+        format_subprocess(["port", "distfiles", port]).replace("\n ", "").split(" ")
+    )
+
+    # There's no output if it's the "skeleton" head port
+    try:
+        old_website = [s for s in distfiles if "http" in s][0]
+    except IndexError:
+        # Tries to determine the subport
+        # This is since the distfiles cmd only works for subports
+        port_info = format_subprocess(["port", "info", port])
+        if "Sub-ports" not in port_info:
+            click.secho(f"Cannot determine distfiles", fg="red")
+            sys.exit(1)
+        # Takes the last subport of the list
+        subport = " ".join(
+            [s for s in port_info.splitlines() if "Sub-ports" in s]
+        ).split(" ")[-1]
+        # Repeat the process with the subport
+        return current_checksums(subport, current, new)
+
+    new_website = old_website.replace(current, new)
+
+    website_index = distfiles.index(old_website)
+
+    # This won't work for older portfiles (e.g. if they used md5 and sha1 for example)
+    size = distfiles[website_index - 1]
+    sha256 = distfiles[website_index - 2][:-5]  # Remove size:
+    rmd160 = distfiles[website_index - 3][:-7]  # Remove sha256:
+
+    return new_website, size, sha256, rmd160
+
+
+def new_checksums(website: str):
+    """Generate checksums of file downloaded from website"""
+    download_dir = tempfile.TemporaryDirectory()
+    download_location = f"{download_dir.name}/download"
+
+    urllib.request.urlretrieve(website, download_location)
+
+    sha256 = format_subprocess(["openssl", "dgst", download_location]).split(" ")[-1]
+    rmd160 = format_subprocess(["openssl", "dgst", "-rmd160", download_location]).split(
+        " "
+    )[-1]
+    size = str(Path(download_location).stat().st_size)
+
+    download_dir.cleanup()
+
+    return sha256, rmd160, size
+
+
+def new_portfile(
+    port: str,
+    current: str,
+    new: str,
+    old_sha: str,
+    old_rmd: str,
+    old_size: str,
+    new_sha: str,
+    new_rmd: str,
+    new_size: str,
+):
+    """Replace a portfile's old checksums with the new ones"""
+    file = subprocess.check_output(["port", "file", port]).decode("utf-8").strip()
+
+    with click.open_file(file) as f:
+        # Backup of the original contents
+        original_contents = f.read()
+
+    # Bump revision numbers to 0
+    new_contents = undo_revision(original_contents)
+
+    # Replace first instances only
+    new_contents = new_contents.replace(current, new, 1)
+    new_contents = new_contents.replace(old_sha, new_sha, 1)
+    new_contents = new_contents.replace(old_rmd, new_rmd, 1)
+    new_contents = new_contents.replace(old_size, new_size, 1)
+
+    return original_contents, new_contents, file
 
 
 # Shell completion for port names
@@ -121,83 +234,23 @@ def main(name: str, bump: str, pr: Path, test: bool, lint: bool, install: bool) 
     # Tasks that require sudo
     sudo = test or lint or install
 
-    # Preliminary checks
-    exists(name)
-    if not cmd_check("port"):
-        click.secho("❌ MacPorts not installed", fg="red")
-        click.echo("It can be installed from https://www.macports.org/")
-        sys.exit(1)
-    elif pr and not cmd_check("gh"):
-        # gh only required if sending pr
-        click.secho("❌ Github CLI not installed", fg="red")
-        if not click.confirm("Do you want to install this via MacPorts?"):
-            sys.exit(1)
-        subprocess.run(["sudo", "port", "install", "gh"])
+    preliminary_checks(name, pr)
 
     current_version = format_subprocess(["port", "info", "--version", name]).split(" ")[
         1
     ]
 
-    # Determines new version number if none manually specified
-    if not bump:
-        # Take the last word of port livecheck, and then remove the bracket
-        bump = format_subprocess(["port", "livecheck", name]).split(" ")[-1][:-1]
-
-        # version == "" if livecheck doesn't output anything
-        # current_version used in output since version = ""
-        if bump == "":
-            click.secho(
-                f"{name} is either already up-to-date ({current_version}) or there is no livecheck available",
-                fg="red",
-            )
-            click.secho(f"Please manually specify the version using --bump", fg="red")
-            sys.exit(1)
-
-    if bump == "":
-        click.secho(f"{name} is already up-to-date ({current_version})", fg="red")
-        sys.exit(1)
-
+    # Determine new version
+    bump = new_version(name, bump, current_version)
     click.secho(f"👍 New version is {bump}", fg="green")
 
-    # Determine new checksums by downloading the updated file
-    # Where to download the files from
-    distfiles = (
-        format_subprocess(["port", "distfiles", name]).replace("\n ", "").split(" ")
+    # Where to download the new file + old checksums
+    new_website, old_size, old_sha256, old_rmd160 = current_checksums(
+        name, current_version, bump
     )
 
-    # There's no output if it's the "skeleton" head port
-    try:
-        old_website = [s for s in distfiles if "http" in s][0]
-    except IndexError:
-        click.secho(
-            f"Please specify a subport e.g. py38-questionary, helm-3.4, etc.", fg="red"
-        )
-        sys.exit(1)
-
-    new_website = old_website.replace(current_version, bump)
-
-    website_index = distfiles.index(old_website)
-
-    # This won't work for older portfiles (e.g. if they used md5 and sha1 for example)
-    old_size = distfiles[website_index - 1]
-    old_sha256 = distfiles[website_index - 2][:-5]  # Remove size:
-    old_rmd160 = distfiles[website_index - 3][:-7]  # Remove sha256:
-
-    download_dir = tempfile.TemporaryDirectory()
-    download_location = f"{download_dir.name}/download"
-
     click.secho(f"🔻 Downloading from {new_website}", fg="cyan")
-    urllib.request.urlretrieve(new_website, download_location)
-
-    new_sha256 = format_subprocess(["openssl", "dgst", download_location]).split(" ")[
-        -1
-    ]
-    new_rmd160 = format_subprocess(
-        ["openssl", "dgst", "-rmd160", download_location]
-    ).split(" ")[-1]
-    new_size = str(Path(download_location).stat().st_size)
-
-    download_dir.cleanup()
+    new_sha256, new_rmd160, new_size = new_checksums(new_website)
 
     click.secho(f"🔎 Checksums:", fg="cyan")
     click.echo(f"Old rmd160: {old_rmd160}")
@@ -207,22 +260,18 @@ def main(name: str, bump: str, pr: Path, test: bool, lint: bool, install: bool) 
     click.echo(f"Old size: {old_size}")
     click.echo(f"New size: {new_size}")
 
-    file_location = (
-        subprocess.check_output(["port", "file", name]).decode("utf-8").strip()
+    # Add the new checksums, and take a backup of the original
+    original, new_contents, file_location = new_portfile(
+        name,
+        current_version,
+        bump,
+        old_sha256,
+        old_rmd160,
+        old_size,
+        new_sha256,
+        new_rmd160,
+        new_size,
     )
-
-    with click.open_file(file_location) as f:
-        # Backup of the original contents
-        original = f.read()
-
-    # Bump revision numbers to 0
-    new_contents = undo_revision(original)
-
-    # Replace first instances only
-    new_contents = new_contents.replace(current_version, bump, 1)
-    new_contents = new_contents.replace(old_sha256, new_sha256, 1)
-    new_contents = new_contents.replace(old_rmd160, new_rmd160, 1)
-    new_contents = new_contents.replace(old_size, new_size, 1)
 
     subprocess.run("pbcopy", universal_newlines=True, input=new_contents)
     click.secho(
@@ -244,9 +293,11 @@ def main(name: str, bump: str, pr: Path, test: bool, lint: bool, install: bool) 
         subprocess.run(["sudo", "cp", tmp_version.name, file_location])
 
     if test:
-        port_test(name)
+        click.secho(f"🧪 Testing {name}", fg="cyan")
+        subprocess.run(["sudo", "port", "test", name])
     if lint:
-        port_lint(name)
+        click.secho(f"🧐 Linting {name}", fg="cyan")
+        subprocess.run(["port", "lint", "--nitpick", name])
 
     if install:
         click.secho(f"🏗️ Installing {name}", fg="cyan")
