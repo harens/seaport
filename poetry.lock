@@ -76,7 +76,7 @@ python-versions = "*"
 
 [[package]]
 name = "isort"
-version = "5.6.4"
+version = "5.7.0"
 description = "A Python utility / library to sort Python imports."
 category = "dev"
 optional = false
@@ -197,7 +197,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cb8d256e7f9dd6185b410df5c89f27596fabe86db9a8e42bed5abddf1110328c"
+content-hash = "a729225fecfec4b425589549fe137b9edd32dffcd31c179929b86346217febfe"
 
 [metadata.files]
 appdirs = [
@@ -228,8 +228,8 @@ iniconfig = [
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 isort = [
-    {file = "isort-5.6.4-py3-none-any.whl", hash = "sha256:dcab1d98b469a12a1a624ead220584391648790275560e1a43e54c5dceae65e7"},
-    {file = "isort-5.6.4.tar.gz", hash = "sha256:dcaeec1b5f0eca77faea2a35ab790b4f3680ff75590bfcb7145986905aab2f58"},
+    {file = "isort-5.7.0-py3-none-any.whl", hash = "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc"},
+    {file = "isort-5.7.0.tar.gz", hash = "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
