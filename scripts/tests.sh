@@ -7,7 +7,7 @@ if [ -d 'venv' ] ; then
     export PREFIX="venv/bin/"
 fi
 
-${PREFIX}pytest --cov=seaport tests/
+${PREFIX}pytest --cov-report=xml:coverage.xml --cov=seaport tests/
 poetry check
 ${PREFIX}black --check .
 ${PREFIX}isort --check-only .
