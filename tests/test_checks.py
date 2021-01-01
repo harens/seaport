@@ -12,6 +12,47 @@ def test_cmd() -> None:
     assert cmd_check("echo")
 
 
+def test_user_path(fake_process) -> None:
+
+    # Port prefix
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"], occurrences=5
+    )
+
+    assert user_path(True) == "/opt/local/bin"
+
+    # Default prefix (first party tools)
+    assert user_path() == "/usr/bin"
+
+    # Third party tool prefixes
+
+    # If installed by MacPorts
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "seaport"], stdout=["/opt/local/bin/seaport\n"]
+    )
+
+    assert user_path(False, True) == "/opt/local/bin"
+
+    # If installed by Homebrew
+
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "seaport"], stdout=["/usr/local/bin/seaport\n"]
+    )
+
+    assert user_path(False, True) == "/usr/local/bin"
+
+    # Poetry example (should default to MacPorts)
+
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "seaport"],
+        stdout=[
+            "~/Library/Caches/pypoetry/virtualenvs/seaport-kpP_O3aU-py3.8/bin/seaport\n"
+        ],
+    )
+
+    assert user_path(False, True) == "/opt/local/bin"
+
+
 def callback_info(process) -> None:
     """`port info some-nonexistent-port` output"""
     process.returncode = 1
