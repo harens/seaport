@@ -5,6 +5,7 @@ import sys
 
 import click
 
+from seaport.checks import user_path
 from seaport.format import format_subprocess
 
 
@@ -64,7 +65,9 @@ def new_version(port: str, stated: str, current: str) -> str:
     # Determines new version number if none manually specified
     if not stated:
         # Take the last word of port livecheck, and then remove the bracket
-        stated = format_subprocess(["port", "livecheck", port]).split(" ")[-1][:-1]
+        stated = format_subprocess(
+            [f"{user_path(True)}/port", "livecheck", port]
+        ).split(" ")[-1][:-1]
 
         # version == "" if livecheck doesn't output anything
         # current_version used in output since version = ""

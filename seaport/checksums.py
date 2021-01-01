@@ -1,5 +1,6 @@
 """Functions related to determining the current and new checksums."""
 
+import shutil
 import sys
 import tempfile
 import urllib.request
@@ -8,6 +9,7 @@ from typing import Tuple
 
 import click
 
+from seaport.checks import user_path
 from seaport.format import format_subprocess
 
 
@@ -23,12 +25,20 @@ def new_checksums(website: str) -> Tuple[str, str, str]:
     download_dir = tempfile.TemporaryDirectory()
     download_location = f"{download_dir.name}/download"
 
-    urllib.request.urlretrieve(website, download_location)
+    # Download the file from `url` and save it locally under `file_name`:
+    # Originally urllib.request.urlretrieve(website, download_location), but this is depreciated
+    # Credit https://stackoverflow.com/a/7244263
+    with urllib.request.urlopen(website) as response, open(
+        download_location, "wb"
+    ) as out_file:
+        shutil.copyfileobj(response, out_file)
 
-    sha256 = format_subprocess(["openssl", "dgst", download_location]).split(" ")[-1]
-    rmd160 = format_subprocess(["openssl", "dgst", "-rmd160", download_location]).split(
-        " "
-    )[-1]
+    sha256 = format_subprocess(
+        [f"{user_path()}/openssl", "dgst", download_location]
+    ).split(" ")[-1]
+    rmd160 = format_subprocess(
+        [f"{user_path()}/openssl", "dgst", "-rmd160", download_location]
+    ).split(" ")[-1]
     size = str(Path(download_location).stat().st_size)
 
     download_dir.cleanup()
@@ -48,7 +58,9 @@ def current_checksums(port: str, current: str, new: str) -> Tuple[str, str, str,
         Tuple[str, str, str, str]: A tuple of strings representing the new website and checksums
     """
     distfiles = (
-        format_subprocess(["port", "distfiles", port]).replace("\n ", "").split(" ")
+        format_subprocess([f"{user_path(True)}/port", "distfiles", port])
+        .replace("\n ", "")
+        .split(" ")
     )
 
     # There's no output if it's the "skeleton" head port
@@ -57,7 +69,7 @@ def current_checksums(port: str, current: str, new: str) -> Tuple[str, str, str,
     except IndexError:
         # Tries to determine the subport
         # This is since the distfiles cmd only works for subports
-        port_info = format_subprocess(["port", "info", port])
+        port_info = format_subprocess([f"{user_path(True)}/port", "info", port])
         if "Sub-ports" not in port_info:
             click.secho("Cannot determine distfiles", fg="red")
             sys.exit(1)

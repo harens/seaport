@@ -10,7 +10,7 @@ from typing import Any, List, Tuple, Union
 import click
 
 from seaport import __version__
-from seaport.checks import preliminary_checks
+from seaport.checks import preliminary_checks, user_path
 from seaport.checksums import current_checksums, new_checksums
 from seaport.clean import clean
 from seaport.format import format_subprocess
@@ -32,7 +32,14 @@ def get_names(
         List[Union[str, Tuple[str, str]]]: The portname and the description
     """
     results = format_subprocess(
-        ["port", "search", "--name", "--line", "--glob", f"{incomplete}*"]
+        [
+            f"{user_path(True)}/port",
+            "search",
+            "--name",
+            "--line",
+            "--glob",
+            f"{incomplete}*",
+        ]
     ).splitlines()
     # Converts to raw string literal to split by backslash
     # See https://stackoverflow.com/a/25047988/10763533
@@ -65,9 +72,9 @@ def seaport(
 
     preliminary_checks(name, pr)
 
-    current_version = format_subprocess(["port", "info", "--version", name]).split(" ")[
-        1
-    ]
+    current_version = format_subprocess(
+        [f"{user_path(True)}/port", "info", "--version", name]
+    ).split(" ")[1]
 
     # Determine new version
     bump = new_version(name, bump, current_version)
@@ -91,7 +98,9 @@ def seaport(
 
     # Add the new checksums, and take a backup of the original
     file_location = (
-        subprocess.check_output(["port", "file", name]).decode("utf-8").strip()
+        subprocess.check_output([f"{user_path(True)}/port", "file", name])
+        .decode("utf-8")
+        .strip()
     )
 
     with click.open_file(file_location) as file:
@@ -107,7 +116,9 @@ def seaport(
     new_contents = new_contents.replace(old_rmd160, new_rmd160, 1)
     new_contents = new_contents.replace(old_size, new_size, 1)
 
-    subprocess.run("pbcopy", universal_newlines=True, input=new_contents, check=True)
+    subprocess.run(
+        f"{user_path()}/pbcopy", universal_newlines=True, input=new_contents, check=True
+    )
     click.secho(
         "📋 The contents of the portfile have been copied to your clipboard!", fg="cyan"
     )
@@ -124,31 +135,42 @@ def seaport(
     if sudo:
         click.secho("💾 Editing local portfile repo, sudo required", fg="cyan")
         click.echo("Changes will be reverted after completion")
-        subprocess.run(["sudo", "cp", tmp_version.name, file_location], check=True)
+        subprocess.run(
+            [f"{user_path()}/sudo", "cp", tmp_version.name, file_location], check=True
+        )
 
     if test:
         click.secho(f"🧪 Testing {name}", fg="cyan")
-        subprocess.run(["sudo", "port", "test", name], check=True)
+        subprocess.run(
+            [f"{user_path()}/sudo", f"{user_path(True)}/port", "test", name], check=True
+        )
     if lint:
         click.secho(f"🧐 Linting {name}", fg="cyan")
-        subprocess.run(["port", "lint", "--nitpick", name], check=True)
+        subprocess.run(
+            [f"{user_path(True)}/port", "lint", "--nitpick", name], check=True
+        )
 
     if install:
         click.secho(f"🏗️ Installing {name}", fg="cyan")
-        subprocess.run(["sudo", "port", "-vst", "install", name], check=True)
+        subprocess.run(
+            [f"{user_path()}/sudo", f"{user_path(True)}/port", "-vst", "install", name],
+            check=True,
+        )
         click.secho(
             "Paused to allow user to test basic functionality in a different terminal",
             fg="cyan",
         )
         click.pause("Press any key to continue ")
         click.secho(f"🗑 Uninstalling {name}", fg="cyan")
-        subprocess.run(["sudo", "port", "uninstall", name], check=True)
+        subprocess.run(
+            [f"{user_path()}/sudo", f"{user_path(True)}/port", "uninstall", name], check=True
+        )
 
     if pr:
 
-        category_list = format_subprocess(["port", "info", "--category", name]).split(
-            " "
-        )
+        category_list = format_subprocess(
+            [f"{user_path(True)}/port", "info", "--category", name]
+        ).split(" ")
 
         # Remove comma, and only take the first category
         if len(category_list) > 2:
@@ -161,7 +183,7 @@ def seaport(
         # check false if macports-ports already exists (error 127)
         subprocess.run(
             [
-                "gh",
+                f"{user_path(False, True)}/gh",
                 "repo",
                 "fork",
                 "macports/macports-ports",
@@ -173,36 +195,51 @@ def seaport(
 
         # Update origin
         os.chdir(f"{pr}/macports-ports")
-        subprocess.run(["git", "fetch", "upstream"], check=True)
-        subprocess.run(["git", "merge", "upstream/master"], check=True)
-        subprocess.run(["git", "push"], check=True)
+        subprocess.run([f"{user_path()}/git", "fetch", "upstream"], check=True)
+        subprocess.run([f"{user_path()}/git", "merge", "upstream/master"], check=True)
+        subprocess.run([f"{user_path()}/git", "push"], check=True)
 
-        subprocess.run(["git", "checkout", "-b", f"seaport-{name}-{bump}"], check=True)
+        subprocess.run(
+            [f"{user_path()}/git", "checkout", "-b", f"seaport-{name}-{bump}"],
+            check=True,
+        )
         copyfile(
             tmp_version.name,
             f"{pr}/macports-ports/{category}/{name}/Portfile",
         )
-        subprocess.run(["git", "add", f"{category}/{name}/Portfile"], check=True)
-        subprocess.run(["git", "commit", "-m", f"{name}: update to {bump}"], check=True)
+        subprocess.run(
+            [f"{user_path()}/git", "add", f"{category}/{name}/Portfile"], check=True
+        )
+        subprocess.run(
+            [f"{user_path()}/git", "commit", "-m", f"{name}: update to {bump}"],
+            check=True,
+        )
         # Automatically choose to send PR to remote
         subprocess.run(
-            ["git", "config", "remote.upstream.gh-resolved", "base"], check=True
+            [f"{user_path()}/git", "config", "remote.upstream.gh-resolved", "base"],
+            check=True,
         )
 
         # PR variables
-        mac_version = format_subprocess(["sw_vers", "-productVersion"])
-        xcode_version = format_subprocess(["xcodebuild", "-version"]).replace(
-            "\nBuild version", ""
-        )
+        mac_version = format_subprocess([f"{user_path()}/sw_vers", "-productVersion"])
+        xcode_version = format_subprocess(
+            [f"{user_path()}/xcodebuild", "-version"]
+        ).replace("\nBuild version", "")
 
         if click.confirm("Does everything look good before sending PR?"):
             subprocess.run(
-                ["git", "push", "--set-upstream", "origin", f"seaport-{name}-{bump}"],
+                [
+                    f"{user_path()}/git",
+                    "push",
+                    "--set-upstream",
+                    "origin",
+                    f"seaport-{name}-{bump}",
+                ],
                 check=True,
             )
             subprocess.run(
                 [
-                    "gh",
+                    f"{user_path(False, True)}/gh",
                     "pr",
                     "create",
                     "--title",
@@ -237,8 +274,10 @@ Have you
                 check=True,
             )
 
-        subprocess.run(["git", "checkout", "master"], check=True)
-        subprocess.run(["git", "branch", "-D", f"seaport-{name}-{bump}"], check=True)
+        subprocess.run([f"{user_path()}/git", "checkout", "master"], check=True)
+        subprocess.run(
+            [f"{user_path()}/git", "branch", "-D", f"seaport-{name}-{bump}"], check=True
+        )
 
     if sudo:
         clean(original, file_location, name)

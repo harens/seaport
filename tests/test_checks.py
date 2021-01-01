@@ -1,7 +1,9 @@
+# See https://alexmarandon.com/articles/python_mock_gotchas/
+
 import pytest
 from pytest_mock import MockFixture
 
-from seaport.checks import cmd_check, exists, preliminary_checks
+from seaport.checks import cmd_check, exists, preliminary_checks, user_path
 
 
 def test_cmd() -> None:
@@ -16,16 +18,21 @@ def callback_info(process) -> None:
     process.stdout = "Error: Port some-nonexistent-port not found"
 
 
-def test_exists(fake_process) -> None:
+def test_exists(fake_process, session_mocker: MockFixture) -> None:
+
+    # Set default path
+    session_mocker.patch("seaport.checks.user_path", return_value="/opt/local/bin")
+
     # Port that exists
     fake_process.register_subprocess(
-        ["port", "info", "some-port"], stdout=["some output"]
+        ["/opt/local/bin/port", "info", "some-port"], stdout=["some output"]
     )
+
     exists("some-port")
 
     # Port that doesn't exist
     fake_process.register_subprocess(
-        ["port", "info", "some-nonexistent-port"], callback=callback_info
+        ["/opt/local/bin/port", "info", "some-nonexistent-port"], callback=callback_info
     )
 
     with pytest.raises(SystemExit):
@@ -33,6 +40,8 @@ def test_exists(fake_process) -> None:
 
 
 def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
+    # Set default path
+    session_mocker.patch("seaport.checks.user_path", return_value="/opt/local/bin")
 
     # port name, pr location
     existent_port = ["some-port", "~/example"]
@@ -40,7 +49,7 @@ def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
 
     # Port that doesn't exist
     fake_process.register_subprocess(
-        ["port", "info", nonexistent_port[0]], callback=callback_info
+        ["/opt/local/bin/port", "info", nonexistent_port[0]], callback=callback_info
     )
 
     with pytest.raises(SystemExit):
@@ -48,7 +57,9 @@ def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
 
     # Port that exists
     fake_process.register_subprocess(
-        ["port", "info", existent_port[0]], stdout=["some output"], occurrences=2
+        ["/opt/local/bin/port", "info", existent_port[0]],
+        stdout=["some output"],
+        occurrences=2,
     )
 
     # Both port and gh pass

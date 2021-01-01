@@ -5,6 +5,8 @@ import tempfile
 
 import click
 
+from seaport.checks import user_path
+
 
 def clean(original_text: str, location: str, port_name: str) -> None:
     """Returns the user's local portfile repo to the original state.
@@ -20,7 +22,12 @@ def clean(original_text: str, location: str, port_name: str) -> None:
     tmp_original = tempfile.NamedTemporaryFile(mode="w")
     tmp_original.write(original_text)
     tmp_original.seek(0)
-    subprocess.run(["sudo", "cp", tmp_original.name, location], check=True)
+    subprocess.run(
+        [f"{user_path()}/sudo", "cp", tmp_original.name, location], check=True
+    )
     tmp_original.close()
 
-    subprocess.run(["sudo", "port", "clean", "--all", port_name], check=True)
+    subprocess.run(
+        [f"{user_path()}/sudo", f"{user_path(True)}/port", "clean", "--all", port_name],
+        check=True,
+    )
