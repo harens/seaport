@@ -71,3 +71,14 @@ def test_new_version(fake_process, session_mocker: MockFixture, capfd) -> None:
     )
 
     assert new_version("example-port", "", "2.0") == "2.1"
+
+    # If devel version is being applied to a standard port
+    session_mocker.patch("click.confirm", return_value=False)
+
+    with pytest.raises(SystemExit):
+        new_version("example-port", "1.2-devel", "1.1")
+
+    # If devel version is being applied to a devel port
+    session_mocker.patch("click.confirm", return_value=True)
+
+    assert new_version("example-port", "1.2-devel", "1.1") == "1.2-devel"

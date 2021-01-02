@@ -83,4 +83,15 @@ def new_version(port: str, stated: str, current: str) -> str:
         click.secho(f"{port} is already up-to-date ({current})", fg="red")
         sys.exit(1)
 
+    # Credit to @herbygillot
+    # See https://github.com/macports/macports-ports/pull/9589#issuecomment-753309298
+    # alpha/beta/rc version detected on a port that isn't -devel
+    devel_versions = ["alpha", "beta", "rc", "devel", "dev", "unstable"]
+    if "-devel" not in port and any(item in stated for item in devel_versions):
+        if not click.confirm(
+            f"{port} is not a devel port, but the new version ({stated}) is a devel build. Do you wish to continue?"
+        ):
+            click.echo("You can specify a different version using --bump")
+            sys.exit(1)
+
     return stated
