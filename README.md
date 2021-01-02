@@ -49,16 +49,6 @@ brew install harens/tap/seaport
 pip install seaport
 ```
 
-### Build from source ☁️
-
-```
-git clone https://github.com/harens/seaport
-cd seaport
-poetry install
-poetry shell
-seaport
-```
-
 ## 💻 Usage
 
 ```txt

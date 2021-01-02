@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from shutil import copyfile
@@ -10,6 +11,7 @@ from typing import Any, List, Tuple, Union
 import click
 
 from seaport import __version__
+from seaport.additional import perform_lint
 from seaport.checks import preliminary_checks, user_path
 from seaport.checksums import current_checksums, new_checksums
 from seaport.clean import clean
@@ -145,10 +147,10 @@ def seaport(
             [f"{user_path()}/sudo", f"{user_path(True)}/port", "test", name], check=True
         )
     if lint:
-        click.secho(f"🧐 Linting {name}", fg="cyan")
-        subprocess.run(
-            [f"{user_path(True)}/port", "lint", "--nitpick", name], check=True
-        )
+        # If the lint is not successful
+        if not perform_lint(name):
+            clean(original, file_location, name)
+            sys.exit(1)
 
     if install:
         click.secho(f"🏗️ Installing {name}", fg="cyan")

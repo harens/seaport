@@ -33,8 +33,10 @@ def new_checksums(website: str) -> Tuple[str, str, str]:
     ) as out_file:
         shutil.copyfileobj(response, out_file)
 
+    # sha256 flag added even though it's the default
+    # Otherwise sometimes doesn't return sha256
     sha256 = format_subprocess(
-        [f"{user_path()}/openssl", "dgst", download_location]
+        [f"{user_path()}/openssl", "dgst", "-sha256", download_location]
     ).split(" ")[-1]
     rmd160 = format_subprocess(
         [f"{user_path()}/openssl", "dgst", "-rmd160", download_location]
