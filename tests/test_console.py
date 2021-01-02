@@ -5,7 +5,7 @@ from seaport.console import seaport
 
 
 def test_version() -> None:
-    assert __version__ == "0.1.1"
+    assert __version__ == "0.2.0"
 
     runner = CliRunner()
     result = runner.invoke(seaport, ["--version"])
