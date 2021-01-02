@@ -3,7 +3,7 @@ from pytest_mock import MockFixture
 from seaport.clean import clean
 
 
-def test_clean(fake_process, session_mocker: MockFixture, capfd):
+def test_clean(fake_process, session_mocker: MockFixture, capfd) -> None:
     # Set default path
     # Don't use /opt/local since sudo is also patched
     session_mocker.patch("seaport.clean.user_path", return_value="/some/path")
@@ -27,3 +27,4 @@ def test_clean(fake_process, session_mocker: MockFixture, capfd):
     out, err = capfd.readouterr()
 
     assert out == "🧽 Cleanup\n"
+    assert not err
