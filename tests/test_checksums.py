@@ -3,7 +3,7 @@
 import pytest
 from pytest_mock import MockFixture
 
-from seaport.checksums import current_checksums, new_checksums
+from seaport.checksums import current_checksums
 
 
 def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
