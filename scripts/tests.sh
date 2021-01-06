@@ -12,5 +12,5 @@ poetry check
 ${PREFIX}black --check .
 ${PREFIX}isort --check-only .
 # TODO: Type check tests
-${PREFIX}mypy --strict seaport
+${PREFIX}mypy --strict --pretty seaport
 ${PREFIX}pydocstyle --convention=google

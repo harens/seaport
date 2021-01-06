@@ -3,12 +3,14 @@
 import pytest
 from pytest_mock import MockFixture
 
-from seaport.checksums import current_checksums
+from seaport.portfile.checksums import current_checksums
 
 
 def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
     # Set default path
-    session_mocker.patch("seaport.checksums.user_path", return_value="/opt/local/bin")
+    session_mocker.patch(
+        "seaport.portfile.checksums.user_path", return_value="/opt/local/bin"
+    )
 
     distfiles = (
         "https://files.pythonhosted.org/packages/source/c/commitizen/commitizen-2.12.2.tar.gz",

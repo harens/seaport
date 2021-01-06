@@ -6,11 +6,13 @@ authors = ["harens <harensdeveloper@gmail.com>"]
 maintainers = ["harens <harensdeveloper@gmail.com>"]
 readme = "README.md"
 license = "MIT"
+include = ["seaport/py.typed"]
 keywords = ["MacPorts", "Port", "Bump", "Checksums"]
 classifiers = [
   "Natural Language :: English",
   "Operating System :: OS Independent",
   "Intended Audience :: Developers",
+  "Typing :: Typed"
 ]
 
 homepage = "https://github.com/harens/seaport"

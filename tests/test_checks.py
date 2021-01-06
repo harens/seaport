@@ -88,14 +88,6 @@ def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
     existent_port = ["some-port", "~/example"]
     nonexistent_port = ["some-nonexistent-port", "~/example"]
 
-    # Port that doesn't exist
-    fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", nonexistent_port[0]], callback=callback_info
-    )
-
-    with pytest.raises(SystemExit):
-        preliminary_checks(*nonexistent_port)
-
     # Port that exists
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "info", existent_port[0]],
@@ -111,3 +103,12 @@ def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
     session_mocker.patch("seaport.checks.cmd_check", return_value=False)
     with pytest.raises(SystemExit):
         preliminary_checks(*existent_port)
+
+    # Port that doesn't exist
+    session_mocker.patch("seaport.checks.cmd_check", return_value=True)
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", nonexistent_port[0]], callback=callback_info
+    )
+
+    with pytest.raises(SystemExit):
+        preliminary_checks(*nonexistent_port)

@@ -1,7 +1,7 @@
 import pytest
 from pytest_mock import MockFixture
 
-from seaport.portfile_numbers import new_version, undo_revision
+from seaport.portfile.portfile_numbers import new_version, undo_revision
 
 
 def test_undo_revision(capfd) -> None:
@@ -51,7 +51,7 @@ def test_new_version(fake_process, session_mocker: MockFixture, capfd) -> None:
     # Livecheck where the port is already up-to-date
     # Set default path
     session_mocker.patch(
-        "seaport.portfile_numbers.user_path", return_value="/opt/local/bin"
+        "seaport.portfile.portfile_numbers.user_path", return_value="/opt/local/bin"
     )
 
     fake_process.register_subprocess(

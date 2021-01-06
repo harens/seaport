@@ -12,6 +12,7 @@
 * __Automatically determines new version numbers and checksums__ for MacPorts portfiles.
 * __Copies the changes to your clipboard 📋__, and optionally __sends a PR to update them__.
 * Contains __additional checking functionality__, such as running tests, linting and installing the updated program.
+* __[PEP 561 compatible](https://www.python.org/dev/peps/pep-0561)__, with built in support for type checking.
 
 ## 🤖 Example
 

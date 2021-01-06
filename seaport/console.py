@@ -13,10 +13,10 @@ import click
 from seaport import __version__
 from seaport.additional import perform_lint
 from seaport.checks import preliminary_checks, user_path
-from seaport.checksums import current_checksums, new_checksums
 from seaport.clean import clean
 from seaport.format import format_subprocess
-from seaport.portfile_numbers import new_version, undo_revision
+from seaport.portfile.checksums import current_checksums, new_checksums
+from seaport.portfile.portfile_numbers import new_version, undo_revision
 
 
 # Shell completion for port names
@@ -66,9 +66,15 @@ def get_names(
     help="Installs the port and allows testing of basic functionality",
 )
 def seaport(
-    name: str, bump: str, pr: Path, test: bool, lint: bool, install: bool
+    name: str,
+    bump: str,
+    pr: Path,
+    test: bool,
+    lint: bool,
+    install: bool,
 ) -> None:
     """Bumps the version number and checksum of NAME, and copies the result to your clipboard."""
+    click.secho("🌊 Starting seaport...", fg="cyan")
     # Tasks that require sudo
     sudo = test or lint or install
 
@@ -80,6 +86,7 @@ def seaport(
 
     # Determine new version
     bump = new_version(name, bump, current_version)
+
     click.secho(f"👍 New version is {bump}", fg="green")
 
     # Where to download the new file + old checksums

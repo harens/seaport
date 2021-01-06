@@ -81,7 +81,6 @@ def preliminary_checks(port: str, pull_request: Path) -> None:
         port: Name of the port
         pull_request: Path of where to clone the macports-ports repo
     """
-    exists(port)
     if not cmd_check("port"):
         click.secho("❌ MacPorts not installed", fg="red")
         click.echo("It can be installed from https://www.macports.org/")
@@ -95,3 +94,4 @@ def preliminary_checks(port: str, pull_request: Path) -> None:
             [f"{user_path()}/sudo", f"{user_path(True)}/port", "install", "gh"],
             check=True,
         )
+    exists(port)
