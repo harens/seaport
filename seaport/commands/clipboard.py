@@ -11,7 +11,7 @@ import click
 from seaport.additional import perform_lint
 from seaport.checks import preliminary_checks, user_path
 from seaport.clean import clean
-from seaport.commands.autocomplete import get_names
+from seaport.commands.autocomplete.autocomplete import get_names
 from seaport.format import format_subprocess
 from seaport.portfile.checksums import current_checksums, new_checksums
 from seaport.portfile.portfile_numbers import new_version, undo_revision

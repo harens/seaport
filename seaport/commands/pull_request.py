@@ -5,12 +5,12 @@ import subprocess
 import sys
 import tempfile
 from shutil import copyfile
-from typing import Any, cast
+from typing import Any
 
 import click
 
 from seaport.checks import user_path
-from seaport.commands.autocomplete import get_names
+from seaport.commands.autocomplete.autocomplete import get_names
 from seaport.commands.clipboard import clip
 from seaport.format import format_subprocess
 

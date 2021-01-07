@@ -3,4 +3,4 @@
 Find out more at https://github.com/harens/seaport
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.1"
