@@ -18,6 +18,7 @@ def perform_lint(name: str) -> bool:
     Returns:
         bool: Whether the linting was successful or not
     """
+    click.secho("🤔 Linting", fg="cyan")
     lint_output = format_subprocess(
         [f"{user_path(True)}/port", "lint", "--nitpick", name]
     )

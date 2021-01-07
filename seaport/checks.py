@@ -2,8 +2,8 @@
 
 import subprocess
 import sys
-from pathlib import Path
 from shutil import which
+from typing import Optional
 
 import click
 
@@ -74,7 +74,7 @@ def exists(name: str) -> None:
         sys.exit(1)
 
 
-def preliminary_checks(port: str, pull_request: Path) -> None:
+def preliminary_checks(port: str, pull_request: Optional[str]) -> None:
     """Checks to run before carrying out updating process.
 
     Args:

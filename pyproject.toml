@@ -39,7 +39,7 @@ pydocstyle = "^5.1.1"
 flake8 = "^3.8.4"
 
 [tool.poetry.scripts]
-seaport = "seaport.console:seaport"
+seaport = "seaport.init:seaport"
 
 [tool.coverage.run]
 branch = true

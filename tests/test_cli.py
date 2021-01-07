@@ -1,7 +1,7 @@
 from click.testing import CliRunner
 
 from seaport import __version__
-from seaport.console import seaport
+from seaport.init import seaport
 
 
 def test_version() -> None:

@@ -17,7 +17,8 @@
 ## 🤖 Example
 
 ```
-> seaport gping
+> seaport clip gping
+🌊 Starting seaport...
 👍 New version is 1.2.0-post
 🔻 Downloading from https://github.com/orf/gping/tarball/v1.2.0-post/gping-1.2.0-post.tar.gz
 🔎 Checksums:
@@ -54,17 +55,37 @@ pip install seaport
 
 ```txt
 > seaport --help
-Usage: seaport [OPTIONS] NAME
+Usage: seaport [OPTIONS] COMMAND [ARGS]...
 
-  Bumps the version number and checksum of NAME, and copies the result to
-  your clipboard
+  Bumps the version number and checksum of a port.
+
+  For more information, please visit https://github.com/harens/seaport
 
 Options:
-  --version                 Show the version and exit.
-  --bump TEXT               The new version number
-  --pr PATH                 Location for where to clone the macports-ports
-                            repo
+  --version  Show the version and exit.
+  --help     Show this message and exit.
 
+Commands:
+  clip  Bumps the version number and checksum of NAME, and copies the
+        result...
+
+  pr    Bumps the version number and checksum of NAME, and sends a PR to...
+```
+
+### 📋 `seaport clip NAME`
+
+Copies the updated portfile to your clipboard
+
+```txt
+> seaport clip --help
+🌊 Starting seaport...
+Usage: seaport clip [OPTIONS] NAME
+
+  Bumps the version number and checksum of NAME, and copies the result to
+  your clipboard.
+
+Options:
+  --bump TEXT               The new version number
   --test / --no-test        Runs port test
   --lint / --no-lint        Runs port lint --nitpick
   --install / --no-install  Installs the port and allows testing of basic
@@ -72,6 +93,73 @@ Options:
 
   --help                    Show this message and exit.
 ```
+
+#### 📛 `name` (_Required_)
+
+The name of the port to update.
+
+e.g. `seaport clip gping`
+
+#### 🔻 `--bump TEXT`
+
+Manually set the version number to bump it to. This should be in the same format as the output of the livecheck.
+
+By default, it uses the value outputted from the livecheck.
+
+This flag can be useful if there's no livecheck available or you want to override it.
+
+e.g. `seaport clip gping --bump 1.2.0-post`
+
+#### 🧪 `--test / --no-test` (_default `--no-test`_)
+
+Runs `sudo port test NAME` after updating the portfile.
+
+e.g. `seaport clip py-rich --test`
+
+#### 🤔 `--lint / --no-lint` (_default `--no-lint`_)
+
+Runs `port lint --nitpick NAME` after updating the portfile.
+
+e.g. `seaport clip gping --lint`
+
+#### 🔨 `--install / --no-install` (_default `--no-install`_)
+
+Installs the port via the updated portfile and allows testing of basic functionality. After this has been completed, the port is uninstalled from the user's system.
+
+e.g. `seaport clip gping --install`
+
+### ✉️ `seaport pr NAME`
+
+Sends a pull requrest to [macports/macports-ports](https://github.com/macports/macports-ports) with the updated portfile contents.
+
+The flags in `clip` are also valid for this subcommand.
+
+The pull request template is automatically filled in depending on what flags the command was run with (e.g. if `--lint` was used, this would be noted in the verification section of the template).
+
+```txt
+> seaport pr --help
+🌊 Starting seaport...
+Usage: seaport pr [OPTIONS] NAME LOCATION
+
+  Bumps the version number and checksum of NAME, and sends a PR to update
+  it.
+
+Options:
+  --bump TEXT               The new version number
+  --test / --no-test        Runs port test
+  --lint / --no-lint        Runs port lint --nitpick
+  --install / --no-install  Installs the port and allows testing of basic
+                            functionality
+
+  --new                     Send a PR from the local portfile repo
+  --help                    Show this message and exit.
+  ```
+  
+#### ✅ `--new`
+
+This flag is used if sending a PR for a new portfile from the user's [local portfile repo](https://guide.macports.org/chunked/development.local-repositories.html).
+
+To bypass the version number checks, it is recommended to set a different version number within the file. This is corrected automatically by seaport.
 
 ### 🚀 Use of sudo
 
