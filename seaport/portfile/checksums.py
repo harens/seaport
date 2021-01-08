@@ -48,13 +48,16 @@ def new_checksums(website: str) -> Tuple[str, str, str]:
     return sha256, rmd160, size
 
 
-def current_checksums(port: str, current: str, new: str) -> Tuple[str, str, str, str]:
+def current_checksums(
+    port: str, current: str, new: str, subport: str = ""
+) -> Tuple[str, str, str, str, str]:
     """Returns outdated checksums and the website to download the new files from.
 
     Args:
         port: Name of the port
         current: The current and outdated version number
         new: The new version number
+        subport: If the subport was used rather than the original port
 
     Returns:
         Tuple[str, str, str, str]: A tuple of strings representing the new website and checksums
@@ -80,7 +83,7 @@ def current_checksums(port: str, current: str, new: str) -> Tuple[str, str, str,
             [s for s in port_info.splitlines() if "Sub-ports" in s]
         ).split(" ")[-1]
         # Repeat the process with the subport
-        return current_checksums(subport, current, new)
+        return current_checksums(subport, current, new, subport)
 
     new_website = old_website.replace(current, new)
 
@@ -91,4 +94,8 @@ def current_checksums(port: str, current: str, new: str) -> Tuple[str, str, str,
     sha256 = distfiles[website_index - 2][:-5]  # Remove size:
     rmd160 = distfiles[website_index - 3][:-7]  # Remove sha256:
 
-    return new_website, size, sha256, rmd160
+    # subport can't be set to an empty string at beginning
+    # due to the recursion
+    if not subport:
+        return new_website, size, sha256, rmd160, ""
+    return new_website, size, sha256, rmd160, subport

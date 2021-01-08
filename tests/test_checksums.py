@@ -28,7 +28,8 @@ def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
         occurrences=3,
     )
 
-    assert current_checksums("commitizen", "2.12.1", "2.12.2") == distfiles
+    # No subports
+    assert current_checksums("commitizen", "2.12.1", "2.12.2") == (*distfiles, "")
 
     # Invalid entry + no subports
 
@@ -53,7 +54,10 @@ def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
         ],
     )
 
-    assert current_checksums("example", "2.12.1", "2.12.2") == distfiles
+    assert current_checksums("example", "2.12.1", "2.12.2") == (
+        *distfiles,
+        "commitizen",
+    )
 
     # Single subport availble
 
@@ -64,4 +68,7 @@ def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
         ],
     )
 
-    assert current_checksums("example", "2.12.1", "2.12.2") == distfiles
+    assert current_checksums("example", "2.12.1", "2.12.2") == (
+        *distfiles,
+        "commitizen",
+    )

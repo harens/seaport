@@ -77,6 +77,9 @@ def new_version(port: str, stated: str, current: str) -> str:
                 fg="red",
             )
             click.secho("Please manually specify the version using --bump", fg="red")
+            # If the subport name is used, it tries to look for it as a directory
+            # in macports-ports
+            click.secho("If sending a PR, do not use the subport name", fg="red")
             sys.exit(1)
 
     if stated == current:

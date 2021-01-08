@@ -8,7 +8,7 @@ from typing import Optional
 
 import click
 
-from seaport.additional import perform_lint
+from seaport.additional import perform_lint, perform_test
 from seaport.checks import preliminary_checks, user_path
 from seaport.clean import clean
 from seaport.commands.autocomplete.autocomplete import get_names
@@ -58,7 +58,7 @@ def clip(
     os.environ["BUMP"] = bump
 
     # Where to download the new file + old checksums
-    new_website, old_size, old_sha256, old_rmd160 = current_checksums(
+    new_website, old_size, old_sha256, old_rmd160, subport = current_checksums(
         name, current_version, bump
     )
 
@@ -107,11 +107,10 @@ def clip(
         )
 
         if test:
-            click.secho(f"🧪 Testing {name}", fg="cyan")
-            subprocess.run(
-                [f"{user_path()}/sudo", f"{user_path(True)}/port", "test", name],
-                check=True,
-            )
+            # If the tests fail
+            if not perform_test(name, subport):
+                clean(original, file_location, name)
+                sys.exit(1)
         if lint:
             # If the lint is not successful
             if not perform_lint(name):

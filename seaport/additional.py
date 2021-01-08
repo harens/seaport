@@ -3,9 +3,12 @@
 e.g. Linting
 """
 
+import subprocess
+
 import click
 
 from seaport.checks import user_path
+from seaport.clean import clean
 from seaport.format import format_subprocess
 
 
@@ -38,4 +41,40 @@ def perform_lint(name: str) -> bool:
             f"There are {warnings} warnings. Do you wish to continue?"
         ):
             return False
+    return True
+
+
+def perform_test(name: str, subport: str) -> bool:
+    """Tests the port and checks output for errors.
+
+    Args:
+        name: The name of the port
+        subport: The name of one of the subports
+
+    Returns:
+        bool: Whether the tet was successful or not
+    """
+    click.secho(f"🧪 Testing {name}", fg="cyan")
+    try:
+        subprocess.run(
+            [f"{user_path()}/sudo", f"{user_path(True)}/port", "test", name],
+            check=True,
+        )
+    except subprocess.CalledProcessError:
+        # For python ports, the tests are in the subport
+        # There are no tests in the original port
+        if subport:
+            click.secho(f"🏗 Trying with subport {subport}", fg="cyan")
+            try:
+                subprocess.run(
+                    [f"{user_path()}/sudo", f"{user_path(True)}/port", "test", subport],
+                    check=True,
+                )
+            except subprocess.CalledProcessError:
+                click.secho("❌ Tests failed", fg="red")
+                return False
+        else:
+            click.secho("❌ Tests failed", fg="red")
+            return False
+    click.secho("✅ Tests passed", fg="green")
     return True
