@@ -2,8 +2,8 @@
 
 from typing import Any, List, Tuple, Union
 
-from seaport.checks import user_path
-from seaport.format import format_subprocess
+from seaport.clipboard.checks import user_path
+from seaport.clipboard.format import format_subprocess
 
 
 def get_names(

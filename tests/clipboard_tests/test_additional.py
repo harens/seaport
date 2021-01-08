@@ -2,7 +2,7 @@ import subprocess
 
 from pytest_mock import MockFixture
 
-from seaport.additional import perform_lint, perform_test
+from seaport.clipboard.additional import perform_lint, perform_test
 
 
 def test_perform_lint(fake_process, session_mocker: MockFixture) -> None:
@@ -10,7 +10,9 @@ def test_perform_lint(fake_process, session_mocker: MockFixture) -> None:
     # If there are errors present in port lint
 
     # Set default path
-    session_mocker.patch("seaport.additional.user_path", return_value="/opt/local/bin")
+    session_mocker.patch(
+        "seaport.clipboard.additional.user_path", return_value="/opt/local/bin"
+    )
 
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "lint", "--nitpick", "some-port"],
@@ -63,7 +65,9 @@ def test_perform_test(fake_process, session_mocker: MockFixture) -> None:
 
     # Set default path
     # Both sudo and port used (hence example)
-    session_mocker.patch("seaport.additional.user_path", return_value="/example")
+    session_mocker.patch(
+        "seaport.clipboard.additional.user_path", return_value="/example"
+    )
 
     # If the tests pass
 

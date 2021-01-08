@@ -7,7 +7,7 @@ from typing import Optional
 
 import click
 
-from seaport.format import format_subprocess
+from seaport.clipboard.format import format_subprocess
 
 
 def user_path(port: bool = False, third_party: bool = False) -> str:

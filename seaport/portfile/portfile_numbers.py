@@ -5,8 +5,8 @@ import sys
 
 import click
 
-from seaport.checks import user_path
-from seaport.format import format_subprocess
+from seaport.clipboard.checks import user_path
+from seaport.clipboard.format import format_subprocess
 
 
 def undo_revision(text: str) -> str:

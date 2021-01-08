@@ -154,6 +154,17 @@ Options:
   --new                     Send a PR from the local portfile repo
   --help                    Show this message and exit.
   ```
+
+#### 🗺 `location` (_Required_)
+
+Where to clone the macports-ports directory to.
+Note that macports-ports should not be in the location (unless you want to clone the repo to a folder with that name)
+
+It is recommended to set the direction to a directory that already contains the cloned repo to speed up the process.
+However, if you do so, please make sure your master branch is clear and has upstream defined.
+
+The following example would create the folder ~/GitHub/macports-ports, creating any subdirectories if they don't exist.
+e.g. `seaport pr gping ~/GitHub/`
   
 #### ✅ `--new`
 

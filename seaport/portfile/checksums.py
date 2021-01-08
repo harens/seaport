@@ -9,8 +9,8 @@ from typing import Tuple
 
 import click
 
-from seaport.checks import user_path
-from seaport.format import format_subprocess
+from seaport.clipboard.checks import user_path
+from seaport.clipboard.format import format_subprocess
 
 
 def new_checksums(website: str) -> Tuple[str, str, str]:

@@ -5,7 +5,7 @@ import tempfile
 
 import click
 
-from seaport.checks import user_path
+from seaport.clipboard.checks import user_path
 
 
 def clean(original_text: str, location: str, port_name: str) -> None:

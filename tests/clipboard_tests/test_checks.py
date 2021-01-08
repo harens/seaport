@@ -3,7 +3,7 @@
 import pytest
 from pytest_mock import MockFixture
 
-from seaport.checks import cmd_check, exists, preliminary_checks, user_path
+from seaport.clipboard.checks import cmd_check, exists, preliminary_checks, user_path
 
 
 def test_cmd() -> None:
@@ -62,7 +62,9 @@ def callback_info(process) -> None:
 def test_exists(fake_process, session_mocker: MockFixture) -> None:
 
     # Set default path
-    session_mocker.patch("seaport.checks.user_path", return_value="/opt/local/bin")
+    session_mocker.patch(
+        "seaport.clipboard.checks.user_path", return_value="/opt/local/bin"
+    )
 
     # Port that exists
     fake_process.register_subprocess(
@@ -82,7 +84,9 @@ def test_exists(fake_process, session_mocker: MockFixture) -> None:
 
 def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
     # Set default path
-    session_mocker.patch("seaport.checks.user_path", return_value="/opt/local/bin")
+    session_mocker.patch(
+        "seaport.clipboard.checks.user_path", return_value="/opt/local/bin"
+    )
 
     # port name, pr location
     existent_port = ["some-port", "~/example"]
@@ -96,16 +100,16 @@ def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
     )
 
     # Both port and gh pass
-    session_mocker.patch("seaport.checks.cmd_check", return_value=True)
+    session_mocker.patch("seaport.clipboard.checks.cmd_check", return_value=True)
     preliminary_checks(*existent_port)
 
     # port fails since it's the first test
-    session_mocker.patch("seaport.checks.cmd_check", return_value=False)
+    session_mocker.patch("seaport.clipboard.checks.cmd_check", return_value=False)
     with pytest.raises(SystemExit):
         preliminary_checks(*existent_port)
 
     # Port that doesn't exist
-    session_mocker.patch("seaport.checks.cmd_check", return_value=True)
+    session_mocker.patch("seaport.clipboard.checks.cmd_check", return_value=True)
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "info", nonexistent_port[0]], callback=callback_info
     )

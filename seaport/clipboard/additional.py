@@ -7,9 +7,8 @@ import subprocess
 
 import click
 
-from seaport.checks import user_path
-from seaport.clean import clean
-from seaport.format import format_subprocess
+from seaport.clipboard.checks import user_path
+from seaport.clipboard.format import format_subprocess
 
 
 def perform_lint(name: str) -> bool:

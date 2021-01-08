@@ -1,4 +1,4 @@
-from seaport.format import format_subprocess
+from seaport.clipboard.format import format_subprocess
 
 
 def test_subprocess() -> None:
