@@ -2,7 +2,6 @@
 
 import os
 import subprocess
-import sys
 import tempfile
 from shutil import copyfile
 from typing import Any
@@ -13,6 +12,7 @@ from seaport.clipboard.checks import user_path
 from seaport.clipboard.format import format_subprocess
 from seaport.commands.autocomplete.autocomplete import get_names
 from seaport.commands.clipboard import clip
+from seaport.pull_request.portfile import new_contents
 
 
 @click.command()
@@ -47,26 +47,12 @@ def pr(
     # That's the command that determines the new contents
     ctx.forward(clip)
 
-    # Determine the output of the clip function from clipboard
-    # Newline added since clipboard removes it
-    new_contents = format_subprocess(["pbpaste"]) + "\n"
-
-    # Get updated version number from clip
-    # Separate var to get mypy to work
-    # This is since os.getenv is Optional[str]
-    env_variable = os.getenv("BUMP")
-
-    if env_variable is None:
-        click.secho(
-            "Cannot determine version number from env variable `bump`", fg="red"
-        )
-        sys.exit(1)
-
-    bump = env_variable
+    # Retrieve new version number and contents
+    contents, bump = new_contents()
 
     # Write the new portfile contents to a tempfile
     tmp_version = tempfile.NamedTemporaryFile(mode="w")
-    tmp_version.write(new_contents)
+    tmp_version.write(contents)
     tmp_version.seek(0)
 
     # Category determined so as to know where to put the portfile

@@ -3,13 +3,13 @@
 import pytest
 from pytest_mock import MockFixture
 
-from seaport.portfile.checksums import current_checksums
+from seaport.clipboard.portfile.checksums import current_checksums
 
 
 def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
     # Set default path
     session_mocker.patch(
-        "seaport.portfile.checksums.user_path", return_value="/opt/local/bin"
+        "seaport.clipboard.portfile.checksums.user_path", return_value="/opt/local/bin"
     )
 
     distfiles = (

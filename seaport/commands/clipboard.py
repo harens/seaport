@@ -12,9 +12,9 @@ from seaport.clipboard.additional import perform_lint, perform_test
 from seaport.clipboard.checks import preliminary_checks, user_path
 from seaport.clipboard.clean import clean
 from seaport.clipboard.format import format_subprocess
+from seaport.clipboard.portfile.checksums import current_checksums, new_checksums
+from seaport.clipboard.portfile.portfile_numbers import new_version, undo_revision
 from seaport.commands.autocomplete.autocomplete import get_names
-from seaport.portfile.checksums import current_checksums, new_checksums
-from seaport.portfile.portfile_numbers import new_version, undo_revision
 
 
 @click.command()
