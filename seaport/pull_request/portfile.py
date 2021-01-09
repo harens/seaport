@@ -6,6 +6,7 @@ from typing import Tuple
 
 import click
 
+from seaport.clipboard.checks import user_path
 from seaport.clipboard.format import format_subprocess
 
 
@@ -35,3 +36,22 @@ def new_contents() -> Tuple[str, str]:
         sys.exit(1)
 
     return contents, env_variable
+
+
+def determine_category(name: str) -> str:
+    """Given the name of a port, output the category.
+
+    Args:
+        name: The name of the port
+
+    Returns:
+        str: The category of the port
+    """
+    # Category determined so as to know where to put the portfile
+    # e.g. macports-ports/category/name/Portfile
+    category_list = format_subprocess(
+        [f"{user_path(True)}/port", "info", "--category", name]
+    ).split(" ")
+
+    # Remove comma, and only take the first category
+    return category_list[1][:-1] if len(category_list) > 2 else category_list[1]

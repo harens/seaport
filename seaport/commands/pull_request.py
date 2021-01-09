@@ -12,7 +12,7 @@ from seaport.clipboard.checks import user_path
 from seaport.clipboard.format import format_subprocess
 from seaport.commands.autocomplete.autocomplete import get_names
 from seaport.commands.clipboard import clip
-from seaport.pull_request.portfile import new_contents
+from seaport.pull_request.portfile import determine_category, new_contents
 
 
 @click.command()
@@ -55,17 +55,8 @@ def pr(
     tmp_version.write(contents)
     tmp_version.seek(0)
 
-    # Category determined so as to know where to put the portfile
-    # e.g. macports-ports/category/name/Portfile
-    category_list = format_subprocess(
-        [f"{user_path(True)}/port", "info", "--category", name]
-    ).split(" ")
-
-    # Remove comma, and only take the first category
-    if len(category_list) > 2:
-        category = category_list[1][:-1]
-    else:
-        category = category_list[1]
+    # Assumes first category is where to put the portfile
+    category = determine_category(name)
 
     click.secho("🚀 Cloning macports/macports-ports", fg="cyan")
     os.chdir(location)
