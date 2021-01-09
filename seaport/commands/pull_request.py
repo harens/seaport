@@ -50,11 +50,6 @@ def pr(
     # Retrieve new version number and contents
     contents, bump = new_contents()
 
-    # Write the new portfile contents to a tempfile
-    tmp_version = tempfile.NamedTemporaryFile(mode="w")
-    tmp_version.write(contents)
-    tmp_version.seek(0)
-
     # Assumes first category is where to put the portfile
     category = determine_category(name)
 
@@ -99,21 +94,10 @@ def pr(
             ["/bin/mkdir", "-p", f"{location}/macports-ports/{category}/{name}"],
             check=True,
         )
-        # copyfile not used since cp creates the file automatically
-        # IF copyfile was used, touch would also be required
-        subprocess.run(
-            [
-                "/bin/cp",
-                tmp_version.name,
-                f"{location}/macports-ports/{category}/{name}/Portfile",
-            ],
-            check=True,
-        )
-    else:
-        copyfile(
-            tmp_version.name,
-            f"{location}/macports-ports/{category}/{name}/Portfile",
-        )
+
+    # Add the new contents to the portfile
+    with open(f"{location}/macports-ports/{category}/{name}/Portfile", "w") as portfile:
+        portfile.write(contents)
 
     subprocess.run(
         [f"{user_path()}/git", "add", f"{category}/{name}/Portfile"], check=True
