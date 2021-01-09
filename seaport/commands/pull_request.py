@@ -2,8 +2,6 @@
 
 import os
 import subprocess
-import tempfile
-from shutil import copyfile
 from typing import Any
 
 import click
