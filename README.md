@@ -192,3 +192,9 @@ As well as this, feel free to open an issue with any new suggestions or bug repo
 This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the MacPorts Project, or any of its subsidiaries or its affiliates. The official MacPorts Project website can be found at <https://www.macports.org>.
 
 The name MacPorts as well as related names, marks, emblems and images are registered trademarks of their respective owners.
+
+## ©️ License
+
+Similar to other MacPorts-based projects, seaport is licensed under the [BSD 3-Clause "New" or "Revised" License](https://github.com/harens/seaport/blob/master/LICENSE).
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fharens%2Fseaport.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fharens%2Fseaport?ref=badge_large)
