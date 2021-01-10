@@ -107,3 +107,32 @@ def perform_test(name: str, subport: str) -> bool:
             return False
     click.secho("✅ Tests passed", fg="green")
     return True
+
+
+def perform_install(name: str) -> None:
+    """Runs sudo port -vst install NAME.
+
+    Args:
+        name: The name of the port
+    """
+    click.secho(f"🏗️ Installing {name}", fg="cyan")
+    subprocess.run(
+        [
+            f"{user_path()}/sudo",
+            f"{user_path(True)}/port",
+            "-vst",
+            "install",
+            name,
+        ],
+        check=True,
+    )
+    click.secho(
+        "Paused to allow user to test basic functionality in a different terminal",
+        fg="cyan",
+    )
+    click.pause("Press any key to continue ")
+    click.secho(f"🗑 Uninstalling {name}", fg="cyan")
+    subprocess.run(
+        [f"{user_path()}/sudo", f"{user_path(True)}/port", "uninstall", name],
+        check=True,
+    )

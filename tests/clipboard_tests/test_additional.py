@@ -32,7 +32,7 @@ import subprocess
 
 from pytest_mock import MockFixture
 
-from seaport.clipboard.additional import perform_lint, perform_test
+from seaport.clipboard.additional import perform_install, perform_lint, perform_test
 
 
 def test_perform_lint(fake_process, session_mocker: MockFixture) -> None:
@@ -128,3 +128,27 @@ def test_perform_test(fake_process, session_mocker: MockFixture) -> None:
     # IF there's no subports
 
     assert not perform_test("some-port", "")
+
+
+def test_perform_install(fake_process, session_mocker: MockFixture) -> None:
+    # Not much to test here unfortunately
+
+    # Set default path
+    # Both sudo and port used (hence example)
+    session_mocker.patch(
+        "seaport.clipboard.additional.user_path", return_value="/example"
+    )
+
+    fake_process.register_subprocess(
+        ["/example/sudo", "/example/port", "-vst", "install", "some-port"],
+        stdout=["Installing some-port"],
+    )
+
+    session_mocker.patch("click.pause", return_value="None")
+
+    fake_process.register_subprocess(
+        ["/example/sudo", "/example/port", "uninstall", "some-port"],
+        stdout=["Unnstalling some-port"],
+    )
+
+    perform_install("some-port")

@@ -30,18 +30,18 @@
 
 from pytest_mock import MockFixture
 
-from seaport.clipboard.clean import clean
+from seaport.clipboard.user import clean, user_clipboard
 
 
 def test_clean(fake_process, session_mocker: MockFixture, capfd) -> None:
     # Set default path
     # Don't use /opt/local since sudo is also patched
-    session_mocker.patch("seaport.clipboard.clean.user_path", return_value="/some/path")
+    session_mocker.patch("seaport.clipboard.user.user_path", return_value="/some/path")
 
     # Credit https://stackoverflow.com/a/58310550/10763533
     # Set the tempfile name
     session_mocker.patch(
-        "seaport.clipboard.clean.tempfile.NamedTemporaryFile"
+        "seaport.clipboard.user.tempfile.NamedTemporaryFile"
     ).return_value.name = "tempfilename"
 
     fake_process.register_subprocess(
@@ -58,3 +58,15 @@ def test_clean(fake_process, session_mocker: MockFixture, capfd) -> None:
 
     assert out == "🧽 Cleanup\n"
     assert not err
+
+
+def test_user_clipboard(fake_process, session_mocker: MockFixture) -> None:
+    # Set default path
+    session_mocker.patch("seaport.clipboard.user.user_path", return_value="/some/path")
+
+    fake_process.register_subprocess(
+        ["/some/path/pbcopy"],
+        stdout=["Copied\n"],
+    )
+
+    user_clipboard("Example portfile contents")

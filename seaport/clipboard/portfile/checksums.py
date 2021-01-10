@@ -58,6 +58,7 @@ def new_checksums(website: str) -> Tuple[str, str, str]:
     # Download the file from `url` and save it locally under `file_name`:
     # Originally urllib.request.urlretrieve(website, download_location), but this is depreciated
     # Credit https://stackoverflow.com/a/7244263
+    click.secho(f"🔻 Downloading from {website}", fg="cyan")
     with urllib.request.urlopen(website) as response, open(
         download_location, "wb"
     ) as out_file:

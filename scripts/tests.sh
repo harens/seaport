@@ -31,9 +31,15 @@
 export PREFIX="poetry run python -m "
 
 ${PREFIX} pytest --cov-report=xml:coverage.xml --cov=seaport tests/
+
 poetry check
-${PREFIX} black --check .
+${PREFIX} pip check
+${PREFIX} safety check --full-report
+
+
+${PREFIX} black --diff --check ./
 ${PREFIX} isort --check-only .
+
 # TODO: Type check tests
 ${PREFIX} mypy --strict --pretty seaport
 ${PREFIX} pydocstyle --convention=google

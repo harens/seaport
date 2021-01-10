@@ -38,12 +38,12 @@ from typing import Optional
 
 import click
 
-from seaport.clipboard.additional import perform_lint, perform_test
+from seaport.clipboard.additional import perform_install, perform_lint, perform_test
 from seaport.clipboard.checks import preliminary_checks, user_path
-from seaport.clipboard.clean import clean
 from seaport.clipboard.format import format_subprocess
 from seaport.clipboard.portfile.checksums import current_checksums, new_checksums
 from seaport.clipboard.portfile.portfile_numbers import new_version, undo_revision
+from seaport.clipboard.user import clean, user_clipboard
 from seaport.commands.autocomplete.autocomplete import get_names
 
 
@@ -92,7 +92,6 @@ def clip(
         name, current_version, bump
     )
 
-    click.secho(f"🔻 Downloading from {new_website}", fg="cyan")
     new_sha256, new_rmd160, new_size = new_checksums(new_website)
 
     click.secho("🔎 Checksums:", fg="cyan")
@@ -148,38 +147,11 @@ def clip(
                 sys.exit(1)
 
         if install:
-            click.secho(f"🏗️ Installing {name}", fg="cyan")
-            subprocess.run(
-                [
-                    f"{user_path()}/sudo",
-                    f"{user_path(True)}/port",
-                    "-vst",
-                    "install",
-                    name,
-                ],
-                check=True,
-            )
-            click.secho(
-                "Paused to allow user to test basic functionality in a different terminal",
-                fg="cyan",
-            )
-            click.pause("Press any key to continue ")
-            click.secho(f"🗑 Uninstalling {name}", fg="cyan")
-            subprocess.run(
-                [f"{user_path()}/sudo", f"{user_path(True)}/port", "uninstall", name],
-                check=True,
-            )
+            perform_install(name)
 
         clean(original, file_location, name)
 
-        subprocess.run(
-            f"{user_path()}/pbcopy",
-            universal_newlines=True,
-            input=new_contents,
-            check=True,
-        )
-
-    click.secho(
-        "📋 The contents of the portfile have been copied to your clipboard!",
-        fg="cyan",
-    )
+    # Clipboard functions at the very end
+    # to reduce the chance of user's clipboard being changed
+    # after adding contents
+    user_clipboard(new_contents)

@@ -28,7 +28,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Functions for cleaning up after completion, such as resetting files to their original state."""
+"""Functions for modifying the user's system, such as the clipboard."""
 
 import subprocess
 import tempfile
@@ -60,4 +60,23 @@ def clean(original_text: str, location: str, port_name: str) -> None:
     subprocess.run(
         [f"{user_path()}/sudo", f"{user_path(True)}/port", "clean", "--all", port_name],
         check=True,
+    )
+
+
+def user_clipboard(new_contents: str) -> None:
+    """Copies the new contents of the portfile to the clipboard.
+
+    Args:
+        new_contents: What to copy the clipboard
+    """
+    subprocess.run(
+        f"{user_path()}/pbcopy",
+        universal_newlines=True,
+        input=new_contents,
+        check=True,
+    )
+
+    click.secho(
+        "📋 The contents of the portfile have been copied to your clipboard!",
+        fg="cyan",
     )
