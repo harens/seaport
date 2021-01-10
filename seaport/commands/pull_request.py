@@ -40,6 +40,7 @@ from seaport.clipboard.checks import user_path
 from seaport.clipboard.format import format_subprocess
 from seaport.commands.autocomplete.autocomplete import get_names
 from seaport.commands.clipboard import clip
+from seaport.pull_request.clone import pr_variables, sync_fork
 from seaport.pull_request.portfile import determine_category, new_contents
 
 
@@ -97,10 +98,7 @@ def pr(
     )
 
     # Update origin
-    os.chdir(f"{location}/macports-ports")
-    subprocess.run([f"{user_path()}/git", "fetch", "upstream"], check=True)
-    subprocess.run([f"{user_path()}/git", "merge", "upstream/master"], check=True)
-    subprocess.run([f"{user_path()}/git", "push"], check=True)
+    sync_fork(location)
 
     # Different titles depending on whether updating
     # or adding new file
@@ -141,11 +139,7 @@ def pr(
         check=True,
     )
 
-    # PR variables
-    mac_version = format_subprocess([f"{user_path()}/sw_vers", "-productVersion"])
-    xcode_version = format_subprocess(
-        [f"{user_path()}/xcodebuild", "-version"]
-    ).replace("\nBuild version", "")
+    mac_version, xcode_version = pr_variables()
 
     if click.confirm("Does everything look good before sending PR?"):
         subprocess.run(
