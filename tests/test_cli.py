@@ -13,7 +13,7 @@ def test_version() -> None:
 
 def test_help() -> None:
     runner = CliRunner()
-    result = runner.invoke(seaport, ["--help"])
+    # clip used to get 100% cov in init file
+    result = runner.invoke(seaport, ["clip", "--help"])
     assert result.exit_code == 0
     assert "Show this message and exit" in result.output
-    assert "Show the version and exit" in result.output
