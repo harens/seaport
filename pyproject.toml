@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "seaport"
-version = "0.3.1"
+version = "0.4.0"
 description = "A more mighty port bump"
 authors = ["harens <harensdeveloper@gmail.com>"]
 maintainers = ["harens <harensdeveloper@gmail.com>"]
 readme = "README.md"
-license = "MIT"
+license = "BSD-3-Clause"
 include = ["seaport/py.typed"]
 keywords = ["MacPorts", "Port", "Bump", "Checksums"]
 classifiers = [
