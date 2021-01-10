@@ -72,7 +72,7 @@ def undo_revision(text: str) -> str:
 
     # Takes the original revision as a string
     # We know original_revision will not be of type none (hence mypy ignore)
-    # This is ince need_changed is equal to 1
+    # This is since need_changed is equal to 1
     original_revision = re.search(r"revision\s*[1-9]", text).group(0)  # type: ignore
     # Replaces the number with 0
     new_revision = original_revision[:-1] + "0"
@@ -80,18 +80,24 @@ def undo_revision(text: str) -> str:
     return text.replace(original_revision, new_revision)
 
 
-def new_version(port: str, stated: str, current: str) -> str:
+def new_version(port: str, stated: str, current: str, new: bool = False) -> str:
     """Determines livecheck version, and sees whether already up-to-date.
 
     Args:
         port: The name of the port
         stated: The user's new version via --bump
         current: The current version of the port
+        new: Whether the port being updated is new or not
 
     Returns:
         str: The version number following checks
 
     """
+    # If it's a new port, essentially ignore version checks
+    # Returns the current version from the portfile
+    if new:
+        return current
+
     # Determines new version number if none manually specified
     if not stated:
         # Take the last word of port livecheck, and then remove the bracket

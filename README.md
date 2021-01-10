@@ -170,8 +170,6 @@ e.g. `seaport pr gping ~/GitHub/`
 
 This flag is used if sending a PR for a new portfile from the user's [local portfile repo](https://guide.macports.org/chunked/development.local-repositories.html).
 
-To bypass the version number checks, it is recommended to set a different version number within the file. This is corrected automatically by seaport.
-
 ### 🚀 Use of sudo
 
 Sudo is only required if `--test`, `--lint` or `--install` are specified, and it will be asked for during runtime. This is since the local portfile repo needs to be modified to be able to run the relevant commands.

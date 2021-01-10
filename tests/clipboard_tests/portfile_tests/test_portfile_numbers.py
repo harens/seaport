@@ -99,6 +99,7 @@ def test_new_version(fake_process, session_mocker: MockFixture, capfd) -> None:
         stdout=[
             "example-port seems to have been updated (port version: 2.0, new version: 2.1)\n"
         ],
+        occurrences=2,
     )
 
     assert new_version("example-port", "", "2.0") == "2.1"
@@ -113,3 +114,11 @@ def test_new_version(fake_process, session_mocker: MockFixture, capfd) -> None:
     session_mocker.patch("click.confirm", return_value=True)
 
     assert new_version("example-port", "1.2-devel", "1.1") == "1.2-devel"
+
+    # If it's a new port (livecheck)
+
+    assert new_version("example-port", "", "2.1", True) == "2.1"
+
+    # If it's a new port (set by --bump)
+
+    assert new_version("example-port", "2.1", "2.1", True) == "2.1"

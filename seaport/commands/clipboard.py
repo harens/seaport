@@ -67,7 +67,7 @@ def clip(
     lint: bool,
     install: bool,
     location: Optional[str] = None,
-    new: Optional[bool] = None,
+    new: bool = False,
 ) -> None:
     """Bumps the version number and checksum of NAME, and copies the result to your clipboard."""
     # Tasks that require sudo
@@ -80,7 +80,7 @@ def clip(
     ).split(" ")[1]
 
     # Determine new version
-    bump = new_version(name, bump, current_version)
+    bump = new_version(name, bump, current_version, new)
 
     click.secho(f"👍 New version is {bump}", fg="green")
 
