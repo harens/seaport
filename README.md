@@ -2,7 +2,8 @@
 
 *A more mighty `port bump` for MacPorts!*
 
-| Test Status | [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/harens/seaport/Tests?logo=github&style=flat-square)](https://github.com/harens/seaport/actions?query=workflow%3ATests) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/harens/seaport/ShellCheck?label=ShellCheck&logo=github%20actions&logoColor=white&style=flat-square)](https://github.com/harens/seaport/actions?query=workflow%3AShellCheck) [![Codecov](https://img.shields.io/codecov/c/github/harens/seaport?logo=codecov&style=flat-square)](https://codecov.io/gh/harens/seaport)  |
+| Test Status | [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/harens/seaport/Tests?logo=github&style=flat-square)](https://github.com/harens/seaport/actions?query=workflow%3ATests) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/harens/seaport/ShellCheck?label=ShellCheck&logo=github%20actions&logoColor=white&style=flat-square)](https://github.com/harens/seaport/actions?query=workflow%3AShellCheck) [![Codecov](https://img.shields.io/codecov/c/github/harens/seaport?logo=codecov&style=flat-square)](https://codecov.io/gh/harens/seaport) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fharens%2Fseaport.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fharens%2Fseaport?ref=badge_shield)
+ |
 |:--|:--|
 | __Version Info__ | [![PyPI](https://img.shields.io/pypi/v/seaport?logo=pypi&logoColor=white&style=flat-square)](https://pypi.org/project/seaport/) [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/harens/seaport?logo=github&style=flat-square)](https://github.com/harens/seaport/releases) [![PyPI - Downloads](https://img.shields.io/pypi/dm/seaport?logo=python&logoColor=white&style=flat-square)](https://pypi.org/project/seaport/) |
 | __Code Analysis__ |[![LGTM Grade](https://img.shields.io/lgtm/grade/python/github/harens/seaport?logo=lgtm&style=flat-square)](https://lgtm.com/projects/g/harens/seaport/) [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/harens/seaport?logo=code%20climate&style=flat-square)](https://codeclimate.com/github/harens/seaport) [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/harens/seaport?logo=codefactor&style=flat-square)](https://www.codefactor.io/repository/github/harens/seaport) [![Codacy grade](https://img.shields.io/codacy/grade/8539131738c3433f8057e65aab21de03?logo=codacy&style=flat-square)](https://app.codacy.com/gh/harens/seaport/dashboard?branch=master)|
@@ -192,3 +193,7 @@ As well as this, feel free to open an issue with any new suggestions or bug repo
 This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the MacPorts Project, or any of its subsidiaries or its affiliates. The official MacPorts Project website can be found at <https://www.macports.org>.
 
 The name MacPorts as well as related names, marks, emblems and images are registered trademarks of their respective owners.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fharens%2Fseaport.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fharens%2Fseaport?ref=badge_large)
