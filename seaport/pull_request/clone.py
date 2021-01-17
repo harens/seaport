@@ -34,6 +34,8 @@ import os
 import subprocess
 from typing import Tuple
 
+import click
+
 from seaport.clipboard.checks import user_path
 from seaport.clipboard.format import format_subprocess
 
@@ -73,6 +75,7 @@ def pr_variables() -> Tuple[str, str]:
         ).replace("\nBuild version", "")
     except subprocess.CalledProcessError:
         # If Xcode isn't installed
+        click.secho("⏩ Using Command Line Tools instead", fg="cyan")
         xcode_version = format_subprocess([f"{user_path()}/xcode-select", "--version"])
 
     return mac_version, xcode_version

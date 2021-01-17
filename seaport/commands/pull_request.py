@@ -37,7 +37,6 @@ from typing import Any
 import click
 
 from seaport.clipboard.checks import user_path
-from seaport.clipboard.format import format_subprocess
 from seaport.commands.autocomplete.autocomplete import get_names
 from seaport.commands.clipboard import clip
 from seaport.pull_request.clone import pr_variables, sync_fork
