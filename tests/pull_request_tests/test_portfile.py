@@ -35,9 +35,13 @@ from seaport.pull_request.portfile import determine_category, new_contents
 
 
 def test_new_contents(fake_process, session_mocker: MockFixture) -> None:
+
+    # Capital P since PortGroup is always there
+    portfile_contents = "Example Portfile contents"
+
     # If the new version cannot be found
     fake_process.register_subprocess(
-        ["pbpaste"], stdout=["Example portfile contents"], occurrences=2
+        ["pbpaste"], stdout=[portfile_contents], occurrences=2
     )
 
     session_mocker.patch("os.getenv", return_value=None)
@@ -48,7 +52,7 @@ def test_new_contents(fake_process, session_mocker: MockFixture) -> None:
     # If everything works
     session_mocker.patch("os.getenv", return_value="v1.2")
 
-    assert new_contents() == ("Example portfile contents\n", "v1.2")
+    assert new_contents() == (f"{portfile_contents}\n", "v1.2")
 
     # If the portfile contents can't be found
 

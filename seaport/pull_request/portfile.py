@@ -50,7 +50,7 @@ def new_contents() -> Tuple[str, str]:
     # Newline added since clipboard removes it
     contents = format_subprocess(["pbpaste"]) + "\n"
 
-    if "port" not in contents:
+    if "port" not in contents.lower():
         click.secho("Cannot retrieve portfile contents from clipboard", fg="red")
         sys.exit(1)
 

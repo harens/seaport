@@ -41,6 +41,7 @@ import click
 
 from seaport.clipboard.checks import user_path
 from seaport.clipboard.format import format_subprocess
+from seaport.clipboard.portfile.portfile_numbers import undo_revision
 
 
 def new_checksums(website: str) -> Tuple[str, str, str]:
@@ -130,3 +131,31 @@ def current_checksums(
     if not subport:
         return new_website, size, sha256, rmd160, ""
     return new_website, size, sha256, rmd160, subport
+
+
+def replace_checksums(
+    file_contents: str,
+    # sha, rmd, size
+    old_sums: Tuple[str, str, str, str],
+    new_sums: Tuple[str, str, str, str],
+) -> str:
+    """Replaces the old checksums with the new ones.
+
+    Args:
+        file_contents: The old contents of the file
+        old_sums: The old checksums that are in file_contents
+        new_sums: The new checksums that will replace the old ones
+        versions: A list representing the old version and the new version
+
+    Returns:
+        A string representing the portfile contents with the new checksums
+    """
+    # Bump revision numbers to 0
+    new_contents = undo_revision(file_contents)
+
+    # Replace first instances only
+    # Iterate over Checksums and version number
+    for i in range(4):
+        new_contents = new_contents.replace(old_sums[i], new_sums[i], 1)
+
+    return new_contents

@@ -38,13 +38,17 @@ from typing import Optional
 
 import click
 
+from seaport.autocomplete.autocomplete import get_names
 from seaport.clipboard.additional import perform_install, perform_lint, perform_test
 from seaport.clipboard.checks import preliminary_checks, user_path
 from seaport.clipboard.format import format_subprocess
-from seaport.clipboard.portfile.checksums import current_checksums, new_checksums
-from seaport.clipboard.portfile.portfile_numbers import new_version, undo_revision
+from seaport.clipboard.portfile.checksums import (
+    current_checksums,
+    new_checksums,
+    replace_checksums,
+)
+from seaport.clipboard.portfile.portfile_numbers import new_version
 from seaport.clipboard.user import clean, user_clipboard
-from seaport.commands.autocomplete.autocomplete import get_names
 
 
 @click.command()
@@ -113,14 +117,11 @@ def clip(
         # Backup of the original contents
         original = file.read()
 
-    # Bump revision numbers to 0
-    new_contents = undo_revision(original)
-
-    # Replace first instances only
-    new_contents = new_contents.replace(current_version, bump, 1)
-    new_contents = new_contents.replace(old_sha256, new_sha256, 1)
-    new_contents = new_contents.replace(old_rmd160, new_rmd160, 1)
-    new_contents = new_contents.replace(old_size, new_size, 1)
+    new_contents = replace_checksums(
+        original,
+        (old_sha256, old_rmd160, old_size, current_version),
+        (new_sha256, new_rmd160, new_size, bump),
+    )
 
     if sudo:
 

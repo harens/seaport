@@ -34,8 +34,8 @@
 import click
 
 from seaport import __version__
-from seaport.commands.clipboard import clip
-from seaport.commands.pull_request import pr
+from seaport.clipboard.clipboard import clip
+from seaport.pull_request.pull_request import pr
 
 
 @click.group()

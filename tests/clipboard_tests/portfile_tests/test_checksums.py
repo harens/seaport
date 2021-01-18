@@ -33,7 +33,7 @@
 import pytest
 from pytest_mock import MockFixture
 
-from seaport.clipboard.portfile.checksums import current_checksums
+from seaport.clipboard.portfile.checksums import current_checksums, replace_checksums
 
 
 def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
@@ -101,4 +101,28 @@ def test_current_checksums(fake_process, session_mocker: MockFixture) -> None:
     assert current_checksums("example", "2.12.1", "2.12.2") == (
         *distfiles,
         "commitizen",
+    )
+
+
+def test_replace_checksums(session_mocker: MockFixture) -> None:
+    session_mocker.patch(
+        "seaport.clipboard.portfile.checksums.undo_revision",
+        return_value="github.setup   orf gping oldversion v \
+                        checksums   ${distname}${extract.suffix} \
+                        rmd160  oldrmd \
+                        sha256  oldsha \
+                        size    oldsize",
+    )
+
+    assert (
+        replace_checksums(
+            "example contents",
+            ("oldrmd", "oldsha", "oldsize", "oldversion"),
+            ("newrmd", "newsha", "newsize", "newversion"),
+        )
+        == "github.setup   orf gping newversion v \
+                        checksums   ${distname}${extract.suffix} \
+                        rmd160  newrmd \
+                        sha256  newsha \
+                        size    newsize"
     )
