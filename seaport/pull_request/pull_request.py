@@ -131,7 +131,12 @@ def pr(
 
     mac_version, xcode_version = pr_variables()
 
-    if click.confirm("Does everything look good before sending PR?"):
+    # Skip prompt if in GitHub Actions
+    # Also different commit message
+    github_actions = os.getenv("GITHUB_ACTIONS") == "true"
+
+    # See https://docs.github.com/en/actions/reference/environment-variables
+    if github_actions or click.confirm("Does everything look good before sending PR?"):
         subprocess.run(
             [
                 f"{user_path()}/git",
@@ -152,7 +157,7 @@ def pr(
                 "--body",
                 f"""#### Description
 
-Created with [seaport](https://github.com/harens/seaport)
+{"Created with [action-macports-bump](https://github.com/harens/action-macports-bump)" if github_actions else "Created with [seaport](https://github.com/harens/seaport)"}
 
 ###### Type(s)
 
