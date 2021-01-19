@@ -36,7 +36,7 @@ from typing import Any
 
 import click
 
-from seaport.autocomplete.autocomplete import get_names
+from seaport.click_functions import main_cmd
 from seaport.clipboard.checks import user_path
 from seaport.clipboard.clipboard import clip
 from seaport.pull_request.clone import pr_variables, sync_fork
@@ -44,24 +44,14 @@ from seaport.pull_request.portfile import determine_category, new_contents
 
 
 @click.command()
-@click.argument("name", type=str, autocompletion=get_names)
+@main_cmd
 @click.argument(
     "location",
     type=click.Path(exists=True, dir_okay=True, writable=True),
 )
-# Some versions could be v1.2.0-post for example
-@click.option("--bump", help="The new version number", type=str)
-@click.option("--test/--no-test", default=False, help="Runs port test")
-@click.option("--lint/--no-lint", default=False, help="Runs port lint --nitpick")
-@click.option(
-    "--install/--no-install",
-    default=False,
-    help="Installs the port and allows testing of basic functionality",
-)
 @click.option("--new", is_flag=True, help="Send a PR from the local portfile repo")
 @click.pass_context
 def pr(
-    ctx: Any,
     name: str,
     bump: str,  # bump is used as part of ctx.forward
     location: str,
@@ -69,6 +59,7 @@ def pr(
     lint: bool,
     install: bool,
     new: bool,
+    ctx: Any,
 ) -> None:
     """Bumps the version number and checksum of NAME, and sends a PR to update it."""
     # Invoke the clipboard cmd

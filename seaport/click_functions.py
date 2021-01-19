@@ -28,9 +28,11 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Shell completion for port names."""
+"""Functions related to the click commands."""
 
-from typing import Any, List, Tuple, Union
+from typing import Any, List, Tuple, TypeVar, Union
+
+import click
 
 from seaport.clipboard.checks import user_path
 from seaport.clipboard.format import format_subprocess
@@ -62,3 +64,28 @@ def get_names(
     # Converts to raw string literal to split by backslash
     # See https://stackoverflow.com/a/25047988/10763533
     return [(repr(k).split("\\")[0][1:], repr(k).split("\\")[3][1:-1]) for k in results]
+
+
+FunctionName = TypeVar("FunctionName")
+
+
+def main_cmd(function: FunctionName) -> FunctionName:
+    """Helps to reduce the number of duplicate decorators.
+
+    See https://stackoverflow.com/a/50061489/10763533
+    """
+    function = click.argument("name", type=str, autocompletion=get_names)(function)
+    # Some versions could be v1.2.0-post for example
+    function = click.option("--bump", help="The new version number", type=str)(function)
+    function = click.option("--test/--no-test", default=False, help="Runs port test")(
+        function
+    )
+    function = click.option(
+        "--install/--no-install",
+        default=False,
+        help="Installs the port and allows testing of basic functionality",
+    )(function)
+    function = click.option(
+        "--lint/--no-lint", default=False, help="Runs port lint --nitpick"
+    )(function)
+    return function

@@ -38,7 +38,7 @@ from typing import Optional
 
 import click
 
-from seaport.autocomplete.autocomplete import get_names
+from seaport.click_functions import main_cmd
 from seaport.clipboard.additional import perform_install, perform_lint, perform_test
 from seaport.clipboard.checks import preliminary_checks, user_path
 from seaport.clipboard.format import format_subprocess
@@ -52,16 +52,7 @@ from seaport.clipboard.user import clean, user_clipboard
 
 
 @click.command()
-@click.argument("name", type=str, autocompletion=get_names)
-# Some versions could be v1.2.0-post for example
-@click.option("--bump", help="The new version number", type=str)
-@click.option("--test/--no-test", default=False, help="Runs port test")
-@click.option("--lint/--no-lint", default=False, help="Runs port lint --nitpick")
-@click.option(
-    "--install/--no-install",
-    default=False,
-    help="Installs the port and allows testing of basic functionality",
-)
+@main_cmd
 # Some parameters are not used
 # They are only here since the pr function sends them
 def clip(
