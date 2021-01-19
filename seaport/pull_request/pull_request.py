@@ -52,6 +52,7 @@ from seaport.pull_request.portfile import determine_category, new_contents
 @click.option("--new", is_flag=True, help="Send a PR from the local portfile repo")
 @click.pass_context
 def pr(
+    ctx: Any,  # This has to be the first parameter
     name: str,
     bump: str,  # bump is used as part of ctx.forward
     location: str,
@@ -59,7 +60,6 @@ def pr(
     lint: bool,
     install: bool,
     new: bool,
-    ctx: Any,
 ) -> None:
     """Bumps the version number and checksum of NAME, and sends a PR to update it."""
     # Invoke the clipboard cmd
