@@ -17,3 +17,12 @@ def test_help() -> None:
     result = runner.invoke(seaport, ["clip", "--help"])
     assert result.exit_code == 0
     assert "Show this message and exit" in result.output
+
+
+def test_clip() -> None:
+    # This is slow...and requires all the deps to be installed
+    runner = CliRunner()
+    result = runner.invoke(
+        seaport, ["clip", "py-rich", "--bump", "9.8.0", "--lint", "--test", "--install"]
+    )
+    assert result.exit_code == 0
