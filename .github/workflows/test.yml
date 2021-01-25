@@ -19,8 +19,6 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Set up MacPorts
       uses: GiovanniBussi/macports-ci-action@master
-      with:
-        ports: gh
     - name: Install dependencies
       run: |
         python -m pip install -U pip poetry
