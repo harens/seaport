@@ -102,7 +102,8 @@ def current_checksums(
 
     # There's no output if it's the "skeleton" head port
     try:
-        old_website = [s for s in distfiles if "http" in s][0]
+        # Cannot be http since some ports have http in the name
+        old_website = [s for s in distfiles if "http://" in s or "https://" in s][0]
     except IndexError:
         # Tries to determine the subport
         # This is since the distfiles cmd only works for subports

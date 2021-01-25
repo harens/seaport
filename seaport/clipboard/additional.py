@@ -131,7 +131,7 @@ def perform_install(name: str) -> None:
         fg="cyan",
     )
     click.pause("Press any key to continue ")
-    click.secho(f"🗑 Uninstalling {name}", fg="cyan")
+    click.secho(f"🗑  Uninstalling {name}", fg="cyan")
     subprocess.run(
         [f"{user_path()}/sudo", f"{user_path(True)}/port", "uninstall", name],
         check=True,
