@@ -33,6 +33,4 @@
 Find out more at https://github.com/harens/seaport
 """
 
-import importlib.metadata as importlib_metadata
-
-__version__ = importlib_metadata.version(__name__)
+__version__ = "0.4.0"

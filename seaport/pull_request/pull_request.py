@@ -49,7 +49,11 @@ from seaport.pull_request.portfile import determine_category, new_contents
     "location",
     type=click.Path(exists=True, dir_okay=True, writable=True),
 )
-@click.option("--new", is_flag=True, help="Send a PR from the local portfile repo")
+@click.option(
+    "--new",
+    is_flag=True,
+    help="Send a PR for a new portfile from the local portfile repo.",
+)
 @click.pass_context
 def pr(
     ctx: Any,  # This has to be the first parameter
@@ -61,7 +65,14 @@ def pr(
     install: bool,
     new: bool,
 ) -> None:
-    """Bumps the version number and checksum of NAME, and sends a PR to update it."""
+    """Bumps the version number and checksum of NAME.
+
+    It then sends a PR to update it, cloning the macports repo to LOCATION if it doesn't exist already.
+
+    The flags in clip are also valid for this subcommand.
+
+    The pull request template is automatically filled in depending on what flags the command was run with (e.g. if --lint was used, this would be noted in the verification section of the template).
+    """
     # Invoke the clipboard cmd
     # That's the command that determines the new contents
     ctx.forward(clip)

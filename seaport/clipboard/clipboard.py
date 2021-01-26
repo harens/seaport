@@ -64,7 +64,10 @@ def clip(
     location: Optional[str] = None,
     new: bool = False,
 ) -> None:
-    """Bumps the version number and checksum of NAME, and copies the result to your clipboard."""
+    """Bumps the version number and checksum of NAME.
+
+    It then copies the result to your clipboard.
+    """
     # Tasks that require sudo
     sudo = test or lint or install
 
