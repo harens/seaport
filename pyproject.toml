@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "seaport"
-version = "0.4.0"
+version = "0.4.1"
 description = "A more mighty port bump"
 authors = ["harens <harensdeveloper@gmail.com>"]
 maintainers = ["harens <harensdeveloper@gmail.com>"]
@@ -43,6 +43,7 @@ Sphinx = "^3.4.3"
 sphinx-autobuild = "^2020.9.1"
 sphinx-click = "^2.5.0"
 sphinxcontrib-programoutput = "^0.16"
+towncrier = "^19.2.0"
 
 [tool.poetry.scripts]
 seaport = "seaport.init:seaport"
@@ -67,6 +68,14 @@ max-line-length = "88"
 
 [tool.black]
 target-version = ["py38"]
+
+[tool.towncrier]
+# The name of your Python package
+package = "seaport"
+# Where you want your news files to come out. This can be .rst
+# or .md, towncrier's default template works with both.
+filename = "./seaport/docs/changelog.rst"
+issue_format = "`#{issue} <https://github.com/harens/seaport/issues/{issue}>`_"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

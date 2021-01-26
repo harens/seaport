@@ -89,7 +89,7 @@ The name MacPorts as well as related names, marks, emblems and images are regist
 .. |ci-badge| image:: https://img.shields.io/github/workflow/status/harens/seaport/Tests?logo=github&style=flat-square
    :target: https://github.com/harens/seaport/actions
    :alt: GitHub Workflow Status
-.. |rtd-badge| image:: https://img.shields.io/readthedocs/seaport?style=flat-square
+.. |rtd-badge| image:: https://img.shields.io/readthedocs/seaport?logo=read%20the%20docs&style=flat-square
    :target: https://seaport.rtfd.io/
    :alt: Read the Docs
 .. |cov-badge| image:: https://img.shields.io/codecov/c/github/harens/seaport?logo=codecov&style=flat-square
