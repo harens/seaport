@@ -30,6 +30,8 @@
 
 # See https://alexmarandon.com/articles/python_mock_gotchas/
 
+import os
+
 import pytest
 from pytest_mock import MockFixture
 
@@ -126,8 +128,30 @@ def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "info", existent_port[0]],
         stdout=["some output"],
-        occurrences=2,
+        occurrences=3,
     )
+
+    # Only do these tests in GitHub Actions
+    # These test are brokent if the user has GH CLI already installed
+    github_actions = os.getenv("GITHUB_ACTIONS") == "true"
+
+    # Don't want to install GitHub CLI
+    session_mocker.patch("click.confirm", return_value=False)
+    if github_actions:
+        # No GH CLI Installed
+        with pytest.raises(SystemExit):
+            # Shouldn't matter whether port is existent or not
+            preliminary_checks(*existent_port)
+
+    # Does want to install GitHub CLI
+    session_mocker.patch("click.confirm", return_value=True)
+    fake_process.register_subprocess(
+        ["/opt/local/bin/sudo", "/opt/local/bin/port", "install", "gh"],
+        stdout=["gh installed"],
+    )
+    if github_actions:
+        # No GH CLI Installed
+        preliminary_checks(*existent_port)
 
     # Both port and gh pass
     session_mocker.patch("seaport.clipboard.checks.cmd_check", return_value=True)
@@ -139,6 +163,7 @@ def test_preliminary_checks(fake_process, session_mocker: MockFixture) -> None:
         preliminary_checks(*existent_port)
 
     # Port that doesn't exist
+    # port and gh tests pass
     session_mocker.patch("seaport.clipboard.checks.cmd_check", return_value=True)
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "info", nonexistent_port[0]], callback=callback_info

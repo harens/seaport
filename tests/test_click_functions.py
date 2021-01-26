@@ -14,6 +14,7 @@ def example(
     test: bool,
     lint: bool,
     install: bool,
+    write: bool,
     location: Optional[str] = None,
     new: bool = False,
 ) -> None:

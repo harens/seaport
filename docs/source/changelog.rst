@@ -1,6 +1,14 @@
 Changelog
 **********
 
+WIP
+====
+
+Features
+--------
+
+- Added a new :code:`--write` flag, which writes the updated portfile contents to the original file (similar to how port bump works) (`#20 <https://github.com/harens/seaport/issues/20>`_)
+
 Seaport 0.4.1 (2021-01-26)
 ==========================
 

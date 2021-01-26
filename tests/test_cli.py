@@ -1,3 +1,5 @@
+import os
+
 from click.testing import CliRunner
 from pytest_mock import MockFixture
 
@@ -77,3 +79,16 @@ def test_lint_fail(session_mocker: MockFixture) -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "gping", "--bump", "1.1.0", "--lint"])
     assert result.exit_code == 1
+
+
+def test_write() -> None:
+    # Only do these tests in GitHub Actions
+    # These tests would overwrite the user's local portfiles
+    github_actions = os.getenv("GITHUB_ACTIONS") == "true"
+
+    if github_actions:
+        runner = CliRunner()
+        result = runner.invoke(
+            seaport, ["clip", "py-rich", "--bump", "9.8.0", "--write"]
+        )
+        assert result.exit_code == 0

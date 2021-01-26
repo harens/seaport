@@ -61,6 +61,7 @@ def clip(
     test: bool,
     lint: bool,
     install: bool,
+    write: bool,
     location: Optional[str] = None,
     new: bool = False,
 ) -> None:
@@ -69,7 +70,7 @@ def clip(
     It then copies the result to your clipboard.
     """
     # Tasks that require sudo
-    sudo = test or lint or install
+    sudo = test or lint or install or write
 
     preliminary_checks(name, location)
 
@@ -125,10 +126,18 @@ def clip(
         tmp_version.seek(0)
 
         click.secho("💾 Editing local portfile repo, sudo required", fg="cyan")
-        click.echo("Changes will be reverted after completion")
+        if not write:
+            # Changes only reverted if the user doesn't use the --write flag
+            click.echo("Changes will be reverted after completion")
         subprocess.run(
             [f"{user_path()}/sudo", "cp", tmp_version.name, file_location], check=True
         )
+
+        if write:
+            click.secho(
+                "📝 The portfile's contents have been updated",
+                fg="cyan",
+            )
 
         if test:
             # If the tests fail
@@ -144,7 +153,7 @@ def clip(
         if install:
             perform_install(name)
 
-        clean(original, file_location, name)
+        clean(original, file_location, name, write)
 
     # Clipboard functions at the very end
     # to reduce the chance of user's clipboard being changed

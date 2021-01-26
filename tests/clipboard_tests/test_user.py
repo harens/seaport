@@ -51,6 +51,7 @@ def test_clean(fake_process, session_mocker: MockFixture, capfd) -> None:
     fake_process.register_subprocess(
         ["/some/path/sudo", "/some/path/port", "clean", "--all", "portname"],
         stdout=["Cleaned\n"],
+        occurrences=2,
     )
 
     clean("original contents", "somewhere", "portname")
@@ -58,6 +59,9 @@ def test_clean(fake_process, session_mocker: MockFixture, capfd) -> None:
 
     assert out == "🧽 Cleanup\n"
     assert not err
+
+    # If writing to local portfile (basically only do the port clean)
+    clean("original contents", "somewhere", "portname", True)
 
 
 def test_user_clipboard(fake_process, session_mocker: MockFixture) -> None:

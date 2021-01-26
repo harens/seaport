@@ -17,6 +17,7 @@ classifiers = [
 
 homepage = "https://github.com/harens/seaport"
 repository = "https://github.com/harens/seaport"
+documentation = "https://seaport.rtfd.io/"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/harens/seaport/issues"

@@ -92,4 +92,9 @@ def main_cmd(function: FunctionName) -> FunctionName:
     function = click.option(
         "--lint/--no-lint", default=False, help="Runs port lint --nitpick."
     )(function)
+    function = click.option(
+        "--write",
+        help="Writes the updated contents to the user's portfile, similar to the original port bump.",
+        is_flag=True,
+    )(function)
     return function

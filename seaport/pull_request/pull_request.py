@@ -59,6 +59,7 @@ def pr(
     ctx: Any,  # This has to be the first parameter
     name: str,
     bump: str,  # bump is used as part of ctx.forward
+    write: bool,  # Also used in ctx.forward
     location: str,
     test: bool,
     lint: bool,
