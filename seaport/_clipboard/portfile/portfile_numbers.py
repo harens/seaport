@@ -32,18 +32,41 @@
 
 import re
 import sys
+from typing import Optional
 
 import click
+from beartype import beartype
 
-from seaport.clipboard.checks import user_path
-from seaport.clipboard.format import format_subprocess
+from seaport.portfile import Port
 
 
+@beartype
 def undo_revision(text: str) -> str:
     """Make version numbers 0.
 
+    Note that this supports a single revision number or multiple revision numbers that are 0.
+    If there are multiple revision numbers, and one of them is not 0, it raises SystemExit 1
+
     Args:
         text: The text of the portfile
+
+    Examples:
+        >>> from seaport._clipboard.portfile.portfile_numbers import undo_revision
+        >>> undo_revision("No revision numbers here")
+        ⏪️ Changing revision numbers
+        No changes necessary
+        'No revision numbers here'
+        >>> try:
+        ...     undo_revision("revision 1  revision 1")
+        ... except SystemExit:
+        ...     pass
+        ⏪️ Changing revision numbers
+        Multiple revision numbers found. Unsure which to reduce to 0
+        >>> undo_revision("revision 1")
+        ⏪️ Changing revision numbers
+        Revision number changed
+        'revision 0'
+
 
     Returns:
         str: The text with version numbers decremented to 0
@@ -80,55 +103,55 @@ def undo_revision(text: str) -> str:
     return text.replace(original_revision, new_revision)
 
 
-def new_version(port: str, stated: str, current: str, new: bool = False) -> str:
+@beartype
+def new_version(port: Port, stated: Optional[str], new: bool = False) -> str:
     """Determines livecheck version, and sees whether already up-to-date.
 
     Args:
-        port: The name of the port
+        port: The port class
         stated: The user's new version via --bump
-        current: The current version of the port
-        new: Whether the port being updated is new or not
+        new: If the port is new or not
+
+    Examples:
+        >>> from seaport.portfile import Port
+        >>> from seaport._clipboard.portfile.portfile_numbers import new_version
+        >>> port = Port("gping")
+        >>> # If the port is a new one
+        >>> new_version(port, "1.2.0", True)
+        '1.2.0'
+        >>> # If the version has been stated
+        >>> new_version(port, "2.0")
+        '2.0'
 
     Returns:
         str: The version number following checks
 
     """
+    # TODO: This will need some serious refactoring at some point
     # If it's a new port, essentially ignore version checks
     # Returns the current version from the portfile
     if new:
-        return current
+        return port.current_version
 
     # Determines new version number if none manually specified
-    if not stated:
-        # Take the last word of port livecheck, and then remove the bracket
-        stated = format_subprocess(
-            [f"{user_path(True)}/port", "livecheck", port]
-        ).split(" ")[-1][:-1]
+    if stated is None:  # None used rather than "is not" to make mypy happy
+        stated = port.livecheck()
 
-        # version == "" if livecheck doesn't output anything
-        # current_version used in output since version = ""
-        if stated == "":
-            click.secho(
-                f"{port}'s either already up-to-date ({current}) or there's no livecheck available",
-                fg="red",
-            )
-            click.secho("Please manually specify the version using --bump", fg="red")
-            # If the subport name is used, it tries to look for it as a directory
-            # in macports-ports
-            click.secho("If sending a PR, do not use the subport name", fg="red")
-            sys.exit(1)
-
-    if stated == current:
-        click.secho(f"{port} is already up-to-date ({current})", fg="red")
+    if stated == port.current_version:
+        click.secho(
+            f"{port.name} is already up-to-date ({port.current_version}) or there's no livecheck available",
+            fg="red",
+        )
+        click.secho("Please manually specify the version using --bump", fg="red")
         sys.exit(1)
 
     # Credit to @herbygillot
     # See https://github.com/macports/macports-ports/pull/9589#issuecomment-753309298
     # alpha/beta/rc version detected on a port that isn't -devel
     devel_versions = ["alpha", "beta", "rc", "devel", "dev", "unstable"]
-    if "-devel" not in port and any(item in stated for item in devel_versions):
+    if "-devel" not in port.name and any(item in stated for item in devel_versions):
         if not click.confirm(
-            f"{port} is not a devel port, but the new version ({stated}) is a devel build. Do you wish to continue?"
+            f"{port.name} is not a devel port, but the new version ({stated}) is a devel build. Do you wish to continue?"
         ):
             click.echo("You can specify a different version using --bump")
             sys.exit(1)

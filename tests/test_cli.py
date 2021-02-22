@@ -4,7 +4,8 @@ from click.testing import CliRunner
 from pytest_mock import MockFixture
 
 from seaport import __version__
-from seaport.init import seaport
+from seaport._clipboard.format import format_subprocess
+from seaport._init import seaport
 
 
 def test_version() -> None:
@@ -33,46 +34,84 @@ def test_all() -> None:
     result = runner.invoke(
         seaport, ["clip", "py-rich", "--bump", "9.8.0", "--lint", "--test", "--install"]
     )
+    assert (
+        "📋 The contents of the portfile have been copied to your clipboard!"
+        in result.output
+    )
     assert result.exit_code == 0
+    assert "9.8.0" in format_subprocess(["pbpaste"])
+
+
+def test_url() -> None:
+    runner = CliRunner()
+    result = runner.invoke(
+        seaport,
+        [
+            "clip",
+            "py-rich",
+            "--bump",
+            "9.7.0",
+            "--url",
+            "https://files.pythonhosted.org/packages/source/r/rich/rich-9.8.0.tar.gz",
+        ],
+    )
+    assert (
+        "📋 The contents of the portfile have been copied to your clipboard!"
+        in result.output
+    )
+    assert result.exit_code == 0
+    assert "9.7.0" in format_subprocess(["pbpaste"])
 
 
 def test_no_sudo() -> None:
     runner = CliRunner()
-    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0"])
+    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.7.0"])
+    assert (
+        "📋 The contents of the portfile have been copied to your clipboard!"
+        in result.output
+    )
     assert result.exit_code == 0
+    assert "9.7.0" in format_subprocess(["pbpaste"])
 
 
 def test_test_only() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0", "--test"])
+    assert (
+        "📋 The contents of the portfile have been copied to your clipboard!"
+        in result.output
+    )
     assert result.exit_code == 0
+    assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
 def test_lint_only() -> None:
     runner = CliRunner()
-    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0", "--lint"])
+    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.7.0", "--lint"])
+    assert (
+        "📋 The contents of the portfile have been copied to your clipboard!"
+        in result.output
+    )
     assert result.exit_code == 0
+    assert "9.7.0" in format_subprocess(["pbpaste"])
 
 
 def test_install_only() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0", "--install"])
+    assert (
+        "📋 The contents of the portfile have been copied to your clipboard!"
+        in result.output
+    )
     assert result.exit_code == 0
-
-
-def test_test_fail() -> None:
-    # gping has no tests, so this should fail
-    runner = CliRunner()
-    result = runner.invoke(seaport, ["clip", "gping", "--bump", "1.1.0", "--test"])
-    assert result.exit_code == 1
-    assert "Tests failed\n" in result.output
+    assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
 def test_lint_fail(session_mocker: MockFixture) -> None:
 
     # If linting fails
     session_mocker.patch(
-        "seaport.clipboard.clipboard.perform_lint",
+        "seaport._clipboard.clipboard.perform_lint",
         return_value=False,
     )
 
@@ -92,3 +131,8 @@ def test_write() -> None:
             seaport, ["clip", "py-rich", "--bump", "9.8.0", "--write"]
         )
         assert result.exit_code == 0
+        assert "9.8.0" in format_subprocess(["pbpaste"])
+        assert (
+            "📋 The contents of the portfile have been copied to your clipboard!"
+            in result.output
+        )

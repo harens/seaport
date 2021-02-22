@@ -30,18 +30,26 @@
 
 """Functions related to the click commands."""
 
-from typing import Any, List, Tuple, TypeVar, Union
+from typing import Any, Callable, List, Tuple, TypeVar, Union
 
 import click
+from beartype import beartype
 
-from seaport.clipboard.checks import user_path
-from seaport.clipboard.format import format_subprocess
+from seaport._clipboard.checks import user_path
+from seaport._clipboard.format import format_subprocess
 
 
+@beartype
 def get_names(
     ctx: Any, args: List[str], incomplete: str
 ) -> List[Union[str, Tuple[str, str]]]:
     """Shell autocompletion for port names.
+
+    Examples:
+        >>> from seaport._click_functions import get_names
+        >>> # User has typed in py-base9
+        >>> get_names("example_ctx", ["example_args"], "py-base9")
+        [('py-base91', 'A Python implementation of Base91')]
 
     Args:
         ctx: The current command context
@@ -66,19 +74,30 @@ def get_names(
     return [(repr(k).split("\\")[0][1:], repr(k).split("\\")[3][1:-1]) for k in results]
 
 
-FunctionName = TypeVar("FunctionName")
+F = TypeVar("F", bound=Callable[..., None])
 
 
-def main_cmd(function: FunctionName) -> FunctionName:
+@beartype
+def main_cmd(function: F) -> F:
     """Helps to reduce the number of duplicate decorators.
 
     See https://stackoverflow.com/a/50061489/10763533
     """
     function = click.argument("name", type=str, autocompletion=get_names)(function)
+    function = click.option(
+        "--write",
+        help="Writes the updated contents to the user's portfile, similar to the original port bump.",
+        is_flag=True,
+    )(function)
     # Some versions could be v1.2.0-post for example
     function = click.option(
         "--bump",
         help="Manually set the version number to bump it to. By default, it uses the value outputted from the livecheck. This flag can be useful if there's no livecheck available or if you want to override it.",
+        type=str,
+    )(function)
+    function = click.option(
+        "--url",
+        help="Manually set the url of where to download the new file",
         type=str,
     )(function)
     function = click.option("--test/--no-test", default=False, help="Runs port test.")(
@@ -91,10 +110,5 @@ def main_cmd(function: FunctionName) -> FunctionName:
     )(function)
     function = click.option(
         "--lint/--no-lint", default=False, help="Runs port lint --nitpick."
-    )(function)
-    function = click.option(
-        "--write",
-        help="Writes the updated contents to the user's portfile, similar to the original port bump.",
-        is_flag=True,
     )(function)
     return function

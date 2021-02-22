@@ -3,7 +3,7 @@ from typing import Optional
 import click
 from click.testing import CliRunner
 
-from seaport.click_functions import main_cmd
+from seaport._click_functions import main_cmd
 
 
 @click.command()
@@ -15,6 +15,7 @@ def example(
     lint: bool,
     install: bool,
     write: bool,
+    url: str,
     location: Optional[str] = None,
     new: bool = False,
 ) -> None:

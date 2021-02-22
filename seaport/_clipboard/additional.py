@@ -36,11 +36,13 @@ e.g. Linting
 import subprocess
 
 import click
+from beartype import beartype
 
-from seaport.clipboard.checks import user_path
-from seaport.clipboard.format import format_subprocess
+from seaport._clipboard.checks import user_path
+from seaport._clipboard.format import format_subprocess
 
 
+@beartype
 def perform_lint(name: str) -> bool:
     """Lints the port and checks output for errors.
 
@@ -73,6 +75,7 @@ def perform_lint(name: str) -> bool:
     return True
 
 
+@beartype
 def perform_test(name: str, subport: str) -> bool:
     """Tests the port and checks output for errors.
 
@@ -109,6 +112,7 @@ def perform_test(name: str, subport: str) -> bool:
     return True
 
 
+@beartype
 def perform_install(name: str) -> None:
     """Runs sudo port -vst install NAME.
 

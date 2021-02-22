@@ -28,19 +28,22 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Functions for modifying the user's system, such as the clipboard."""
+"""Functions for modifying the user's system, such as the _clipboard."""
 
 import subprocess
 import tempfile
 
 import click
+from beartype import beartype
+from beartype.cave import NoneType
 
-from seaport.clipboard.checks import user_path
+from seaport._clipboard.checks import user_path
 
 
+@beartype
 def clean(
     original_text: str, location: str, port_name: str, write: bool = False
-) -> None:
+) -> NoneType:
     """Returns the user's local portfile repo to the original state.
 
     Args:
@@ -69,8 +72,17 @@ def clean(
     )
 
 
-def user_clipboard(new_contents: str) -> None:
-    """Copies the new contents of the portfile to the clipboard.
+@beartype
+def user_clipboard(new_contents: str) -> NoneType:
+    """Copies the new contents of the portfile to the _clipboard.
+
+    Examples:
+        >>> from seaport._clipboard.user import user_clipboard
+        >>> from seaport._clipboard.format import format_subprocess
+        >>> user_clipboard("hello there")
+        📋 The contents of the portfile have been copied to your clipboard!
+        >>> format_subprocess(["pbpaste"])
+        'hello there'
 
     Args:
         new_contents: What to copy the clipboard

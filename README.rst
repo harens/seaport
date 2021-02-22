@@ -3,7 +3,7 @@
 
 |ci-badge| |rtd-badge| |cov-badge|
 
-A more mighty `port bump` for `MacPorts <https://www.macports.org>`_!
+The modern `MacPorts <https://www.macports.org>`_ portfile updater.
 
 .. code-block::
 
@@ -22,43 +22,85 @@ A more mighty `port bump` for `MacPorts <https://www.macports.org>`_!
     No changes necessary
     📋 The contents of the portfile have been copied to your clipboard!
 
-✨ Features
------------
+⚡️ Features
+--------------
+
+..
+   TODO: When a new release is published, update the Python API url to stable
 
 * **Automatically determines new version numbers and checksums** for MacPorts portfiles.
 * **Copies the changes to your clipboard 📋**, and optionally **sends a PR to update them**.
 * Contains **additional checking functionality**, such as running tests, linting and installing the updated program.
+* `Python API <https://seaport.readthedocs.io/en/latest/reference.html>`_ for convenient access to portfile information. Easily import as a Python module for your project.
 * `PEP 561 compatible <https://www.python.org/dev/peps/pep-0561>`_, with built in support for type checking.
 
-To find out more, please read the `Documentation <http://seaport.rtfd.io/>`_.
+To find out more, please read the `Documentation <https://seaport.rtfd.io/>`_.
+
+🤔 How to use seaport
+----------------------
+
+For simple ports with straightforward updates, use :code:`seaport pr example_port`.
+This sends a PR with the updated portfile and automatically fills in the PR template for you.
+
+For ports that require some manual changes, use :code:`seaport clip example_port`.
+This updates the version number and checksums so you don't have to. 😎
+
+Be sure to check out the `flags overview <https://seaport.readthedocs.io/en/stable/overview.html>`_ for information on additional features.
+
+🔥 seaport vs port bump
+-------------------------
+
+.. list-table::
+   :widths: 25 25 25
+   :header-rows: 1
+
+   * - Features
+     - 🌊 seaport
+     - 🛼 port bump
+   * - 🔒 Updates checksums
+     - ✅
+     - ✅
+   * - 📚 Updates the revision number
+     - ✅
+     - ✅
+   * - 📝 Can write changes to the original file
+     - ✅
+     - ✅
+   * - ⏮ Can update portfile to a specific version
+     - ✅
+     - ✅
+   * - 🔮 Updates the version number
+     - ✅
+     - ❌
+   * - 🚀 Can send a pull request (both for updated and new ports)
+     - ✅
+     - ❌
+   * - 🧪 Can lint/test/install the port to check if the update works
+     - ✅
+     - ❌
+   * - 📋 Copies changes to clipboard
+     - ✅
+     - ❌
+   * - 🌎 Can both manually and automatically set the url to download from
+     - ✅
+     - ❌
 
 Installation
 ------------
 
-Naturally, MacPorts needs to already be installed for the tool to function.
-
 Homebrew 🍺
 ***********
-
-For those with both Homebrew and MacPorts installed, you can run the following:
 
 .. code-block::
 
     brew install harens/tap/seaport
 
-Binary bottles are provided for x86_64_linux, catalina and big_sur.
-
-.. note::
-    ⚠️ You can install the development version by running the following:
-
-    .. code-block::
-
-        brew install harens/tap/seaport --HEAD
+Binary bottles are provided for x86_64 Linux, macOS Catalina and Big Sur.
 
 PyPi 🐍
 ********
 
-If you install seaport via `PyPi <https://pypi.org/project/seaport/>`_ and you want it to send PRs for you, please install `GitHub CLI <https://cli.github.com>`_.
+If you install seaport via `PyPi <https://pypi.org/project/seaport/>`_ and want it to send PRs for you, please install `GitHub CLI <https://cli.github.com>`_.
 
 .. code-block::
 

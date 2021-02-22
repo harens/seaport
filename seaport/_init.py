@@ -28,8 +28,28 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from seaport.clipboard.format import format_subprocess
+
+"""The main cli module (a facade for the other commands)."""
+
+import click
+
+from seaport import __version__
+from seaport._clipboard.clipboard import clip
+from seaport._pull_request.pull_request import pr
 
 
-def test_subprocess() -> None:
-    assert format_subprocess(["echo", "hello", "there"]) == "hello there"
+# This acts as the facade of the command line tool
+@click.group()
+@click.version_option(__version__)
+def seaport() -> None:
+    """The modern MacPorts portfile updater.
+
+    Bumps the version number and checksum of a port
+
+    For more information, please visit https://seaport.rtfd.io/
+    """
+    click.secho("🌊 Starting seaport...", fg="cyan")
+
+
+seaport.add_command(clip)
+seaport.add_command(pr)

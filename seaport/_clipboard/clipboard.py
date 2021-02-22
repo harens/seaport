@@ -37,34 +37,34 @@ import tempfile
 from typing import Optional
 
 import click
+from beartype import beartype
+from beartype.cave import NoneType
 
-from seaport.click_functions import main_cmd
-from seaport.clipboard.additional import perform_install, perform_lint, perform_test
-from seaport.clipboard.checks import preliminary_checks, user_path
-from seaport.clipboard.format import format_subprocess
-from seaport.clipboard.portfile.checksums import (
-    current_checksums,
-    new_checksums,
-    replace_checksums,
-)
-from seaport.clipboard.portfile.portfile_numbers import new_version
-from seaport.clipboard.user import clean, user_clipboard
+from seaport._click_functions import main_cmd
+from seaport._clipboard.additional import perform_install, perform_lint, perform_test
+from seaport._clipboard.checks import user_path
+from seaport._clipboard.portfile.checksums import new_checksums, replace_checksums
+from seaport._clipboard.portfile.portfile_numbers import new_version
+from seaport._clipboard.user import clean, user_clipboard
+from seaport.portfile import Port
 
 
-@click.command()
-@main_cmd
 # Some parameters are not used
 # They are only here since the pr function sends them
+@click.command()
+@main_cmd
+@beartype
 def clip(
     name: str,
-    bump: str,
+    bump: Optional[str],
     test: bool,
     lint: bool,
+    url: Optional[str],
     install: bool,
     write: bool,
     location: Optional[str] = None,
     new: bool = False,
-) -> None:
+) -> NoneType:
     """Bumps the version number and checksum of NAME.
 
     It then copies the result to your clipboard.
@@ -72,33 +72,44 @@ def clip(
     # Tasks that require sudo
     sudo = test or lint or install or write
 
-    preliminary_checks(name, location)
-
-    current_version = format_subprocess(
-        [f"{user_path(True)}/port", "info", "--version", name]
-    ).split(" ")[1]
+    port = Port(name)
 
     # Determine new version
-    bump = new_version(name, bump, current_version, new)
+    bump = new_version(port, bump)
 
     click.secho(f"👍 New version is {bump}", fg="green")
 
-    # Allows pr function to get the version number
-    os.environ["BUMP"] = bump
+    # Allows pr function to get the version number and category
+    # new_version checks if bump is none and deals with it there
+    os.environ["BUMP"] = bump  # type: ignore[assignment]
+    os.environ["CATEGORY"] = port.primary_category()
+    old_checks = port.checksums()
 
-    # Where to download the new file + old checksums
-    new_website, old_size, old_sha256, old_rmd160, subport = current_checksums(
-        name, current_version, bump
+    if port.current_version not in old_checks[3]:
+        # Likely something's gone wrong with port --index info
+        # Probably lots of writing to portfiles
+        click.secho(
+            f"😬 port --index info {port.name} doesn't match port info {port.name}",
+            fg="red",
+        )
+        click.echo("🐌 Going into slow but careful mode...")
+
+        port = Port(name, True)
+
+    # Allows setting custom url
+    new_website = (
+        old_checks[3].replace(port.current_version, bump) if url is None else url
     )
 
+    # Parameter is new website (old website with old version replaced with new version)
     new_sha256, new_rmd160, new_size = new_checksums(new_website)
 
     click.secho("🔎 Checksums:", fg="cyan")
-    click.echo(f"Old rmd160: {old_rmd160}")
+    click.echo(f"Old rmd160: {old_checks[0]}")
     click.echo(f"New rmd160: {new_rmd160}")
-    click.echo(f"Old sha256: {old_sha256}")
+    click.echo(f"Old sha256: {old_checks[1]}")
     click.echo(f"New sha256: {new_sha256}")
-    click.echo(f"Old size: {old_size}")
+    click.echo(f"Old size: {old_checks[2]}")
     click.echo(f"New size: {new_size}")
 
     # Add the new checksums, and take a backup of the original
@@ -114,8 +125,8 @@ def clip(
 
     new_contents = replace_checksums(
         original,
-        (old_sha256, old_rmd160, old_size, current_version),
-        (new_sha256, new_rmd160, new_size, bump),
+        (old_checks[0], old_checks[1], old_checks[2], port.current_version),
+        (new_rmd160, new_sha256, new_size, bump),
     )
 
     if sudo:
@@ -141,7 +152,7 @@ def clip(
 
         if test:
             # If the tests fail
-            if not perform_test(name, subport):
+            if not perform_test(name, port.subports()[-1]):
                 clean(original, file_location, name)
                 sys.exit(1)
         if lint:

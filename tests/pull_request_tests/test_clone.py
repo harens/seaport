@@ -32,15 +32,16 @@ import subprocess
 
 from pytest_mock import MockFixture
 
-from seaport.pull_request.clone import pr_variables, sync_fork
+from seaport._pull_request.clone import pr_variables, sync_fork
 
 
 def test_new_contents(fake_process, session_mocker: MockFixture) -> None:
     # There's not really much to test here
+    # TODO: Properly test this
 
     # default path
     session_mocker.patch(
-        "seaport.pull_request.clone.user_path", return_value="/some/path"
+        "seaport._pull_request.clone.user_path", return_value="/some/path"
     )
 
     session_mocker.patch("os.chdir", return_value=None)
@@ -48,6 +49,11 @@ def test_new_contents(fake_process, session_mocker: MockFixture) -> None:
     fake_process.register_subprocess(
         ["/some/path/git", "fetch", "upstream"],
         stdout=["Fetching upstream\n"],
+    )
+
+    fake_process.register_subprocess(
+        ["/some/path/git", "checkout", "-f", "master"],
+        stdout=["Checking out\n"],
     )
 
     fake_process.register_subprocess(
@@ -71,7 +77,7 @@ def callback_info(process) -> None:
 def test_pr_variables(fake_process, session_mocker: MockFixture) -> None:
     # default path
     session_mocker.patch(
-        "seaport.pull_request.clone.user_path", return_value="/some/path"
+        "seaport._pull_request.clone.user_path", return_value="/some/path"
     )
 
     # If everything works

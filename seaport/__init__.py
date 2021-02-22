@@ -28,9 +28,10 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""A more mighty port bump for MacPorts.
+"""The modern MacPorts portfile updater.
 
-Find out more at https://github.com/harens/seaport
+Find out more at https://seaport.rtfd.io/
 """
 
 __version__ = "0.4.1"
+__all__ = ["portfile"]

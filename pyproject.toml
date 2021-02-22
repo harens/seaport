@@ -25,6 +25,10 @@ documentation = "https://seaport.rtfd.io/"
 [tool.poetry.dependencies]
 python = "^3.8"
 click = "^7.1.2"
+# TODO: With the release of 0.5.2, change depencency
+# This is temporarily required for pep 561 compliance
+#beartype = "^0.5.2"
+beartype = { url = "https://github.com/beartype/beartype/archive/main.tar.gz" }
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"
@@ -44,10 +48,9 @@ Sphinx = "^3.5.0"
 sphinx-autobuild = "^2020.9.1"
 sphinx-click = "^2.5.0"
 sphinxcontrib-programoutput = "^0.16"
-towncrier = "^19.2.0"
 
 [tool.poetry.scripts]
-seaport = "seaport.init:seaport"
+seaport = "seaport._init:seaport"
 
 [tool.coverage.run]
 branch = true
@@ -69,14 +72,6 @@ max-line-length = "88"
 
 [tool.black]
 target-version = ["py38"]
-
-[tool.towncrier]
-# The name of your Python package
-package = "seaport"
-# Where you want your news files to come out. This can be .rst
-# or .md, towncrier's default template works with both.
-filename = "./seaport/docs/changelog.rst"
-issue_format = "`#{issue} <https://github.com/harens/seaport/issues/{issue}>`_"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

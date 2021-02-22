@@ -30,6 +30,6 @@
 
 # See https://click.palletsprojects.com/en/7.x/bashcomplete/#activation-script
 
-_SEAPORT_COMPLETE=source_bash seaport > ./seaport/autocomplete/seaport.bash
-_SEAPORT_COMPLETE=source_zsh seaport > ./seaport/autocomplete/seaport.zsh
-_SEAPORT_COMPLETE=source_fish seaport > ./seaport/autocomplete/seaport.fish
+_SEAPORT_COMPLETE=source_bash seaport > ./seaport/_autocomplete/seaport.bash
+_SEAPORT_COMPLETE=source_zsh seaport > ./seaport/_autocomplete/seaport.zsh
+_SEAPORT_COMPLETE=source_fish seaport > ./seaport/_autocomplete/seaport.fish

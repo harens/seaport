@@ -30,18 +30,26 @@
 
 """Defensive programming functions."""
 
-import subprocess
-import sys
-from shutil import which
-from typing import Optional
+from beartype import beartype
 
-import click
-
-from seaport.clipboard.format import format_subprocess
+from seaport._clipboard.format import format_subprocess
 
 
+# TODO: This will need major refactoring (it's a mess)
+# It also kind of defeats the purpose of the bandit error it's meant to solve
+# TODO: This test will fail if non-default macports path is used
+@beartype
 def user_path(port: bool = False, third_party: bool = False) -> str:
     """Determines the path to prevent starting a process with a partial executable path.
+
+    Examples:
+        >>> from seaport._clipboard.checks import user_path
+        >>> # If it's a port command (e.g. port lint)
+        >>> user_path(True)
+        '/opt/local/bin'
+        >>> # If it's a standard system command
+        >>> user_path()
+        '/usr/bin'
 
     Args:
         port: Whether to output the path of the port cmd
@@ -73,55 +81,3 @@ def user_path(port: bool = False, third_party: bool = False) -> str:
         return port_prefix
 
     return "/usr/bin"
-
-
-def cmd_check(name: str) -> bool:
-    """Checks whether a command is installed.
-
-    Args:
-        name: Name of the port
-
-    Returns:
-        bool: Whether the command is active
-    """
-    # Credit to https://stackoverflow.com/a/34177358/10763533
-    return which(name) is not None
-
-
-def exists(name: str) -> None:
-    """Checks whether the port exists.
-
-    Args:
-        name: Name of the port
-    """
-    # Hide output
-    if subprocess.call(
-        [f"{user_path(True)}/port", "info", name],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.STDOUT,
-    ):
-        click.secho(f"❌ {name} is not a port", fg="red")
-        sys.exit(1)
-
-
-def preliminary_checks(port: str, pull_request: Optional[str]) -> None:
-    """Checks to run before carrying out updating process.
-
-    Args:
-        port: Name of the port
-        pull_request: Path of where to clone the macports-ports repo
-    """
-    if not cmd_check("port"):
-        click.secho("❌ MacPorts not installed", fg="red")
-        click.echo("It can be installed from https://www.macports.org/")
-        sys.exit(1)
-    elif pull_request and not cmd_check("gh"):
-        # gh only required if sending pr
-        click.secho("❌ Github CLI not installed", fg="red")
-        if not click.confirm("Do you want to install this via MacPorts?"):
-            sys.exit(1)
-        subprocess.run(
-            [f"{user_path()}/sudo", f"{user_path(True)}/port", "install", "gh"],
-            check=True,
-        )
-    exists(port)

@@ -33,9 +33,17 @@
 import subprocess
 from typing import List
 
+from beartype import beartype
 
+
+@beartype
 def format_subprocess(args: List[str]) -> str:
     """Formats the output to remove newlines and decode to utf-8.
+
+    Examples:
+        >>> from seaport._clipboard.format import format_subprocess
+        >>> format_subprocess(["echo", "hello", "there"])
+        'hello there'
 
     Args:
         args: A list of arguments to run

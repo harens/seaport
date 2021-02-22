@@ -32,18 +32,21 @@
 
 import os
 import subprocess
-from typing import Any
+from typing import Any, Optional
 
 import click
+from beartype import beartype
+from beartype.cave import NoneType
 
-from seaport.click_functions import main_cmd
-from seaport.clipboard.checks import user_path
-from seaport.clipboard.clipboard import clip
-from seaport.pull_request.clone import pr_variables, sync_fork
-from seaport.pull_request.portfile import determine_category, new_contents
+from seaport._click_functions import main_cmd
+from seaport._clipboard.checks import user_path
+from seaport._clipboard.clipboard import clip
+from seaport._pull_request.clone import pr_variables, sync_fork
+from seaport._pull_request.portfile import new_contents
 
 
 @click.command()
+@beartype
 @main_cmd
 @click.argument(
     "location",
@@ -58,14 +61,15 @@ from seaport.pull_request.portfile import determine_category, new_contents
 def pr(
     ctx: Any,  # This has to be the first parameter
     name: str,
-    bump: str,  # bump is used as part of ctx.forward
+    bump: Optional[str],  # bump is used as part of ctx.forward
     write: bool,  # Also used in ctx.forward
+    url: Optional[str],  # same here
     location: str,
     test: bool,
     lint: bool,
     install: bool,
     new: bool,
-) -> None:
+) -> NoneType:
     """Bumps the version number and checksum of NAME.
 
     It then sends a PR to update it, cloning the macports repo to LOCATION if it doesn't exist already.
@@ -79,10 +83,8 @@ def pr(
     ctx.forward(clip)
 
     # Retrieve new version number and contents
-    contents, bump = new_contents()
-
     # Assumes first category is where to put the portfile
-    category = determine_category(name)
+    contents, bump, category = new_contents()
 
     click.secho("🚀 Cloning macports/macports-ports", fg="cyan")
     os.chdir(location)

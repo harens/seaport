@@ -35,12 +35,15 @@ import subprocess
 from typing import Tuple
 
 import click
+from beartype import beartype
+from beartype.cave import NoneType
 
-from seaport.clipboard.checks import user_path
-from seaport.clipboard.format import format_subprocess
+from seaport._clipboard.checks import user_path
+from seaport._clipboard.format import format_subprocess
 
 
-def sync_fork(location: str) -> None:
+@beartype
+def sync_fork(location: str) -> NoneType:
     """Update the cloned repo with upstream.
 
     Based on https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/syncing-a-fork
@@ -49,11 +52,13 @@ def sync_fork(location: str) -> None:
         location: Where the macports-ports repo is located
     """
     os.chdir(f"{location}/macports-ports")
+    subprocess.run([f"{user_path()}/git", "checkout", "-f", "master"], check=True)
     subprocess.run([f"{user_path()}/git", "fetch", "upstream"], check=True)
     subprocess.run([f"{user_path()}/git", "merge", "upstream/master"], check=True)
     subprocess.run([f"{user_path()}/git", "push"], check=True)
 
 
+@beartype
 def pr_variables() -> Tuple[str, str]:
     """Determines macOS and Xcode version numbers for pr template.
 

@@ -33,3 +33,5 @@
 One file should test one file, with one function for each function.
 
 """
+
+# TODO: These tests are a mess. It needs to be refactored
