@@ -37,6 +37,7 @@ import subprocess
 
 import click
 from beartype import beartype
+from beartype.cave import NoneType
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
@@ -113,7 +114,7 @@ def perform_test(name: str, subport: str) -> bool:
 
 
 @beartype
-def perform_install(name: str) -> None:
+def perform_install(name: str) -> NoneType:
     """Runs sudo port -vst install NAME.
 
     Args:

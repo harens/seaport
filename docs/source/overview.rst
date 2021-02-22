@@ -1,6 +1,6 @@
 Command Line Overview
 =======================
 
-.. click:: seaport.init:seaport
+.. click:: seaport._init:seaport
   :prog: seaport
   :nested: full

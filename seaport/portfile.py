@@ -35,6 +35,7 @@ import subprocess
 from typing import List, Optional, Tuple
 
 from beartype import beartype
+from beartype.cave import NoneType
 
 from seaport._clipboard.format import format_subprocess
 
@@ -69,7 +70,7 @@ class Port:
     """
 
     @beartype
-    def __init__(self, name: str, careful: bool = False) -> None:
+    def __init__(self, name: str, careful: bool = False) -> NoneType:
         """Set optional attributes and check if port exists."""
         # TODO: Figure out how to find path without subprocess
         # TODO: Refactor this

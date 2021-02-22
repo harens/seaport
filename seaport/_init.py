@@ -32,6 +32,8 @@
 """The main cli module (a facade for the other commands)."""
 
 import click
+from beartype import beartype
+from beartype.cave import NoneType
 
 from seaport import __version__
 from seaport._clipboard.clipboard import clip
@@ -40,8 +42,9 @@ from seaport._pull_request.pull_request import pr
 
 # This acts as the facade of the command line tool
 @click.group()
+@beartype
 @click.version_option(__version__)
-def seaport() -> None:
+def seaport() -> NoneType:
     """The modern MacPorts portfile updater.
 
     Bumps the version number and checksum of a port
