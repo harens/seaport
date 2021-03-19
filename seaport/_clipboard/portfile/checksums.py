@@ -42,7 +42,7 @@ from beartype import beartype
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
 from seaport._clipboard.portfile.portfile_numbers import undo_revision
-from seaport._pep584_constants import TUPLE_TYPE
+from seaport._pep585_constants import TUPLE_TYPE
 
 
 @beartype

@@ -37,7 +37,7 @@ from typing import Optional
 from beartype import beartype
 
 from seaport._clipboard.format import format_subprocess
-from seaport._pep584_constants import LIST_TYPE, TUPLE_TYPE
+from seaport._pep585_constants import LIST_TYPE, TUPLE_TYPE
 
 # TODO: Set no output (especially for errors)
 

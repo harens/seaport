@@ -34,7 +34,7 @@ import subprocess
 
 from beartype import beartype
 
-from seaport._pep584_constants import LIST_TYPE
+from seaport._pep585_constants import LIST_TYPE
 
 
 @beartype

@@ -36,7 +36,7 @@
 import sys
 from typing import Any
 
-# Deals with typing module being depreciated in PEP 585
+# Deals with typing module being depreciated
 # Credit to https://stackoverflow.com/a/62900998/10763533
 # Credit to https://github.com/beartype/beartype/issues/30#issuecomment-792490864
 PYTHON_AT_LEAST_3_9 = sys.version_info >= (3, 9)
