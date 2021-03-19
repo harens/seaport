@@ -32,12 +32,12 @@
 
 import re
 import subprocess
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from beartype import beartype
-from beartype.cave import NoneType
 
 from seaport._clipboard.format import format_subprocess
+from seaport._pep584_constants import LIST_TYPE, TUPLE_TYPE
 
 # TODO: Set no output (especially for errors)
 
@@ -48,13 +48,13 @@ class Port:
     Examples:
         >>> from seaport.portfile import Port
         >>> port = Port("py-base91")
-        >>> port.current_version
+        >>> port.version
         '1.0.1'
 
         >>> # Same as above, but uses `port info` rather than `port info --index`
         >>> from seaport.portfile import Port
         >>> port = Port("py-base91", True)
-        >>> port.current_version
+        >>> port.version
         '1.0.1'
 
         >>> from seaport.portfile import Port
@@ -69,8 +69,13 @@ class Port:
         careful (bool): Defaults to false. Use if portfiles are being edited frequently (not required if only reading).
     """
 
+    # This makes mypy and pytype happy
+    # See https://google.github.io/pytype/errors.html#attribute-error
+    name: str
+    version: str
+
     @beartype
-    def __init__(self, name: str, careful: bool = False) -> NoneType:
+    def __init__(self, name: str, careful: bool = False) -> None:
         """Set optional attributes and check if port exists."""
         # TODO: Figure out how to find path without subprocess
         # TODO: Refactor this
@@ -95,7 +100,40 @@ class Port:
             # TODO: Set a more specific exception
             raise Exception(f"{self.name} doesn't exist, run portindex if port is new")
 
-        self.current_version = self.__current()
+        self.version = self.__current()
+
+    @beartype
+    def __repr__(self) -> str:
+        """Outputs the arguments of the init class (i.e. name and careful mode).
+
+        Examples:
+            >>> from seaport.portfile import Port
+            >>> Port("py-base91")
+            Port('py-base91', False)
+        """
+        return f"{self.__class__.__name__}(" f"{self.name!r}, {self._index!r})"
+
+    @beartype
+    def __str__(self) -> str:
+        """Outputs the name and version of the port.
+
+        Examples:
+            >>> from seaport.portfile import Port
+            >>> print(Port("py-base91"))
+            py-base91 1.0.1
+        """
+        return f"{self.name} {self.version}"
+
+    @beartype
+    def __len__(self) -> int:
+        """Returns the size of the downloaded file.
+
+        Examples:
+            >>> from seaport.portfile import Port
+            >>> len(Port("py-base91"))
+            2331
+        """
+        return int(self.checksums()[2])
 
     @beartype
     def __current(self) -> str:
@@ -148,10 +186,10 @@ class Port:
 
         # If there's no livecheck output again, fallback to current version
         # Implies no livecheck available or already up-to-date
-        return update if update != "" else self.current_version
+        return update if update != "" else self.version
 
     @beartype
-    def subports(self) -> Optional[List[str]]:
+    def subports(self) -> Optional[LIST_TYPE[str]]:
         """Determines a list of subports of a port.
 
         If there are no subports available, None is outputted.
@@ -184,7 +222,7 @@ class Port:
         return [i.replace(" ", "") for i in subport_list if i != "Sub-ports"]
 
     @beartype
-    def checksums(self, _name: Optional[str] = None) -> Tuple[str, str, str, str]:
+    def checksums(self, _name: Optional[str] = None) -> TUPLE_TYPE[str, str, str, str]:
         """Determines the current checksums of a portfile.
 
         For python ports, their pyXY- subport is used to determine the checksums.

@@ -28,29 +28,29 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Functions for formatting output."""
+"""Constants to deal with type hints in different python versions."""
 
-import subprocess
+# Credit to beartype organisation
+# See https://github.com/beartype/beartype/blob/main/beartype/_util/hint/data/pep/utilhintdatapepsign.py
 
-from beartype import beartype
+import sys
+from typing import Any
 
-from seaport._pep584_constants import LIST_TYPE
+# Deals with typing module being depreciated in PEP 585
+# Credit to https://stackoverflow.com/a/62900998/10763533
+# Credit to https://github.com/beartype/beartype/issues/30#issuecomment-792490864
+PYTHON_AT_LEAST_3_9 = sys.version_info >= (3, 9)
 
+# Use typing module below python 3.9
+# Initialised first with Any to make mypy happy
+LIST_TYPE: Any = None
+TUPLE_TYPE: Any = None
 
-@beartype
-def format_subprocess(args: LIST_TYPE[str]) -> str:
-    """Formats the output to remove newlines and decode to utf-8.
+if PYTHON_AT_LEAST_3_9:
+    LIST_TYPE = list
+    TUPLE_TYPE = tuple
+else:
+    from typing import List, Tuple
 
-    Examples:
-        >>> from seaport._clipboard.format import format_subprocess
-        >>> format_subprocess(["echo", "hello", "there"])
-        'hello there'
-
-    Args:
-        args: A list of arguments to run
-
-    Returns:
-        str: The formatted output of the result
-
-    """
-    return subprocess.check_output(args).decode("utf-8").strip()
+    LIST_TYPE = List
+    TUPLE_TYPE = Tuple

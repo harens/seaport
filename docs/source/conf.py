@@ -56,7 +56,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 html_theme = "alabaster"
 
 html_theme_options = {
-    "description": "A more mighty port bump for MacPorts!",
+    "description": "The modern MacPorts portfile updater",
     "github_user": "harens",
     "github_repo": "seaport",
     "fixed_sidebar": True,

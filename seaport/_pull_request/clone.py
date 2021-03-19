@@ -32,18 +32,17 @@
 
 import os
 import subprocess
-from typing import Tuple
 
 import click
 from beartype import beartype
-from beartype.cave import NoneType
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
+from seaport._pep584_constants import TUPLE_TYPE
 
 
 @beartype
-def sync_fork(location: str) -> NoneType:
+def sync_fork(location: str) -> None:
     """Update the cloned repo with upstream.
 
     Based on https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/syncing-a-fork
@@ -59,7 +58,7 @@ def sync_fork(location: str) -> NoneType:
 
 
 @beartype
-def pr_variables() -> Tuple[str, str]:
+def pr_variables() -> TUPLE_TYPE[str, str]:
     """Determines macOS and Xcode version numbers for pr template.
 
     If Xcode isn't installed, it outputs the Xcode CLT version.

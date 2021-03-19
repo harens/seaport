@@ -36,7 +36,6 @@ from typing import Any, Optional
 
 import click
 from beartype import beartype
-from beartype.cave import NoneType
 
 from seaport._click_functions import main_cmd
 from seaport._clipboard.checks import user_path
@@ -69,7 +68,7 @@ def pr(
     lint: bool,
     install: bool,
     new: bool,
-) -> NoneType:
+) -> None:
     """Bumps the version number and checksum of NAME.
 
     It then sends a PR to update it, cloning the macports repo to LOCATION if it doesn't exist already.
@@ -171,7 +170,7 @@ def pr(
                 "--body",
                 f"""#### Description
 
-{"Created with [action-macports-bump](https://github.com/harens/action-macports-bump)" if github_actions else "Created with [seaport](https://github.com/harens/seaport)"}
+{"Created with [action-macports-bump](https://github.com/harens/action-macports-bump)" if github_actions else "Created with [seaport](https://seaport.rtfd.io/), the modern MacPorts portfile updater."}
 
 ###### Type(s)
 
