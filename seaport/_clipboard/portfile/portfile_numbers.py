@@ -131,15 +131,15 @@ def new_version(port: Port, stated: Optional[str], new: bool = False) -> str:
     # If it's a new port, essentially ignore version checks
     # Returns the current version from the portfile
     if new:
-        return port.current_version
+        return port.version
 
     # Determines new version number if none manually specified
     if stated is None:  # None used rather than "is not" to make mypy happy
         stated = port.livecheck()
 
-    if stated == port.current_version:
+    if stated == port.version:
         click.secho(
-            f"{port.name} is already up-to-date ({port.current_version}) or there's no livecheck available",
+            f"{port.name} is already up-to-date ({port.version}) or there's no livecheck available",
             fg="red",
         )
         click.secho("Please manually specify the version using --bump", fg="red")

@@ -30,12 +30,16 @@
 
 import subprocess
 
+from beartype import beartype
 from pytest_mock import MockFixture
+from pytest_subprocess import FakeProcess
+from pytest_subprocess.core import FakePopen
 
 from seaport._pull_request.clone import pr_variables, sync_fork
 
 
-def test_new_contents(fake_process, session_mocker: MockFixture) -> None:
+@beartype
+def test_new_contents(fake_process: FakeProcess, session_mocker: MockFixture) -> None:
     # There's not really much to test here
     # TODO: Properly test this
 
@@ -69,12 +73,15 @@ def test_new_contents(fake_process, session_mocker: MockFixture) -> None:
     sync_fork("~/Desktop")
 
 
-def callback_info(process) -> None:
+@beartype
+def callback_info(process: FakePopen) -> None:
     """`xcodebuild` output if xcode isn't installed"""
+    process.returncode = 1
     raise subprocess.CalledProcessError(1, cmd="xcodebuild -version")
 
 
-def test_pr_variables(fake_process, session_mocker: MockFixture) -> None:
+@beartype
+def test_pr_variables(fake_process: FakeProcess, session_mocker: MockFixture) -> None:
     # default path
     session_mocker.patch(
         "seaport._pull_request.clone.user_path", return_value="/some/path"

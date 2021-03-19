@@ -30,19 +30,8 @@
 
 export PREFIX="poetry run python -m "
 
-# Important that seaport comes before tests
-# This is since mocking in tests messes up docstring tests
-${PREFIX} pytest --cov-report=xml:coverage.xml --cov=seaport --doctest-modules seaport/ tests/
-
-poetry check
-${PREFIX} pip check
-# Temporarily remove until tornado issue fixed
-#${PREFIX} safety check --full-report
-
-
-${PREFIX} black --diff --check ./
-${PREFIX} isort --check-only .
-
-# TODO: Type check tests
-${PREFIX} mypy --pretty seaport
-${PREFIX} pydocstyle --convention=google
+${PREFIX} mypy --pretty seaport  # TODO: Add --strict
+${PREFIX} mypy --pretty --strict tests
+# NOTE: These flags will be added as default some time in the future
+# They should then be removed
+${PREFIX} pytype --check-variable-types   --check-attribute-types --check-container-types --check-parameter-types seaport tests

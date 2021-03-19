@@ -30,12 +30,16 @@
 
 import subprocess
 
+from beartype import beartype
 from pytest_mock import MockFixture
+from pytest_subprocess import FakeProcess
+from pytest_subprocess.core import FakePopen
 
 from seaport._clipboard.additional import perform_install, perform_lint, perform_test
 
 
-def test_perform_lint(fake_process, session_mocker: MockFixture) -> None:
+@beartype
+def test_perform_lint(fake_process: FakeProcess, session_mocker: MockFixture) -> None:
 
     # If there are errors present in port lint
 
@@ -86,12 +90,17 @@ def test_perform_lint(fake_process, session_mocker: MockFixture) -> None:
     assert perform_lint("some-port")
 
 
-def callback_info(process) -> None:
+@beartype
+def callback_info(process: FakePopen) -> None:
     """`port test name` output if tests fail"""
+    process.returncode = 1
+    # TODO: Is the 1 below necessary
+    # process is required from type checking since it's passed as a parameter
     raise subprocess.CalledProcessError(1, cmd="port test someport")
 
 
-def test_perform_test(fake_process, session_mocker: MockFixture) -> None:
+@beartype
+def test_perform_test(fake_process: FakeProcess, session_mocker: MockFixture) -> None:
 
     # Set default path
     # Both sudo and port used (hence example)
@@ -130,7 +139,10 @@ def test_perform_test(fake_process, session_mocker: MockFixture) -> None:
     assert not perform_test("some-port", "")
 
 
-def test_perform_install(fake_process, session_mocker: MockFixture) -> None:
+@beartype
+def test_perform_install(
+    fake_process: FakeProcess, session_mocker: MockFixture
+) -> None:
     # Not much to test here unfortunately
 
     # Set default path

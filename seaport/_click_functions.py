@@ -30,19 +30,20 @@
 
 """Functions related to the click commands."""
 
-from typing import Any, Callable, List, Tuple, TypeVar, Union
+from typing import Any, Callable, TypeVar, Union
 
 import click
 from beartype import beartype
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
+from seaport._pep585_constants import LIST_TYPE, TUPLE_TYPE
 
 
 @beartype
 def get_names(
-    ctx: Any, args: List[str], incomplete: str
-) -> List[Union[str, Tuple[str, str]]]:
+    ctx: Any, args: LIST_TYPE[str], incomplete: str
+) -> LIST_TYPE[Union[str, TUPLE_TYPE[str, str]]]:
     """Shell autocompletion for port names.
 
     Examples:

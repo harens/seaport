@@ -35,7 +35,6 @@ import sys
 import tempfile
 import urllib.request
 from pathlib import Path
-from typing import Tuple
 
 import click
 from beartype import beartype
@@ -43,10 +42,11 @@ from beartype import beartype
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
 from seaport._clipboard.portfile.portfile_numbers import undo_revision
+from seaport._pep585_constants import TUPLE_TYPE
 
 
 @beartype
-def new_checksums(website: str) -> Tuple[str, str, str]:
+def new_checksums(website: str) -> TUPLE_TYPE[str, str, str]:
     """Generate checksums of file downloaded from website.
 
     Args:
@@ -105,8 +105,8 @@ def new_checksums(website: str) -> Tuple[str, str, str]:
 @beartype
 def replace_checksums(
     file_contents: str,
-    old_sums: Tuple[str, str, str, str],
-    new_sums: Tuple[str, str, str, str],
+    old_sums: TUPLE_TYPE[str, str, str, str],
+    new_sums: TUPLE_TYPE[str, str, str, str],
 ) -> str:
     """Replaces the old checksums with the new ones.
 
@@ -130,7 +130,7 @@ def replace_checksums(
         A string representing the portfile contents with the new checksums
     """
     # Bump revision numbers to 0
-    new_contents = undo_revision(file_contents)
+    new_contents: str = undo_revision(file_contents)
 
     # Replace first instances only
     # Iterate over Checksums and version number

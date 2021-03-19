@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "seaport"
-version = "0.4.1"
-description = "A more mighty port bump"
+version = "0.4.2-alpha.0"
+description = "The modern MacPorts portfile updater"
 authors = ["harens <harensdeveloper@gmail.com>"]
 maintainers = ["harens <harensdeveloper@gmail.com>"]
 readme = "README.rst"
@@ -15,7 +15,7 @@ classifiers = [
   "Typing :: Typed"
 ]
 
-homepage = "https://github.com/harens/seaport"
+homepage = "https://seaport.rtfd.io/"
 repository = "https://github.com/harens/seaport"
 documentation = "https://seaport.rtfd.io/"
 
@@ -23,24 +23,20 @@ documentation = "https://seaport.rtfd.io/"
 "Bug Tracker" = "https://github.com/harens/seaport/issues"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8, <3.10"  # See https://python-poetry.org/docs/dependency-specification/#caret-requirements
 click = "^7.1.2"
-# TODO: With the release of 0.5.2, change depencency
-# This is temporarily required for pep 561 compliance
-#beartype = "^0.5.2"
-beartype = { url = "https://github.com/beartype/beartype/archive/main.tar.gz" }
+beartype = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"
 black = "^20.8b1"
 isort = "^5.7.0"
-mypy = "^0.800"
+mypy = "^0.812"
 pytest-subprocess = "^1.0.0"
 pytest-mock = "^3.5.1"
 pytest-cov = "^2.11.1"
 coverage = "^5.4"
 pydocstyle = "^5.1.1"
-flake8 = "^3.8.4"
 pre-commit = "^2.10.1"
 pyupgrade = "^2.10.0"
 safety = "^1.10.3"
@@ -48,6 +44,7 @@ Sphinx = "^3.5.0"
 sphinx-autobuild = "^2020.9.1"
 sphinx-click = "^2.5.0"
 sphinxcontrib-programoutput = "^0.16"
+pytype = "^2021.3.10"
 
 [tool.poetry.scripts]
 seaport = "seaport._init:seaport"

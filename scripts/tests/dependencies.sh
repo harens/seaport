@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 
 # Copyright (c) 2021, harens
 #
@@ -28,29 +28,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Functions for formatting output."""
+export PREFIX="poetry run python -m "
 
-import subprocess
-
-from beartype import beartype
-
-from seaport._pep585_constants import LIST_TYPE
-
-
-@beartype
-def format_subprocess(args: LIST_TYPE[str]) -> str:
-    """Formats the output to remove newlines and decode to utf-8.
-
-    Examples:
-        >>> from seaport._clipboard.format import format_subprocess
-        >>> format_subprocess(["echo", "hello", "there"])
-        'hello there'
-
-    Args:
-        args: A list of arguments to run
-
-    Returns:
-        str: The formatted output of the result
-
-    """
-    return subprocess.check_output(args).decode("utf-8").strip()
+poetry check
+${PREFIX} pip check
+${PREFIX} safety check --full-report

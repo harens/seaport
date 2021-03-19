@@ -38,7 +38,6 @@ from typing import Optional
 
 import click
 from beartype import beartype
-from beartype.cave import NoneType
 
 from seaport._click_functions import main_cmd
 from seaport._clipboard.additional import perform_install, perform_lint, perform_test
@@ -64,7 +63,7 @@ def clip(
     write: bool,
     location: Optional[str] = None,
     new: bool = False,
-) -> NoneType:
+) -> None:
     """Bumps the version number and checksum of NAME.
 
     It then copies the result to your clipboard.
@@ -85,7 +84,7 @@ def clip(
     os.environ["CATEGORY"] = port.primary_category()
     old_checks = port.checksums()
 
-    if port.current_version not in old_checks[3]:
+    if port.version not in old_checks[3]:
         # Likely something's gone wrong with port --index info
         # Probably lots of writing to portfiles
         click.secho(
@@ -97,9 +96,7 @@ def clip(
         port = Port(name, True)
 
     # Allows setting custom url
-    new_website = (
-        old_checks[3].replace(port.current_version, bump) if url is None else url
-    )
+    new_website = old_checks[3].replace(port.version, bump) if url is None else url
 
     # Parameter is new website (old website with old version replaced with new version)
     new_sha256, new_rmd160, new_size = new_checksums(new_website)
@@ -125,7 +122,7 @@ def clip(
 
     new_contents = replace_checksums(
         original,
-        (old_checks[0], old_checks[1], old_checks[2], port.current_version),
+        (old_checks[0], old_checks[1], old_checks[2], port.version),
         (new_rmd160, new_sha256, new_size, bump),
     )
 

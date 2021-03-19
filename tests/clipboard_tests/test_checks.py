@@ -31,10 +31,14 @@
 # See https://alexmarandon.com/articles/python_mock_gotchas/
 
 
+from beartype import beartype
+from pytest_subprocess import FakeProcess
+
 from seaport._clipboard.checks import user_path
 
 
-def test_user_path(fake_process) -> None:
+@beartype
+def test_user_path(fake_process: FakeProcess) -> None:
 
     # Port prefix
     fake_process.register_subprocess(

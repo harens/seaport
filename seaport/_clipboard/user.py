@@ -35,7 +35,6 @@ import tempfile
 
 import click
 from beartype import beartype
-from beartype.cave import NoneType
 
 from seaport._clipboard.checks import user_path
 
@@ -43,7 +42,7 @@ from seaport._clipboard.checks import user_path
 @beartype
 def clean(
     original_text: str, location: str, port_name: str, write: bool = False
-) -> NoneType:
+) -> None:
     """Returns the user's local portfile repo to the original state.
 
     Args:
@@ -73,7 +72,7 @@ def clean(
 
 
 @beartype
-def user_clipboard(new_contents: str) -> NoneType:
+def user_clipboard(new_contents: str) -> None:
     """Copies the new contents of the portfile to the _clipboard.
 
     Examples:
