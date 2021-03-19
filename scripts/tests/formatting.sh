@@ -28,6 +28,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+export PREFIX="poetry run python -m "
+
 ${PREFIX} black --diff --check ./
 ${PREFIX} isort --check-only .
 

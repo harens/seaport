@@ -1,6 +1,12 @@
 # Based off https://github.com/Electrostatics/mmcif_pdbx/blob/master/.github/workflows/python-package.yml
 # Also credit to https://github.com/commitizen-tools/commitizen/tree/master/.github/workflows
 
+# MacPorts setup and coverage only required for pytest
+
+# We don't need these checks in both python versions
+# TODO: Add mypy only for python 3.9 (since different typing syntax)
+# pytype currently doesn't work in python 3.9
+
 name: Tests
 on: [push, pull_request]
 
@@ -12,23 +18,31 @@ jobs:
       matrix:
         python-version: [3.8, 3.9]
         test-file: [dependencies, formatting, pytest, type_checking]
+        exclude:
+          - python-version: 3.8
+            test-file: dependencies
+          - python-version: 3.8
+            test-file: formatting
+          - python-version: 3.9
+            test-file: type_checking
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Set up MacPorts
+    - name: Set up MacPorts  # Only required for pytest
+      if: matrix.test-file == 'pytest'
       uses: GiovanniBussi/macports-ci-action@master
     - name: Install dependencies
       run: |
         python -m pip install -U pip poetry
         poetry --version
         poetry install
-    - name: Run Tests
-      run: bash ./scripts/tests/${{ matrix.file }}.sh
-    - name: Upload coverage to Codecov
-      if: ${{ matrix.file }} == 'pytest'
+    - name: Test ${{ matrix.test-file }}
+      run: bash ./scripts/tests/${{ matrix.test-file }}.sh
+    - name: Upload coverage to Codecov  # Again only required for pytest
+      if: matrix.test-file == 'pytest'
       uses: codecov/codecov-action@v1.1.1
       with:
         file: ./coverage.xml
