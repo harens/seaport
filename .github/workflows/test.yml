@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8, 3.9]
+        test-file: [dependencies, formatting, pytest, type_checking]
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python-version }}
@@ -25,9 +26,9 @@ jobs:
         poetry --version
         poetry install
     - name: Run Tests
-      run: |
-        bash ./scripts/tests.sh
+      run: bash ./scripts/tests/${{ matrix.file }}.sh
     - name: Upload coverage to Codecov
+      if: ${{ matrix.file }} == 'pytest'
       uses: codecov/codecov-action@v1.1.1
       with:
         file: ./coverage.xml
