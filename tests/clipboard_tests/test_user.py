@@ -28,12 +28,18 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from beartype import beartype
+from pytest import CaptureFixture
 from pytest_mock import MockFixture
+from pytest_subprocess import FakeProcess
 
 from seaport._clipboard.user import clean
 
 
-def test_clean(fake_process, session_mocker: MockFixture, capfd) -> None:
+@beartype
+def test_clean(
+    fake_process: FakeProcess, session_mocker: MockFixture, capfd: CaptureFixture[str]
+) -> None:
     # Set default path
     # Don't use /opt/local since sudo is also patched
     session_mocker.patch("seaport._clipboard.user.user_path", return_value="/some/path")

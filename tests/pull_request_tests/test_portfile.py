@@ -29,12 +29,15 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import pytest
+from beartype import beartype
 from pytest_mock import MockFixture
+from pytest_subprocess import FakeProcess
 
 from seaport._pull_request.portfile import new_contents
 
 
-def test_new_contents(fake_process, session_mocker: MockFixture) -> None:
+@beartype
+def test_new_contents(fake_process: FakeProcess, session_mocker: MockFixture) -> None:
 
     # Capital P since PortGroup is always there
     portfile_contents = "Example Portfile contents"

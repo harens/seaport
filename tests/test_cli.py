@@ -1,5 +1,6 @@
 import os
 
+from beartype import beartype
 from click.testing import CliRunner
 from pytest_mock import MockFixture
 
@@ -8,6 +9,7 @@ from seaport._clipboard.format import format_subprocess
 from seaport._init import seaport
 
 
+@beartype
 def test_version() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["--version"])
@@ -15,6 +17,7 @@ def test_version() -> None:
     assert result.output == f"seaport, version {__version__}\n"
 
 
+@beartype
 def test_help() -> None:
     runner = CliRunner()
     # clip used to get 100% cov in init file
@@ -29,6 +32,7 @@ def test_help() -> None:
 # py-rich 9.8.0 chosen since all tests/linting pass
 
 
+@beartype
 def test_all() -> None:
     runner = CliRunner()
     result = runner.invoke(
@@ -42,6 +46,7 @@ def test_all() -> None:
     assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
+@beartype
 def test_url() -> None:
     runner = CliRunner()
     result = runner.invoke(
@@ -63,6 +68,7 @@ def test_url() -> None:
     assert "9.7.0" in format_subprocess(["pbpaste"])
 
 
+@beartype
 def test_no_sudo() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.7.0"])
@@ -74,6 +80,7 @@ def test_no_sudo() -> None:
     assert "9.7.0" in format_subprocess(["pbpaste"])
 
 
+@beartype
 def test_test_only() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0", "--test"])
@@ -85,6 +92,7 @@ def test_test_only() -> None:
     assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
+@beartype
 def test_lint_only() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.7.0", "--lint"])
@@ -96,6 +104,7 @@ def test_lint_only() -> None:
     assert "9.7.0" in format_subprocess(["pbpaste"])
 
 
+@beartype
 def test_install_only() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0", "--install"])
@@ -107,6 +116,7 @@ def test_install_only() -> None:
     assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
+@beartype
 def test_lint_fail(session_mocker: MockFixture) -> None:
 
     # If linting fails
@@ -120,6 +130,7 @@ def test_lint_fail(session_mocker: MockFixture) -> None:
     assert result.exit_code == 1
 
 
+@beartype
 def test_write() -> None:
     # Only do these tests in GitHub Actions
     # These tests would overwrite the user's local portfiles
