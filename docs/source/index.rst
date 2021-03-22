@@ -1,6 +1,6 @@
 .. meta::
    :description lang=en:
-     🌊 A more mighty port bump for MacPorts 🌊
+     🌊 The modern MacPorts portfile updater 🌊
 
 .. include:: ../../README.rst
 
