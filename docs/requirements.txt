@@ -1,5 +1,9 @@
-beartype==0.5.1
+beartype==0.6.0
 click==7.1.2
 Sphinx==3.4.3
 sphinx-click==2.5.0
 sphinxcontrib-programoutput==0.16
+
+# Install development version of seaport
+# See https://stackoverflow.com/a/35998253 and https://github.com/readthedocs/readthedocs.org/issues/7156#issuecomment-638790698
+git+git://github.com/harens/seaport@master#egg=seaport
