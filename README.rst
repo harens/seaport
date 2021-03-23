@@ -116,6 +116,8 @@ Any change, big or small, that you think can help improve this project is more t
 
 As well as this, feel free to open an issue with any new suggestions or bug reports. Every contribution is appreciated.
 
+For more information, please read our `contributing page <https://seaport.readthedocs.io/en/latest/contributing.html>`_ on how to get started.
+
 ©️ License
 ----------
 
