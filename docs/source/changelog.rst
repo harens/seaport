@@ -1,8 +1,8 @@
 Changelog
 **********
 
-WIP
-====
+Seaport 0.5.0 (2021-03-23)
+===========================
 
 ⚡️ Features
 ------------
@@ -20,13 +20,15 @@ WIP
 📚 Improved Documentation
 ---------------------------
 
-- Python API documented with examples.
+- The `Python API <https://seaport.readthedocs.io/en/latest/reference.html>`_ has been documented with examples.
+- A `contributing <https://seaport.readthedocs.io/en/latest/contributing.html>`_ page has been added.
 
 🎭 Behind the Scenes
 ---------------------
 
 - Improved `PEP 585 <https://www.python.org/dev/peps/pep-0585/>`_ compliance, with different type hints for different python versions.
 - Test files are now fully type checked - with full use of `beartype <https://github.com/beartype/beartype>`_, `mypy <http://www.mypy-lang.org/>`_ and `pytype <https://google.github.io/pytype>`_ throughout the code base.
+- Fixed an issue where the `API reference <https://seaport.readthedocs.io/en/latest/reference.html#>`_ and `CLT overview <https://seaport.readthedocs.io/en/latest/overview.html>`_ weren't rendered properly.
 
 Seaport 0.4.1 (2021-01-26)
 ==========================
