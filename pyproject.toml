@@ -44,7 +44,7 @@ Sphinx = "^3.5.3"
 sphinx-autobuild = "^2021.3.14"
 sphinx-click = "^2.7.1"
 sphinxcontrib-programoutput = "^0.16"
-pytype = "^2021.3.10"
+pytype = "^2021.3.22"
 
 [tool.poetry.scripts]
 seaport = "seaport._init:seaport"
