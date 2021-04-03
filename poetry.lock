@@ -694,7 +694,7 @@ test = ["pytest", "flake8", "mypy"]
 
 [[package]]
 name = "sphinxcontrib-programoutput"
-version = "0.16"
+version = "0.17"
 description = "Sphinx extension to include program output"
 category = "dev"
 optional = false
@@ -801,7 +801,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.10"
-content-hash = "e3b1223026f5b154a7606148229fc8be0a7c907dede351695ad1f86b20aab934"
+content-hash = "0fe2882c8ec48a0f1f5ea161540bd05551bba246b4ef9ab758165be82a363c3f"
 
 [metadata.files]
 alabaster = [
@@ -1244,8 +1244,8 @@ sphinxcontrib-jsmath = [
     {file = "sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl", hash = "sha256:2ec2eaebfb78f3f2078e73666b1415417a116cc848b72e5172e596c871103178"},
 ]
 sphinxcontrib-programoutput = [
-    {file = "sphinxcontrib-programoutput-0.16.tar.gz", hash = "sha256:0caaa216d0ad8d2cfa90a9a9dba76820e376da6e3152be28d10aedc09f82a3b0"},
-    {file = "sphinxcontrib_programoutput-0.16-py2.py3-none-any.whl", hash = "sha256:8009d1326b89cd029ee477ce32b45c58d92b8504d48811461c3117014a8f4b1e"},
+    {file = "sphinxcontrib-programoutput-0.17.tar.gz", hash = "sha256:300ee9b8caee8355d25cc74b4d1c7efd12e608d2ad165e3141d31e6fbc152b7f"},
+    {file = "sphinxcontrib_programoutput-0.17-py2.py3-none-any.whl", hash = "sha256:0ef1c1d9159dbe7103077748214305eb4e0138e861feb71c0c346afc5fe97f84"},
 ]
 sphinxcontrib-qthelp = [
     {file = "sphinxcontrib-qthelp-1.0.3.tar.gz", hash = "sha256:4c33767ee058b70dba89a6fc5c1892c0d57a54be67ddd3e7875a18d14cba5a72"},
