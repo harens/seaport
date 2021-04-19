@@ -471,11 +471,11 @@ dev = ["pre-commit", "tox", "pytest-asyncio"]
 
 [[package]]
 name = "pytest-subprocess"
-version = "1.0.1"
+version = "1.1.0"
 description = "A plugin to fake subprocess for pytest"
 category = "dev"
 optional = false
-python-versions = ">=3.4"
+python-versions = ">=3.6"
 
 [package.dependencies]
 pytest = ">=4.0.0"
@@ -483,7 +483,7 @@ pytest = ">=4.0.0"
 [package.extras]
 dev = ["nox", "changelogd"]
 docs = ["sphinx", "sphinxcontrib-napoleon", "sphinx-autodoc-typehints", "changelogd"]
-test = ["pytest (>=4.0)", "coverage", "docutils (>=0.12)", "Pygments (>=2.0)", "pytest-azurepipelines"]
+test = ["pytest (>=4.0)", "coverage", "docutils (>=0.12)", "Pygments (>=2.0)", "pytest-rerunfailures"]
 
 [[package]]
 name = "pytype"
@@ -801,7 +801,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.10"
-content-hash = "629a912ab63513b60f324e6dad31764ac22c5b4c06008053250d2dfd8ef92386"
+content-hash = "a46efacf27233b85cce5d3a92fd041841e769f456c0e6296cf0675712280d50b"
 
 [metadata.files]
 alabaster = [
@@ -1103,8 +1103,8 @@ pytest-mock = [
     {file = "pytest_mock-3.5.1-py3-none-any.whl", hash = "sha256:379b391cfad22422ea2e252bdfc008edd08509029bcde3c25b2c0bd741e0424e"},
 ]
 pytest-subprocess = [
-    {file = "pytest-subprocess-1.0.1.tar.gz", hash = "sha256:0caab914f7cfa6f383a0a0627ec784ec531ba587f38df98e374b716039b255dd"},
-    {file = "pytest_subprocess-1.0.1-py3-none-any.whl", hash = "sha256:e7c1fc73c6c1d4eab88deba99309fdb66eac7f1b006428ed18ff7c05a0a328fc"},
+    {file = "pytest-subprocess-1.1.0.tar.gz", hash = "sha256:ab92e9ab0ce938afe7a6e19b2a682c06b036b6220b6ba7bb525cc371378b1c74"},
+    {file = "pytest_subprocess-1.1.0-py3-none-any.whl", hash = "sha256:041c2ba7440a8be82dbb057281a421f184cd8f81e715b9a1b18e79a3964e69f4"},
 ]
 pytype = [
     {file = "pytype-2021.4.15-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:e98a5260a27128fbb7c58d6a4893ec5c47a0153a760af0ee46b281d55352fe77"},
