@@ -134,9 +134,9 @@ def perform_install(name: str) -> None:
         "Paused to allow user to test basic functionality in a different terminal",
         fg="cyan",
     )
-    click.pause("Press any key to continue ")
-    click.secho(f"🗑  Uninstalling {name}", fg="cyan")
-    subprocess.run(
-        [f"{user_path()}/sudo", f"{user_path(True)}/port", "uninstall", name],
-        check=True,
-    )
+    if click.confirm("Do you want to uninstall the port?"):
+        click.secho(f"🗑  Uninstalling {name}", fg="cyan")
+        subprocess.run(
+            [f"{user_path()}/sudo", f"{user_path(True)}/port", "uninstall", name],
+            check=True,
+        )

@@ -154,13 +154,19 @@ def test_perform_install(
     fake_process.register_subprocess(
         ["/example/sudo", "/example/port", "-vst", "install", "some-port"],
         stdout=["Installing some-port"],
+        occurrences=2,
     )
 
-    session_mocker.patch("click.pause", return_value="None")
+    # If the user wishes to uninstall the port
+    session_mocker.patch("click.confirm", return_value=True)
 
     fake_process.register_subprocess(
         ["/example/sudo", "/example/port", "uninstall", "some-port"],
         stdout=["Unnstalling some-port"],
     )
 
+    perform_install("some-port")
+
+    # If the user wishes to keep the port
+    session_mocker.patch("click.confirm", return_value=False)
     perform_install("some-port")
