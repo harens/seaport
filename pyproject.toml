@@ -25,7 +25,7 @@ documentation = "https://seaport.rtfd.io/"
 [tool.poetry.dependencies]
 python = ">=3.8, <3.10"  # See https://python-poetry.org/docs/dependency-specification/#caret-requirements
 click = "^7.1.2"
-beartype = "^0.6.0"
+beartype = ">=0.6,<0.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.3"

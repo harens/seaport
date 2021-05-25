@@ -49,16 +49,17 @@ pytz = ">=2015.7"
 
 [[package]]
 name = "beartype"
-version = "0.6.0"
+version = "0.7.0"
 description = "Unbearably fast runtime type checking in pure Python."
 category = "main"
 optional = false
 python-versions = ">=3.6.0"
 
 [package.extras]
-dev = ["mypy (>=0.800)", "pytest (>=4.0.0)", "tox (>=3.20.1)", "sphinx (>=3.4.3)"]
+dev = ["coverage (>=5.5)", "mypy (>=0.800)", "pytest (>=4.0.0)", "tox (>=3.20.1)", "sphinx (>=3.4.3)"]
 doc-rtd = ["sphinx (==3.4.3)", "sphinx-rtd-theme (==0.5.1)"]
 test-tox = ["mypy (>=0.800)", "pytest (>=4.0.0)"]
+test-tox-coverage = ["coverage (>=5.5)"]
 
 [[package]]
 name = "black"
@@ -800,7 +801,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.10"
-content-hash = "3fb6bcbd42b62a0667e0fac512c816bbe2f7a82f31d9ee05983860e0c5cd96d7"
+content-hash = "2b710ceb0390f705b590705fc8a7aee148c79ff0e47deb18a1e2aa1fcc8dad66"
 
 [metadata.files]
 alabaster = [
@@ -824,8 +825,8 @@ babel = [
     {file = "Babel-2.9.0.tar.gz", hash = "sha256:da031ab54472314f210b0adcff1588ee5d1d1d0ba4dbd07b94dba82bde791e05"},
 ]
 beartype = [
-    {file = "beartype-0.6.0-py3-none-any.whl", hash = "sha256:03c2a9984890da13319acfffd53979a7a778caf111cff390dcb7c490845e728b"},
-    {file = "beartype-0.6.0.tar.gz", hash = "sha256:f6167aaa2691db46669f1c2e2aa1f2c38f456fe8a669fe9d3f2af6ed97d083ec"},
+    {file = "beartype-0.7.0-py3-none-any.whl", hash = "sha256:4ccd61484b68c2bcd979dd25ae6d83ddd70b1a800a0c80ff70d5b28ddce15cde"},
+    {file = "beartype-0.7.0.tar.gz", hash = "sha256:eee491b0f9636a88dd8af3f6cf893bd094f6e5669fce2d45b7c5f6171d501c6a"},
 ]
 black = [
     {file = "black-21.4b2-py3-none-any.whl", hash = "sha256:bff7067d8bc25eb21dcfdbc8c72f2baafd9ec6de4663241a52fb904b304d391f"},
