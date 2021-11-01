@@ -29,7 +29,7 @@ beartype = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.3"
-black = "^21.4b2"
+black = "^21.10b0"
 isort = "^5.8.0"
 mypy = "^0.812"
 pytest-subprocess = "^1.1.0"
