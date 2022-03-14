@@ -28,7 +28,7 @@ click = "^7.1.2"
 beartype = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.3"
+pytest = "^7.1.0"
 black = "^21.4b2"
 isort = "^5.8.0"
 mypy = "^0.812"
