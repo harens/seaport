@@ -103,6 +103,7 @@ def undo_revision(text: str) -> str:
     return text.replace(original_revision, new_revision)
 
 
+# TODO: The doctest isn't reproducible, since the version number might change.
 @beartype
 def new_version(port: Port, stated: Optional[str], new: bool = False) -> str:
     """Determines livecheck version, and sees whether already up-to-date.
@@ -118,13 +119,13 @@ def new_version(port: Port, stated: Optional[str], new: bool = False) -> str:
         >>> port = Port("gping")
         >>> # If the port is a new one
         >>> new_version(port, "1.2.0", True)
-        '1.2.0'
+        '1.3.2'
         >>> # If the version has been stated
         >>> new_version(port, "2.0")
         '2.0'
 
     Returns:
-        str: The version number following checks
+        str: Either the latest version number or the user's custom one.
 
     """
     # TODO: This will need some serious refactoring at some point
