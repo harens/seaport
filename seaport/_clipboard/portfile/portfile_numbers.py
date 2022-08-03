@@ -42,7 +42,7 @@ from seaport.portfile import Port
 
 @beartype
 def undo_revision(text: str) -> str:
-    """Make version numbers 0.
+    """Make revision numbers 0.
 
     Note that this supports a single revision number or multiple revision numbers that are 0.
     If there are multiple revision numbers, and one of them is not 0, it raises SystemExit 1
