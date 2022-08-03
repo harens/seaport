@@ -28,11 +28,12 @@ The modern `MacPorts <https://www.macports.org>`_ portfile updater.
 ..
    TODO: When a new release is published, update the Python API url to stable
 
-* **Automatically determines new version numbers and checksums** for MacPorts portfiles.
-* **Copies the changes to your clipboard 📋**, and optionally **sends a PR to update them**.
-* Contains **additional checking functionality**, such as running tests, linting and installing the updated program.
-* `Python API <https://seaport.readthedocs.io/en/latest/reference.html>`_ for convenient access to portfile information. Easily import as a Python module for your project.
-* `PEP 561 compatible <https://www.python.org/dev/peps/pep-0561>`_, with built in support for type checking.
+* ⏩ **Automatically determines new version numbers and checksums** for MacPorts portfiles.
+* 📋 **Copies the changes to your clipboard**, and optionally **sends a PR to update them**.
+* 🔎 Contains **additional checking functionality**, such as running tests, linting and installing the updated program.
+* 🐍 `Python API <https://seaport.readthedocs.io/en/latest/reference.html>`_ for convenient access to portfile information. Easily import as a Python module for your project.
+* ⌨️ `PEP 561 compatible <https://www.python.org/dev/peps/pep-0561>`_, with built in support for type checking.
+*  📦 Works out of the box with all `supported Python versions <https://endoflife.date/python>`_ (3.7-3.10).
 
 To find out more, please read the `Documentation <https://seaport.rtfd.io/>`_.
 
