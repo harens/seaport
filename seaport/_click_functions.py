@@ -30,27 +30,26 @@
 
 """Functions related to the click commands."""
 
-from typing import Any, Callable, TypeVar, Union
+from typing import Any, Callable, TypeVar
 
 import click
 from beartype import beartype
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
-from seaport._pep585_constants import LIST_TYPE, TUPLE_TYPE
+from seaport._pep585_constants import LIST_TYPE
 
 
 @beartype
-def get_names(
-    ctx: Any, args: LIST_TYPE[str], incomplete: str
-) -> LIST_TYPE[Union[str, TUPLE_TYPE[str, str]]]:
+def get_names(ctx: Any, param: click.Argument, incomplete: str) -> LIST_TYPE[str]:
     """Shell autocompletion for port names.
 
     Examples:
         >>> from seaport._click_functions import get_names
+        >>> from click.core import Argument
         >>> # User has typed in py-base9
-        >>> get_names("example_ctx", ["example_args"], "py-base9")
-        [('py-base91', 'A Python implementation of Base91')]
+        >>> get_names("example_ctx", Argument(["example_args"]), "py-ric")
+        ['py-rich', 'py-rich-click']
 
     Args:
         ctx: The current command context
@@ -72,7 +71,7 @@ def get_names(
     ).splitlines()
     # Converts to raw string literal to split by backslash
     # See https://stackoverflow.com/a/25047988/10763533
-    return [(repr(k).split("\\")[0][1:], repr(k).split("\\")[3][1:-1]) for k in results]
+    return [repr(k).split("\\")[0][1:] for k in results]
 
 
 F = TypeVar("F", bound=Callable[..., None])
@@ -84,7 +83,7 @@ def main_cmd(function: F) -> F:
 
     See https://stackoverflow.com/a/50061489/10763533
     """
-    function = click.argument("name", type=str, autocompletion=get_names)(function)
+    function = click.argument("name", type=str, shell_complete=get_names)(function)
     function = click.option(
         "--write",
         help="Writes the updated contents to the user's portfile, similar to the original port bump.",
