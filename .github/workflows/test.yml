@@ -32,9 +32,9 @@ jobs:
           - python-version: "3.10"
             test-file: type_checking
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Set up MacPorts  # Only required for pytest
@@ -49,7 +49,7 @@ jobs:
       run: bash ./scripts/tests/${{ matrix.test-file }}.sh
     - name: Upload coverage to Codecov  # Again only required for pytest
       if: matrix.test-file == 'pytest'
-      uses: codecov/codecov-action@v1.1.1
+      uses: codecov/codecov-action@v3.1.0
       with:
         file: ./coverage.xml
         flags: unittests
