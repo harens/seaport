@@ -7,4 +7,4 @@ sphinxcontrib-programoutput==0.17
 # Install development version of seaport
 # See https://stackoverflow.com/a/35998253 and https://github.com/readthedocs/readthedocs.org/issues/7156#issuecomment-638790698
 # TODO: Change this to install the local version of GitHub to allow PRs changing docs to work.
-git+git://github.com/harens/seaport@master#egg=seaport
+git+https://github.com/harens/seaport@master#egg=seaport
