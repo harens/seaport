@@ -33,12 +33,11 @@
 import subprocess
 
 from beartype import beartype
-
-from seaport._pep585_constants import LIST_TYPE
+from beartype.typing import List
 
 
 @beartype
-def format_subprocess(args: LIST_TYPE[str]) -> str:
+def format_subprocess(args: List[str]) -> str:
     """Formats the output to remove newlines and decode to utf-8.
 
     Examples:

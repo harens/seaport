@@ -35,10 +35,10 @@ import subprocess
 
 import click
 from beartype import beartype
+from beartype.typing import Tuple
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
-from seaport._pep585_constants import TUPLE_TYPE
 
 
 @beartype
@@ -58,7 +58,7 @@ def sync_fork(location: str) -> None:
 
 
 @beartype
-def pr_variables() -> TUPLE_TYPE[str, str]:
+def pr_variables() -> Tuple[str, str]:
     """Determines macOS and Xcode version numbers for pr template.
 
     If Xcode isn't installed, it outputs the Xcode CLT version.

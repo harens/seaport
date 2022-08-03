@@ -35,9 +35,9 @@ import subprocess
 from typing import Optional
 
 from beartype import beartype
+from beartype.typing import List, Tuple
 
 from seaport._clipboard.format import format_subprocess
-from seaport._pep585_constants import LIST_TYPE, TUPLE_TYPE
 
 # TODO: Set no output (especially for errors)
 
@@ -192,7 +192,7 @@ class Port:
         return update if update != "" else self.version
 
     @beartype
-    def subports(self) -> Optional[LIST_TYPE[str]]:
+    def subports(self) -> Optional[List[str]]:
         """Determines a list of subports of a port.
 
         If there are no subports available, None is outputted.
@@ -225,7 +225,7 @@ class Port:
         return [i.replace(" ", "") for i in subport_list if i != "Sub-ports"]
 
     @beartype
-    def checksums(self, _name: Optional[str] = None) -> TUPLE_TYPE[str, str, str, str]:
+    def checksums(self, _name: Optional[str] = None) -> Tuple[str, str, str, str]:
         """Determines the current checksums of a portfile.
 
         For python ports, their pyXY- subport is used to determine the checksums.

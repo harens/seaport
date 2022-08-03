@@ -38,15 +38,15 @@ from pathlib import Path
 
 import click
 from beartype import beartype
+from beartype.typing import Tuple
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
 from seaport._clipboard.portfile.portfile_numbers import undo_revision
-from seaport._pep585_constants import TUPLE_TYPE
 
 
 @beartype
-def new_checksums(website: str) -> TUPLE_TYPE[str, str, str]:
+def new_checksums(website: str) -> Tuple[str, str, str]:
     """Generate checksums of file downloaded from website.
 
     Args:
@@ -105,8 +105,8 @@ def new_checksums(website: str) -> TUPLE_TYPE[str, str, str]:
 @beartype
 def replace_checksums(
     file_contents: str,
-    old_sums: TUPLE_TYPE[str, str, str, str],
-    new_sums: TUPLE_TYPE[str, str, str, str],
+    old_sums: Tuple[str, str, str, str],
+    new_sums: Tuple[str, str, str, str],
 ) -> str:
     """Replaces the old checksums with the new ones.
 

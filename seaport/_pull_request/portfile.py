@@ -35,13 +35,13 @@ import sys
 
 import click
 from beartype import beartype
+from beartype.typing import Tuple
 
 from seaport._clipboard.format import format_subprocess
-from seaport._pep585_constants import TUPLE_TYPE
 
 
 @beartype
-def new_contents() -> TUPLE_TYPE[str, str, str]:
+def new_contents() -> Tuple[str, str, str]:
     """Determines the new contents and version number of a portfile.
 
     Returns:

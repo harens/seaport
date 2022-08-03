@@ -34,14 +34,14 @@ from typing import Any, Callable, TypeVar
 
 import click
 from beartype import beartype
+from beartype.typing import List
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
-from seaport._pep585_constants import LIST_TYPE
 
 
 @beartype
-def get_names(ctx: Any, param: click.Argument, incomplete: str) -> LIST_TYPE[str]:
+def get_names(ctx: Any, param: click.Argument, incomplete: str) -> List[str]:
     """Shell autocompletion for port names.
 
     Examples:
