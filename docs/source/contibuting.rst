@@ -40,7 +40,7 @@ First, clone the project and install all the dependencies. This also installs a 
     seaport --help
 
 📚Build the Docs
-==============
+=================
 
 The documentation can be found in :code:`docs/source`.
 

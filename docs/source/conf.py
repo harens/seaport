@@ -59,6 +59,7 @@ html_theme_options = {
     "description": "The modern MacPorts portfile updater",
     "github_user": "harens",
     "github_repo": "seaport",
+    "github_type": "star",
     "fixed_sidebar": True,
     "show_powered_by": False,
 }

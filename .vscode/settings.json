@@ -1,4 +1,5 @@
 {
     "restructuredtext.confPath": "",
-    "python.pythonPath": "/opt/local/bin/python"
+    "python.pythonPath": "/opt/local/bin/python",
+    "esbonio.sphinx.confDir": ""
 }

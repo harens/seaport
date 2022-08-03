@@ -1,8 +1,8 @@
-beartype==0.6.0
-click==7.1.2
-Sphinx==3.5.3
-sphinx-click==2.7.1
-sphinxcontrib-programoutput==0.16
+beartype==0.10.4
+click==8.1.3
+Sphinx==5.1.1
+sphinx-click==4.3.0
+sphinxcontrib-programoutput==0.17
 
 # Install development version of seaport
 # See https://stackoverflow.com/a/35998253 and https://github.com/readthedocs/readthedocs.org/issues/7156#issuecomment-638790698
