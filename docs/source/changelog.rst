@@ -1,7 +1,25 @@
 Changelog
 **********
 
-Seaport 0.6.0 (2022-02-12)
+v0.6.1 (2022-08-03)
+===========================
+
+⚡️ Features
+------------
+
+- Compatible with all `supported Python versions <https://endoflife.date/python>`_ (3.7-3.10).
+
+🎭 Behind the Scenes
+---------------------
+
+- **pep585_constants**: replace with beartype.typing.
+
+🐛 Bugfixes
+------------
+
+- fixes :code:`--test` when a port has no subports.
+
+v0.6.0 (2022-02-12)
 ===========================
 
 ⚡️ Features
@@ -9,7 +27,7 @@ Seaport 0.6.0 (2022-02-12)
 
 - Replaced the wait after installation with a prompt asking whether or not to uninstall the port. `#35 <https://github.com/harens/seaport/issues/35>`_
 
-Seaport 0.5.0 (2021-03-23)
+v0.5.0 (2021-03-23)
 ===========================
 
 ⚡️ Features
@@ -38,7 +56,7 @@ Seaport 0.5.0 (2021-03-23)
 - Test files are now fully type checked - with full use of `beartype <https://github.com/beartype/beartype>`_, `mypy <http://www.mypy-lang.org/>`_ and `pytype <https://google.github.io/pytype>`_ throughout the code base.
 - Fixed an issue where the `API reference <https://seaport.readthedocs.io/en/latest/reference.html#>`_ and `CLT overview <https://seaport.readthedocs.io/en/latest/overview.html>`_ weren't rendered properly.
 
-Seaport 0.4.1 (2021-01-26)
+v0.4.1 (2021-01-26)
 ==========================
 
 ⚡️ Features

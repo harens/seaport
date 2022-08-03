@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "seaport"
-version = "0.6.0"
+version = "0.6.1"
 description = "The modern MacPorts portfile updater"
 authors = ["harens <harensdeveloper@gmail.com>"]
 maintainers = ["harens <harensdeveloper@gmail.com>"]
@@ -69,6 +69,14 @@ max-line-length = "88"
 
 [tool.black]
 target-version = ["py38"]
+
+[tool.commitizen]
+version = "0.6.1"
+tag_format = "v$version"
+version_files = [
+  "pyproject.toml:version",
+  "seaport/__init__.py",
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
