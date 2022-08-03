@@ -33,7 +33,7 @@ import subprocess
 from beartype import beartype
 from pytest_mock import MockFixture
 from pytest_subprocess import FakeProcess
-from pytest_subprocess.core import FakePopen
+from pytest_subprocess.fake_popen import FakePopen
 
 from seaport._clipboard.additional import perform_install, perform_lint, perform_test
 
