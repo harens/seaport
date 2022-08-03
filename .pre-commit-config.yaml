@@ -22,6 +22,11 @@ repos:
           - --remove-all-unused-imports
           - --expand-star-imports
 
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: master
+    hooks:
+      - id: commitizen
+
   - repo: local
     hooks:
       - id: pyupgrade
