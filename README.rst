@@ -25,13 +25,17 @@ The modern `MacPorts <https://www.macports.org>`_ portfile updater.
 ⚡️ Features
 --------------
 
-..
-   TODO: When a new release is published, update the Python API url to stable
+🖥 `Command Line Tool <https://seaport.readthedocs.io/en/stable/overview.html>`_
+*********************************************************************************
 
 * ⏩ **Automatically determines new version numbers and checksums** for MacPorts portfiles.
 * 📋 **Copies the changes to your clipboard**, and optionally **sends a PR to update them**.
 * 🔎 Contains **additional checking functionality**, such as running tests, linting and installing the updated program.
-* 🐍 `Python API <https://seaport.readthedocs.io/en/latest/reference.html>`_ for convenient access to portfile information. Easily import as a Python module for your project.
+
+🐍 `Python API <https://seaport.readthedocs.io/en/stable/reference.html>`_
+****************************************************************************
+
+* 📚 Library for convenient access to portfile information. Easily import as a Python module for your project.
 * ⌨️ `PEP 561 compatible <https://www.python.org/dev/peps/pep-0561>`_, with built in support for type checking.
 *  📦 Works out of the box with all `supported Python versions <https://endoflife.date/python>`_ (3.7-3.10).
 
@@ -70,7 +74,7 @@ Be sure to check out the `flags overview <https://seaport.readthedocs.io/en/stab
    * - ⏮ Can update portfile to a specific version
      - ✅
      - ✅
-   * - 🔮 Updates the version number
+   * - 🔮 Updates the version number via livecheck
      - ✅
      - ❌
    * - 🚀 Can send a pull request (both for updated and new ports)
