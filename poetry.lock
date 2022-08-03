@@ -910,8 +910,8 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.8, <3.10"  # See https://python-poetry.org/docs/dependency-specification/#caret-requirements
-content-hash = "7155a4909e24407016ca3763dbd3ed0897897c0eba87738ac9d71151d329ad0f"
+python-versions = ">=3.8, <3.11"  # See https://python-poetry.org/docs/dependency-specification/#caret-requirements
+content-hash = "82729b3921ae8a5bff35b2ebb63e50594da4a2e359e2e1bda272284a98ee636f"
 
 [metadata.files]
 alabaster = []
