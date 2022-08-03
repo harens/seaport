@@ -179,10 +179,13 @@ class Port:
         ).split(" ")[-1][:-1]
 
         # If there's no livecheck output, fallback to subport
-        if update == "" and self.subports() is not None:
-            update = format_subprocess(
-                [f"{self._path}/port", "livecheck", self.subports()[-1]]
-            ).split(" ")[-1][:-1]
+        # Convoluted if statement to make mypy happy
+        if update == "":
+            subports = self.subports()
+            if subports is not None:
+                update = format_subprocess(
+                    [f"{self._path}/port", "livecheck", subports[-1]]
+                ).split(" ")[-1][:-1]
 
         # If there's no livecheck output again, fallback to current version
         # Implies no livecheck available or already up-to-date
@@ -254,10 +257,11 @@ class Port:
         except StopIteration:
             # Tries to determine the subport
             # This is since the distfiles cmd only works for subports
-            if "Sub-ports" not in self._info:
+            subports = self.subports()
+            if subports is None:
                 raise Exception(f"port distfiles {_name} provides no output")
             # Repeat the process with the subport
-            return self.checksums(self.subports()[-1])
+            return self.checksums(subports[-1])
 
         website_index = distfiles.index(website)
 

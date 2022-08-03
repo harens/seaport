@@ -34,6 +34,7 @@ e.g. Linting
 """
 
 import subprocess
+from typing import Optional
 
 import click
 from beartype import beartype
@@ -76,7 +77,7 @@ def perform_lint(name: str) -> bool:
 
 
 @beartype
-def perform_test(name: str, subport: str) -> bool:
+def perform_test(name: str, subport: Optional[str] = None) -> bool:
     """Tests the port and checks output for errors.
 
     Args:

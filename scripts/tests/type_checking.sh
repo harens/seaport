@@ -30,8 +30,5 @@
 
 export PREFIX="poetry run python -m "
 
-${PREFIX} mypy --pretty seaport  # TODO: Add --strict
-${PREFIX} mypy --pretty --strict tests
-# NOTE: These flags will be added as default some time in the future
-# They should then be removed
-${PREFIX} pytype --check-variable-types   --check-attribute-types --check-container-types --check-parameter-types seaport tests
+${PREFIX} mypy --pretty --strict seaport tests
+${PREFIX} pytype seaport tests

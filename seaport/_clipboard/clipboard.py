@@ -80,7 +80,7 @@ def clip(
 
     # Allows pr function to get the version number and category
     # new_version checks if bump is none and deals with it there
-    os.environ["BUMP"] = bump  # type: ignore[assignment]
+    os.environ["BUMP"] = bump
     os.environ["CATEGORY"] = port.primary_category()
     old_checks = port.checksums()
 
@@ -148,8 +148,13 @@ def clip(
             )
 
         if test:
+            subport = port.subports()
+            if subport is not None:
+                result = perform_test(name, subport[-1])
+            else:
+                result = perform_test(name)
             # If the tests fail
-            if not perform_test(name, port.subports()[-1]):
+            if not result:
                 clean(original, file_location, name)
                 sys.exit(1)
         if lint:
