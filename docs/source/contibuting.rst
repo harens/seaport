@@ -39,8 +39,25 @@ First, clone the project and install all the dependencies. This also installs a 
     pre-commit install
     seaport --help
 
-📚Build the Docs
-=================
+🚀 Commits
+***********
+
+As of v0.6.1, seaport uses `commitizen <https://commitizen-tools.github.io/commitizen/>`_ to help manage commits.
+
+To make a commit, stage the relevant changes, and then run :code:`cz c`.
+
+🚧 Removing trailing whitespace
+================================
+
+One of the git commit hooks might complain that a file has trailing whitespace. To remove it from a file, run the following
+(`credit <https://stackoverflow.com/a/10711226>`_):
+
+.. code-block:: console
+
+    find . -iname FILE -type f -exec sed -i '' 's/[[:space:]]\{1,\}$//' {} \+
+
+📚 Build the Docs
+******************
 
 The documentation can be found in :code:`docs/source`.
 
@@ -50,12 +67,21 @@ We can use `sphinx-autobuild <https://github.com/executablebooks/sphinx-autobuil
 
     sphinx-autobuild docs/source docs/_build/html
 
-🧪 Running Tests
-==================
+🧪 Testing
+************
+
+🏃 Running Tests
+=================
 
 The test scripts can be found in :code:`scripts/tests`. Please make sure all tests pass before sending a PR. Thank you :)
 
-When adding python tests, note that `doctests <https://docs.python.org/3/library/doctest.html>`_ **are preferred to test files.**
+To run all the tests at once, run :code:`bash ./scripts/tests/test.sh` from the root directory. Don't copy/paste while running the tests,
+and make sure you have nothing important in your clipboard.
+
+📝 Writing Tests
+=================
+
+When writing tests, note that `doctests <https://docs.python.org/3/library/doctest.html>`_ **are preferred to test files.**
 However, use test files if mocking is necessary or if it wouldn't make sense to add a certain test to the documentation (e.g. testing internal features).
 
 When adding a test file, please name it according to the file it's testing and place it in a corresponding directory.
