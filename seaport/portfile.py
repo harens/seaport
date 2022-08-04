@@ -53,7 +53,7 @@ class Port:
 
         >>> # Same as above, but uses `port info` rather than `port info --index`
         >>> from seaport.portfile import Port
-        >>> port = Port("py-base91", True)
+        >>> port = Port("py-base91", False)
         >>> port.version
         '1.0.1'
 
@@ -66,7 +66,8 @@ class Port:
 
     Attributes:
         name (str): The name of the port e.g. gping
-        careful (bool): Defaults to false. Use if portfiles are being edited frequently (not required if only reading).
+        index (bool): Defaults to True - Whether to use the --index flag with port or not.
+            Set to false if portfiles are being edited frequently (not required if only reading).
     """
 
     # This makes mypy and pytype happy
@@ -75,26 +76,26 @@ class Port:
     version: str
 
     @beartype
-    def __init__(self, name: str, careful: bool = False) -> None:
+    def __init__(self, name: str, index: bool = True) -> None:
         """Set optional attributes and check if port exists."""
         # TODO: Figure out how to find path without subprocess
         # TODO: Refactor this
         # TODO: This also kind of defeats the purpose of that bandit error, so find a better way to determine the path
         # no forward slash at end for Bandit B607
         self.name = name
-        self._index = careful
+        self._index = index
         self._path = format_subprocess(["/usr/bin/which", "port"]).replace("/port", "")
 
         try:
             if self._index:
-                self._info = format_subprocess(
-                    [f"{self._path}/port", "info", self.name]
-                )
-            else:
                 # Caches port info for later
                 # --index provides big speed boost, but doesn't always work
                 self._info = format_subprocess(
                     [f"{self._path}/port", "info", "--index", self.name]
+                )
+            else:
+                self._info = format_subprocess(
+                    [f"{self._path}/port", "info", self.name]
                 )
         except subprocess.CalledProcessError:
             # TODO: Set a more specific exception
@@ -109,7 +110,7 @@ class Port:
         Examples:
             >>> from seaport.portfile import Port
             >>> Port("py-base91")
-            Port('py-base91', False)
+            Port('py-base91', True)
         """
         return f"{self.__class__.__name__}(" f"{self.name!r}, {self._index!r})"
 
@@ -287,7 +288,7 @@ class Port:
             'net'
 
             >>> from seaport.portfile import Port
-            >>> port = Port("py-rich")
+            >>> port = Port("py-rich", False)
             >>> port.primary_category()
             'python'
 

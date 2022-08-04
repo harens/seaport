@@ -93,7 +93,7 @@ def clip(
         )
         click.echo("🐌 Going into slow but careful mode...")
 
-        port = Port(name, True)
+        port = Port(name, False)
 
     # Allows setting custom url
     new_website = old_checks[3].replace(port.version, bump) if url is None else url
