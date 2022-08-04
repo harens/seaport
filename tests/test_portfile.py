@@ -26,6 +26,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import pytest
+from pytest_mock import MockFixture
 from pytest_subprocess import FakeProcess
 
 from seaport.portfile import Port
@@ -33,10 +35,8 @@ from seaport.portfile import Port
 
 def test_outdated_livecheck(fake_process: FakeProcess) -> None:
     """If a port is out of date."""
-
     fake_process.register_subprocess(
-        ["/usr/bin/which", "port"],
-        stdout=["/opt/local/bin/port"],
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port"]
     )
 
     fake_process.register_subprocess(
@@ -59,3 +59,35 @@ def test_outdated_livecheck(fake_process: FakeProcess) -> None:
     )
 
     assert port.livecheck() == "0.2"
+
+
+def test_failed_finding_checksums(
+    fake_process: FakeProcess, session_mocker: MockFixture
+) -> None:
+    """In the unlikely but possible event that a port is valid but doesn't have any distfiles."""
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port"]
+    )
+
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", "--index", "ioping"],
+        stdout=["example output"],
+    )
+
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", "--version", "--index", "ioping"],
+        stdout=["version: 0.1"],
+    )
+
+    port = Port("ioping")
+
+    session_mocker.patch("seaport.portfile.Port.subports", return_value=None)
+
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "distfiles", "ioping"], stdout=[""]
+    )
+
+    with pytest.raises(Exception) as excinfo:
+        port.checksums()
+
+    assert "port distfiles ioping provides no output" == str(excinfo.value)
