@@ -28,29 +28,36 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import pytest
+from pytest_mock import MockFixture
 from pytest_subprocess import FakeProcess
 
 from seaport._clipboard.portfile.portfile_numbers import new_version
 from seaport.portfile import Port
 
 
-def test_livecheck(fake_process: FakeProcess) -> None:
-    """Test new version check when using livecheck."""
+def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
+    """Generates an example gping v0.1 port for testing."""
     fake_process.register_subprocess(
         ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port"]
     )
 
     fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--index", "gping"],
+        ["/opt/local/bin/port", "info", "--index", name],
         stdout=["example output"],
     )
 
     fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--version", "--index", "gping"],
+        ["/opt/local/bin/port", "info", "--version", "--index", name],
         stdout=["version: 0.1"],
     )
 
-    port = Port("gping")
+    return Port(name)
+
+
+def test_livecheck(fake_process: FakeProcess) -> None:
+    """Test new version check when using livecheck."""
+    port = setup_port(fake_process)
 
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "livecheck", "gping"],
@@ -60,3 +67,36 @@ def test_livecheck(fake_process: FakeProcess) -> None:
     )
 
     assert new_version(port, None) == "0.2"
+
+
+def test_latest_version(fake_process: FakeProcess) -> None:
+    """If the port is already up to date."""
+    port = setup_port(fake_process)
+
+    with pytest.raises(SystemExit):
+        new_version(port, "0.1")
+
+
+def test_dev_version_nondev_port(
+    fake_process: FakeProcess, session_mocker: MockFixture
+) -> None:
+    """If the latest version is a developer option for a non-dev port"""
+    port = setup_port(fake_process)
+
+    # User doesn't want to use the new version
+    session_mocker.patch("click.confirm", return_value=False)
+
+    with pytest.raises(SystemExit):
+        new_version(port, "0.2-alpha")
+
+    # User does want to continue
+    session_mocker.patch("click.confirm", return_value=True)
+
+    assert new_version(port, "0.2-alpha") == "0.2-alpha"
+
+
+def test_dev_version_dev_port(fake_process: FakeProcess) -> None:
+    """New dev version of a port, but the port is a dev port."""
+    port = setup_port(fake_process, "gping-devel")
+
+    assert new_version(port, "0.2-alpha") == "0.2-alpha"
