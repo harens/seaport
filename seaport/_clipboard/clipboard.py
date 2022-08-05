@@ -73,6 +73,17 @@ def clip(
 
     port = Port(name)
 
+    old_checks = port.checksums()
+
+    if not port._index():
+        # Likely something's gone wrong with port --index info
+        # Probably lots of writing to portfiles
+        click.secho(
+            f"😬 `port --index info {port.name}` doesn't match `port info {port.name}`",
+            fg="yellow",
+        )
+        click.echo("🐌 Going into slow but careful mode...")
+
     # Determine new version
     bump = new_version(port, bump)
 
@@ -82,18 +93,6 @@ def clip(
     # new_version checks if bump is none and deals with it there
     os.environ["BUMP"] = bump
     os.environ["CATEGORY"] = port.primary_category()
-    old_checks = port.checksums()
-
-    if port.version not in old_checks[3]:
-        # Likely something's gone wrong with port --index info
-        # Probably lots of writing to portfiles
-        click.secho(
-            f"😬 port --index info {port.name} doesn't match port info {port.name}",
-            fg="red",
-        )
-        click.echo("🐌 Going into slow but careful mode...")
-
-        port = Port(name, False)
 
     # Allows setting custom url
     new_website = old_checks[3].replace(port.version, bump) if url is None else url

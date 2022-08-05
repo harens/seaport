@@ -33,26 +33,7 @@ from pytest_mock import MockFixture
 from pytest_subprocess import FakeProcess
 
 from seaport._clipboard.portfile.portfile_numbers import new_version
-from seaport.portfile import Port
-
-
-def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
-    """Generates an example gping v0.1 port for testing."""
-    fake_process.register_subprocess(
-        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port"]
-    )
-
-    fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--index", name],
-        stdout=["example output"],
-    )
-
-    fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--version", "--index", name],
-        stdout=["version: 0.1"],
-    )
-
-    return Port(name)
+from tests.test_portfile import setup_port
 
 
 def test_livecheck(fake_process: FakeProcess) -> None:

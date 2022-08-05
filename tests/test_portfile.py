@@ -33,23 +33,46 @@ from pytest_subprocess import FakeProcess
 from seaport.portfile import Port
 
 
-def test_outdated_livecheck(fake_process: FakeProcess) -> None:
-    """If a port is out of date."""
+# TODO: Maybe put this somewhere better?
+def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
+    """Generates an example gping v0.1 port for testing.
+
+    Since the docstrings use --index, the setup_port functions doesn't for greater coverage.
+    """
+
     fake_process.register_subprocess(
         ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port"]
     )
 
     fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--index", "gping"],
+        ["/opt/local/bin/port", "info", "--index", name],
         stdout=["example output"],
+        occurrences=4,
     )
 
     fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--version", "--index", "gping"],
+        ["/opt/local/bin/port", "info", name],
+        stdout=["different output"],
+        occurrences=4,
+    )
+
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", "--version", name],
         stdout=["version: 0.1"],
     )
 
-    port = Port("gping")
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", "--version", "--index", name],
+        stdout=["version: 0.1"],
+    )
+
+    return Port(name)
+
+
+def test_outdated_livecheck(fake_process: FakeProcess) -> None:
+    """If a port is out of date."""
+
+    port = setup_port(fake_process)
 
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "livecheck", "gping"],
@@ -61,33 +84,30 @@ def test_outdated_livecheck(fake_process: FakeProcess) -> None:
     assert port.livecheck() == "0.2"
 
 
+def test_nonindex_category(fake_process: FakeProcess) -> None:
+    port = setup_port(fake_process)
+
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", "--category", "gping"],
+        stdout=["category: net, something-else"],
+    )
+
+    assert port.primary_category() == "net"
+
+
 def test_failed_finding_checksums(
     fake_process: FakeProcess, session_mocker: MockFixture
 ) -> None:
     """In the unlikely but possible event that a port is valid but doesn't have any distfiles."""
-    fake_process.register_subprocess(
-        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port"]
-    )
-
-    fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--index", "ioping"],
-        stdout=["example output"],
-    )
-
-    fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--version", "--index", "ioping"],
-        stdout=["version: 0.1"],
-    )
-
-    port = Port("ioping")
+    port = setup_port(fake_process)
 
     session_mocker.patch("seaport.portfile.Port.subports", return_value=None)
 
     fake_process.register_subprocess(
-        ["/opt/local/bin/port", "distfiles", "ioping"], stdout=[""]
+        ["/opt/local/bin/port", "distfiles", "gping"], stdout=[""]
     )
 
     with pytest.raises(Exception) as excinfo:
         port.checksums()
 
-    assert "port distfiles ioping provides no output" == str(excinfo.value)
+    assert "port distfiles gping provides no output" == str(excinfo.value)
