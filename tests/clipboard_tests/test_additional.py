@@ -152,7 +152,7 @@ def test_perform_install(
     )
 
     fake_process.register_subprocess(
-        ["/example/sudo", "/example/port", "-vst", "install", "some-port"],
+        ["/example/sudo", "/example/port", "-vt", "install", "some-port"],
         stdout=["Installing some-port"],
         occurrences=2,
     )

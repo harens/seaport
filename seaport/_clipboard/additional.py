@@ -125,7 +125,7 @@ def perform_install(name: str) -> None:
         [
             f"{user_path()}/sudo",
             f"{user_path(True)}/port",
-            "-vst",
+            "-vt",
             "install",
             name,
         ],
