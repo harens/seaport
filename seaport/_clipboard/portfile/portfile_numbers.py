@@ -116,10 +116,10 @@ def new_version(port: Port, stated: Optional[str], new: bool = False) -> str:
     Examples:
         >>> from seaport.portfile import Port
         >>> from seaport._clipboard.portfile.portfile_numbers import new_version
-        >>> port = Port("gping")
+        >>> port = Port("py-base91")
         >>> # If the port is a new one
         >>> new_version(port, "1.2.0", True)
-        '1.3.2'
+        '1.0.1'
         >>> # If the version has been stated
         >>> new_version(port, "2.0")
         '2.0'
