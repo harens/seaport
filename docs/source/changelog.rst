@@ -1,6 +1,27 @@
 Changelog
 **********
 
+v0.7.0 (2022-08-06)
+===========================
+
+🚨 BREAKING CHANGE
+--------------------
+
+- The :code:`careful` parameter of the Port API has been removed. This is now determined automatically.
+
+⚡️ Features
+------------
+
+- The :code:`-s` flag has been dropped from during CLT installation.
+    - If the port version is being bumped, binaries aren't available so the flag doesn't make a difference.
+      The issue with :code:`-s` is that the deps are then built from source, wasting time.
+
+🐛 Bugfixes
+------------
+
+- With the CLT, there were previously some scenarios where a port is
+  completely up-to-date but the CLT would say it's up-to-date with an older version.
+
 v0.6.1 (2022-08-03)
 ===========================
 
