@@ -100,7 +100,7 @@ Homebrew 🍺
 
     brew install harens/tap/seaport
 
-Binary bottles are provided for x86_64 Linux, macOS Catalina and Big Sur.
+Binary bottles are provided for x86_64 Linux, macOS Big Sur and Monterey.
 
 PyPi 🐍
 ********
