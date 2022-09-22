@@ -28,8 +28,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# See https://click.palletsprojects.com/en/7.x/bashcomplete/#activation-script
+# See https://click.palletsprojects.com/en/8.1.x/shell-completion/
 
-_SEAPORT_COMPLETE=source_bash seaport > ./seaport/_autocomplete/seaport.bash
-_SEAPORT_COMPLETE=source_zsh seaport > ./seaport/_autocomplete/seaport.zsh
-_SEAPORT_COMPLETE=source_fish seaport > ./seaport/_autocomplete/seaport.fish
+_SEAPORT_COMPLETE=bash_source seaport > ./seaport/_autocomplete/seaport.bash
+_SEAPORT_COMPLETE=zsh_source seaport > ./seaport/_autocomplete/seaport.zsh
+_SEAPORT_COMPLETE=fish_source seaport > ./seaport/_autocomplete/seaport.fish
