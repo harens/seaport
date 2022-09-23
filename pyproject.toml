@@ -44,7 +44,7 @@ Sphinx = "^5.1.1"
 sphinx-autobuild = "^2021.3.14"
 sphinx-click = "^4.3.0"
 sphinxcontrib-programoutput = "^0.17"
-pytype = "^2022.8.3"
+pytype = "^2022.9.19"
 commitizen = "^2.29.3"
 
 [tool.poetry.scripts]
