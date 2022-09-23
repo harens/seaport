@@ -1,6 +1,20 @@
 Changelog
 **********
 
+v0.7.1 (2022-09-23)
+=====================
+
+⚡️ Features
+------------
+
+- The shell autocomplete scripts have been updated to support Click 8.
+
+🐛 Bugfixes
+------------
+
+- Fixed `PEP 585 deprecation warnings <https://github.com/beartype/beartype#pep-585-deprecations>`_ when attempting
+  to use autocompletion.
+
 v0.7.0 (2022-08-06)
 ===========================
 

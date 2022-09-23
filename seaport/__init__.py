@@ -33,5 +33,5 @@
 Find out more at https://seaport.rtfd.io/
 """
 
-__version__ = "0.7.0"
+__version__ = "0.7.1"
 __all__ = ["portfile"]
