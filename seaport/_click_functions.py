@@ -30,11 +30,11 @@
 
 """Functions related to the click commands."""
 
-from typing import Any, Callable, TypeVar
+from typing import Any, TypeVar
 
 import click
 from beartype import beartype
-from beartype.typing import List
+from beartype.typing import Callable, List
 
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.format import format_subprocess
