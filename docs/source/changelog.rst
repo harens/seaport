@@ -1,6 +1,11 @@
 Changelog
 **********
 
+v0.7.1 (2022-09-23)
+=====================
+
+- The shell autocomplete scripts have been updated to support Click 8.
+
 v0.7.0 (2022-08-06)
 ===========================
 
