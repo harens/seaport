@@ -135,7 +135,7 @@ This project is not affiliated, associated, authorized, endorsed by, or in any w
 
 The name MacPorts as well as related names, marks, emblems and images are registered trademarks of their respective owners.
 
-.. |ci-badge| image:: https://img.shields.io/github/workflow/status/harens/seaport/Tests?logo=github&style=flat-square
+.. |ci-badge| image:: https://img.shields.io/github/actions/workflow/status/harens/seaport/test.yml?logo=github&style=flat-square
    :target: https://github.com/harens/seaport/actions
    :alt: GitHub Workflow Status
 .. |rtd-badge| image:: https://img.shields.io/readthedocs/seaport?logo=read%20the%20docs&style=flat-square
