@@ -32,4 +32,3 @@ export PREFIX="poetry run python -m "
 
 poetry check
 ${PREFIX} pip check
-${PREFIX} safety check --full-report

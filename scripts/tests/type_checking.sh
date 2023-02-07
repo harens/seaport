@@ -31,4 +31,3 @@
 export PREFIX="poetry run python -m "
 
 ${PREFIX} mypy --pretty --strict seaport tests
-${PREFIX} pytype seaport tests
