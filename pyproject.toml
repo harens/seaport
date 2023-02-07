@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "seaport"
-version = "0.7.1"
+version = "0.8.0"
 description = "The modern MacPorts portfile updater"
 authors = ["harens <harensdeveloper@gmail.com>"]
 maintainers = ["harens <harensdeveloper@gmail.com>"]
