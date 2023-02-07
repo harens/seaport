@@ -146,7 +146,6 @@ def test_install_only() -> None:
 
 @beartype
 def test_lint_fail(session_mocker: MockFixture) -> None:
-
     # If linting fails
     session_mocker.patch(
         "seaport._clipboard.clipboard.perform_lint",

@@ -126,7 +126,6 @@ def clip(
     )
 
     if sudo:
-
         # Temporary files created to get around sudo write problem
         tmp_version = tempfile.NamedTemporaryFile(mode="w")
         tmp_version.write(new_contents)

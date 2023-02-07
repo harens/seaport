@@ -39,7 +39,6 @@ from seaport._clipboard.checks import user_path
 
 @beartype
 def test_user_path(fake_process: FakeProcess) -> None:
-
     # Port prefix
     fake_process.register_subprocess(
         ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"], occurrences=5

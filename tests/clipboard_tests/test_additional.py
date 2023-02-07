@@ -40,7 +40,6 @@ from seaport._clipboard.additional import perform_install, perform_lint, perform
 
 @beartype
 def test_perform_lint(fake_process: FakeProcess, session_mocker: MockFixture) -> None:
-
     # If there are errors present in port lint
 
     # Set default path
@@ -101,7 +100,6 @@ def callback_info(process: FakePopen) -> None:
 
 @beartype
 def test_perform_test(fake_process: FakeProcess, session_mocker: MockFixture) -> None:
-
     # Set default path
     # Both sudo and port used (hence example)
     session_mocker.patch(
