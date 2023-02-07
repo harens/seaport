@@ -22,6 +22,25 @@ The modern `MacPorts <https://www.macports.org>`_ portfile updater.
     No changes necessary
     📋 The contents of the portfile have been copied to your clipboard!
 
+Installation
+------------
+
+MacPorts 🍎
+************
+
+.. code-block::
+
+    sudo port install seaport
+
+PyPi 🐍
+********
+
+.. code-block::
+
+    pip3 install seaport
+    # Optionally, install GitHub CLI to send PRs
+    sudo port install gh
+
 ⚡️ Features
 --------------
 
@@ -89,25 +108,6 @@ Be sure to check out the `flags overview <https://seaport.readthedocs.io/en/stab
    * - 🌎 Can both manually and automatically set the url to download from
      - ✅
      - ❌
-
-Installation
-------------
-
-MacPorts 🍎
-************
-
-.. code-block::
-
-    sudo port install seaport
-
-PyPi 🐍
-********
-
-.. code-block::
-
-    pip3 install seaport
-    # Optionally, install GitHub CLI to send PRs
-    sudo port install gh
 
 🔨 Contributing
 ---------------
