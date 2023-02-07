@@ -37,7 +37,7 @@ The modern `MacPorts <https://www.macports.org>`_ portfile updater.
 
 * 📚 Library for convenient access to portfile information. Easily import as a Python module for your project.
 * ⌨️ `PEP 561 compatible <https://www.python.org/dev/peps/pep-0561>`_, with built in support for type checking.
-*  📦 Works out of the box with all `supported Python versions <https://endoflife.date/python>`_ (3.7-3.10).
+*  📦 Works out of the box with all `supported Python versions <https://endoflife.date/python>`_ (3.7-3.11).
 
 To find out more, please read the `Documentation <https://seaport.rtfd.io/>`_.
 
@@ -93,23 +93,21 @@ Be sure to check out the `flags overview <https://seaport.readthedocs.io/en/stab
 Installation
 ------------
 
-Homebrew 🍺
-***********
+MacPorts 🍎
+************
 
 .. code-block::
 
-    brew install harens/tap/seaport
-
-Binary bottles are provided for x86_64 Linux, macOS Big Sur and Monterey.
+    sudo port install seaport
 
 PyPi 🐍
 ********
 
-If you install seaport via `PyPi <https://pypi.org/project/seaport/>`_ and want it to send PRs for you, please install `GitHub CLI <https://cli.github.com>`_.
-
 .. code-block::
 
     pip3 install seaport
+    # Optionally, install GitHub CLI to send PRs
+    sudo port install gh
 
 🔨 Contributing
 ---------------
