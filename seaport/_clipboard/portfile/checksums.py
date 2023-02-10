@@ -30,6 +30,7 @@
 
 """Functions related to determining the current and new checksums."""
 
+import hashlib
 import shutil
 import sys
 import tempfile
@@ -40,8 +41,6 @@ import click
 from beartype import beartype
 from beartype.typing import Tuple
 
-from seaport._clipboard.checks import user_path
-from seaport._clipboard.format import format_subprocess
 from seaport._clipboard.portfile.portfile_numbers import undo_revision
 
 
@@ -65,7 +64,8 @@ def new_checksums(website: str) -> Tuple[str, str, str]:
         Couldn't determine the new url. Modify the url above and use the --url flag to set it manually
 
     Returns:
-        Tuple[str, str, str]: A tuple of strings representing the new checksums
+        Tuple[str, str, str]: A tuple of strings representing the new checksums in the order sha256,
+            rmd160 and size.
     """
     download_dir = tempfile.TemporaryDirectory()
     download_location = f"{download_dir.name}/download"
@@ -86,16 +86,12 @@ def new_checksums(website: str) -> Tuple[str, str, str]:
         )
         sys.exit(1)
 
-    # sha256 flag added even though it's the default
-    # Otherwise sometimes doesn't return sha256
-    # TODO: Repalce the subprocess with native python functions
-    sha256 = format_subprocess(
-        [f"{user_path()}/openssl", "dgst", "-sha256", download_location]
-    ).split(" ")[-1]
-    rmd160 = format_subprocess(
-        [f"{user_path()}/openssl", "dgst", "-rmd160", download_location]
-    ).split(" ")[-1]
     size = str(Path(download_location).stat().st_size)
+
+    with open(download_location, "rb") as file:
+        data = file.read()
+        sha256 = hashlib.sha256(data).hexdigest()
+        rmd160 = hashlib.new("ripemd160", data).hexdigest()
 
     download_dir.cleanup()
 
