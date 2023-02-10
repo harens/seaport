@@ -36,16 +36,24 @@ import sys
 import tempfile
 import urllib.request
 from pathlib import Path
+from sys import version_info
 
 import click
 from beartype import beartype
 from beartype.typing import Tuple
+from beartype.vale import Is
 
 from seaport._clipboard.portfile.portfile_numbers import undo_revision
 
+if version_info >= (3, 9):
+    from typing import Annotated
+else:
+    from typing_extensions import Annotated
 
-@beartype
-def new_checksums(website: str) -> Tuple[str, str, str]:
+
+def new_checksums(
+    website: Annotated[str, Is[lambda text: text[:4] == "http"]]
+) -> Tuple[str, str, str]:
     """Generate checksums of file downloaded from website.
 
     Args:
