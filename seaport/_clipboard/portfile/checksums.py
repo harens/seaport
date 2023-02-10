@@ -36,7 +36,6 @@ import sys
 import tempfile
 import urllib.request
 from pathlib import Path
-from sys import version_info
 
 import click
 from beartype import beartype
@@ -45,9 +44,11 @@ from beartype.vale import Is
 
 from seaport._clipboard.portfile.portfile_numbers import undo_revision
 
-if version_info >= (3, 9):
+# Don't count code coverage since different python versions
+# won't run different parts of code
+if sys.version_info >= (3, 9):  # pragma: no cover
     from typing import Annotated
-else:
+else:  # pragma: no cover
     from typing_extensions import Annotated
 
 
