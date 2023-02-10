@@ -68,8 +68,8 @@ def clip(
 
     It then copies the result to your clipboard.
     """
-    # Tasks that require sudo
-    sudo = test or lint or install or write
+    # Tasks that definitely require sudo
+    sudo = test or install
 
     port = Port(name)
 
@@ -125,18 +125,21 @@ def clip(
         (new_rmd160, new_sha256, new_size, bump),
     )
 
-    if sudo:
+    if sudo or write or lint:
         # Temporary files created to get around sudo write problem
         tmp_version = tempfile.NamedTemporaryFile(mode="w")
         tmp_version.write(new_contents)
         tmp_version.seek(0)
 
-        click.secho("💾 Editing local portfile repo, sudo required", fg="cyan")
+        click.secho("💾 Editing local portfile repo", fg="cyan")
         if not write:
             # Changes only reverted if the user doesn't use the --write flag
-            click.echo("Changes will be reverted after completion")
+            click.secho("📝 Changes will be reverted after completion", fg="cyan")
+
         subprocess.run(
-            [f"{user_path()}/sudo", "cp", tmp_version.name, file_location], check=True
+            ([] if os.access(file_location, os.W_OK) else [f"{user_path()}/sudo"])
+            + ["cp", tmp_version.name, file_location],
+            check=True,
         )
 
         if write:
@@ -144,6 +147,12 @@ def clip(
                 "📝 The portfile's contents have been updated",
                 fg="cyan",
             )
+
+        if lint:
+            # If the lint is not successful
+            if not perform_lint(name):
+                clean(original, file_location, name)
+                sys.exit(1)
 
         if test:
             subport = port.subports()
@@ -155,16 +164,11 @@ def clip(
             if not result:
                 clean(original, file_location, name)
                 sys.exit(1)
-        if lint:
-            # If the lint is not successful
-            if not perform_lint(name):
-                clean(original, file_location, name)
-                sys.exit(1)
 
         if install:
             perform_install(name)
 
-        clean(original, file_location, name, write)
+        clean(original, file_location, name, write, sudo)
 
     # Clipboard functions at the very end
     # to reduce the chance of user's clipboard being changed

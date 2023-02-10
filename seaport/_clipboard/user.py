@@ -30,6 +30,7 @@
 
 """Functions for modifying the user's system, such as the _clipboard."""
 
+import os
 import subprocess
 import tempfile
 
@@ -41,7 +42,11 @@ from seaport._clipboard.checks import user_path
 
 @beartype
 def clean(
-    original_text: str, location: str, port_name: str, write: bool = False
+    original_text: str,
+    location: str,
+    port_name: str,
+    write: bool = False,
+    sudo: bool = False,
 ) -> None:
     """Returns the user's local portfile repo to the original state.
 
@@ -50,6 +55,7 @@ def clean(
         location: Where the portfile is located
         port_name: The name of the portfile
         write: Whether to keep the updated portfile contents
+        sudo: Whether any testing or building was done.
 
     """
     click.secho("🧽 Cleanup", fg="cyan")
@@ -61,14 +67,23 @@ def clean(
         tmp_original.write(original_text)
         tmp_original.seek(0)
         subprocess.run(
-            [f"{user_path()}/sudo", "cp", tmp_original.name, location], check=True
+            ([] if os.access(location, os.W_OK) else [f"{user_path()}/sudo"])
+            + ["cp", tmp_original.name, location],
+            check=True,
         )
         tmp_original.close()
 
-    subprocess.run(
-        [f"{user_path()}/sudo", f"{user_path(True)}/port", "clean", "--all", port_name],
-        check=True,
-    )
+    if sudo:
+        subprocess.run(
+            [
+                f"{user_path()}/sudo",
+                f"{user_path(True)}/port",
+                "clean",
+                "--all",
+                port_name,
+            ],
+            check=True,
+        )
 
 
 @beartype
@@ -88,7 +103,7 @@ def user_clipboard(new_contents: str) -> None:
     """
     subprocess.run(
         f"{user_path()}/pbcopy",
-        universal_newlines=True,
+        text=True,
         input=new_contents,
         check=True,
     )
