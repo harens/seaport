@@ -117,6 +117,17 @@ class Port:
         return f"{self.name} {self.version}"
 
     @beartype
+    def __repr__(self) -> str:
+        """Outputs the attributes that a port was defined with.
+
+        Examples:
+            >>> from seaport.portfile import Port
+            >>> Port("py-base91")
+            Port(name=py-base91)
+        """
+        return f"Port(name={self.name})"
+
+    @beartype
     def __len__(self) -> int:
         """Returns the size of the downloaded file.
 
