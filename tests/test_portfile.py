@@ -103,7 +103,7 @@ def test_backup_revision(fake_process: FakeProcess) -> None:
     """Tests determining the revision number when the standard port info parse fails."""
     backupPort = setup_backup_port(fake_process)
 
-    assert backupPort.revision == "3"
+    assert backupPort.revision == 3
 
 
 def test_outdated_livecheck(fake_process: FakeProcess) -> None:

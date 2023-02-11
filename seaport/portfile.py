@@ -35,7 +35,7 @@ import subprocess
 from typing import Optional
 
 from beartype import beartype
-from beartype.typing import List, Tuple
+from beartype.typing import Final, List, Tuple
 
 from seaport._clipboard.format import format_subprocess
 
@@ -67,11 +67,6 @@ class Port:
         name (str): The name of the port e.g. gping
     """
 
-    # This makes mypy and pytype happy
-    # See https://google.github.io/pytype/errors.html#attribute-error
-    name: str
-    version: str
-
     @beartype
     def __init__(self, name: str) -> None:
         """Set optional attributes and check if port exists."""
@@ -79,30 +74,46 @@ class Port:
         # TODO: Refactor this
         # TODO: This also kind of defeats the purpose of that bandit error, so find a better way to determine the path
         # no forward slash at end for Bandit B607
-        self.name = name
-        self._path = format_subprocess(["/usr/bin/which", "port"]).replace("/port", "")
+        self.name: Final[str] = name
+        self._path: Final[str] = format_subprocess(["/usr/bin/which", "port"]).replace(
+            "/port", ""
+        )
 
         try:
-            self._info = format_subprocess([f"{self._path}/port", "info", self.name])
+            self._info: Final[str] = format_subprocess(
+                [f"{self._path}/port", "info", self.name]
+            )
         except subprocess.CalledProcessError:
             # TODO: Set a more specific exception
             raise Exception(f"{self.name} doesn't exist, run portindex if port is new")
 
-        self._parsedInfo = self._info[self._info.find("@") + 1 :].split()
-        versionParse = self._parsedInfo[0].split("_")
+        self._parsedInfo: Final[List[str]] = self._info[
+            self._info.find("@") + 1 :
+        ].split()
+        versionParse: Final[List[str]] = self._parsedInfo[0].split("_")
 
         # Parse saved port info, falling back to calling the explicit function
         # As a quick sanity check, see that the first digit of the version number is indeed a digit
-        if len(versionParse) not in (1, 2) or not versionParse[0][0].isdigit():
-            self.version = format_subprocess(
+
+        self.version: Final[str] = (
+            format_subprocess(
                 [f"{self._path}/port", "info", "--version", self.name]
             ).split(" ")[1]
-            self.revision = format_subprocess(
-                [f"{self._path}/port", "info", "--revision", self.name]
-            ).split(" ")[1]
-        else:
-            self.revision = 0 if len(versionParse) == 1 else int(versionParse[1])
-            self.version = versionParse[0]
+            if len(versionParse) not in (1, 2) or not versionParse[0][0].isdigit()
+            else versionParse[0]
+        )
+
+        self.revision: Final[int] = (
+            int(
+                format_subprocess(
+                    [f"{self._path}/port", "info", "--revision", self.name]
+                ).split(" ")[1]
+            )
+            if len(versionParse) not in (1, 2) or not versionParse[0][0].isdigit()
+            else 0
+            if len(versionParse) == 1
+            else int(versionParse[1])
+        )
 
     @beartype
     def __str__(self) -> str:
@@ -156,9 +167,11 @@ class Port:
         # If there's no livecheck output, fallback to subport
         # Convoluted if statement to make mypy happy
         if update == "":
-            if self.subports() is not None:
+            # Makes mypy happy since a function could theoretically change to be None
+            subports = self.subports()
+            if subports is not None:
                 update = format_subprocess(
-                    [f"{self._path}/port", "livecheck", self.subports()[-1]]
+                    [f"{self._path}/port", "livecheck", subports[-1]]
                 ).split(" ")[-1][:-1]
 
         # If there's no livecheck output again, fallback to current version
@@ -233,16 +246,19 @@ class Port:
         try:
             # We're only interested in the first result
             # Credit to https://stackoverflow.com/a/9868665/10763533
-            website = next(s for s in distfiles if "http://" in s or "https://" in s)
+            website: Final[str] = next(
+                s for s in distfiles if "http://" in s or "https://" in s
+            )
         except StopIteration:
             # Tries to determine the subport
             # This is since the distfiles cmd only works for subports
-            if self.subports() is None:
+            subports = self.subports()
+            if subports is None:
                 raise Exception(f"port distfiles {_name} provides no output")
             # Repeat the process with the subport
-            return self.checksums(self.subports()[-1])
+            return self.checksums(subports[-1])
 
-        website_index = distfiles.index(website)
+        website_index: Final[int] = distfiles.index(website)
 
         # rmd, sha, size, download website
         # TODO: This will not work for the old format
@@ -273,7 +289,7 @@ class Port:
             ")",
             ",",
         ):
-            category_list = format_subprocess(
+            category_list: Final[List[str]] = format_subprocess(
                 [f"{self._path}/port", "info", "--category", self.name]
             ).split(" ")
             # Remove comma, and only take the first category
