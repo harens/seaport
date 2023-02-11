@@ -52,6 +52,11 @@ class Port:
         '1.0.1'
 
         >>> from seaport.portfile import Port
+        >>> port = Port("py-base91")
+        >>> port.revision
+        0
+
+        >>> from seaport.portfile import Port
         >>> try:
         ...     port = Port("non-existent-port")
         ... except Exception:
@@ -77,33 +82,27 @@ class Port:
         self.name = name
         self._path = format_subprocess(["/usr/bin/which", "port"]).replace("/port", "")
 
-        # TODO: We're calling port info twice (here and in _index()). Maybe find a way to only do it once.
         try:
-            if self._index():
-                # Caches port info for later
-                # --index provides big speed boost, but doesn't always work
-                self._info = format_subprocess(
-                    [f"{self._path}/port", "info", "--index", self.name]
-                )
-            else:
-                self._info = format_subprocess(
-                    [f"{self._path}/port", "info", self.name]
-                )
+            self._info = format_subprocess([f"{self._path}/port", "info", self.name])
         except subprocess.CalledProcessError:
             # TODO: Set a more specific exception
             raise Exception(f"{self.name} doesn't exist, run portindex if port is new")
 
-        self.version = self.__current()
+        self._parsedInfo = self._info[self._info.find("@") + 1 :].split()
+        versionParse = self._parsedInfo[0].split("_")
 
-    @beartype
-    def _index(self) -> bool:
-        """Whether to use the --index flag with port or not.
-
-        --index provides a speed boost, but can be wrong if the port has been edited recently.
-        """
-        return format_subprocess(
-            [f"{self._path}/port", "info", self.name]
-        ) == format_subprocess([f"{self._path}/port", "info", "--index", self.name])
+        # Parse saved port info, falling back to calling the explicit function
+        # As a quick sanity check, see that the first digit of the version number is indeed a digit
+        if len(versionParse) not in (1, 2) or not versionParse[0][0].isdigit():
+            self.version = format_subprocess(
+                [f"{self._path}/port", "info", "--version", self.name]
+            ).split(" ")[1]
+            self.revision = format_subprocess(
+                [f"{self._path}/port", "info", "--revision", self.name]
+            ).split(" ")[1]
+        else:
+            self.revision = 0 if len(versionParse) == 1 else int(versionParse[1])
+            self.version = versionParse[0]
 
     @beartype
     def __str__(self) -> str:
@@ -126,33 +125,6 @@ class Port:
             Port(name=py-base91)
         """
         return f"Port(name={self.name})"
-
-    @beartype
-    def __len__(self) -> int:
-        """Returns the size of the downloaded file.
-
-        Examples:
-            >>> from seaport.portfile import Port
-            >>> len(Port("py-base91"))
-            2331
-        """
-        return int(self.checksums()[2])
-
-    @beartype
-    def __current(self) -> str:
-        """Determines the current version of the portfile."""
-        # TODO: Uses self._info to determine current version (since it's already saved)
-        # Be careful of revision numbers e.g. 1.2.3_1
-        # Credit to https://stackoverflow.com/a/29836831/10763533
-        # return self._info[self._info.find("@") + 1 :].split()[0]
-        if self._index():
-            return format_subprocess(
-                [f"{self._path}/port", "info", "--version", "--index", self.name]
-            ).split(" ")[1]
-        else:
-            return format_subprocess(
-                [f"{self._path}/port", "info", "--version", self.name]
-            ).split(" ")[1]
 
     # TODO: These livecheck tests will fail when I least expect it
     @beartype
@@ -184,10 +156,9 @@ class Port:
         # If there's no livecheck output, fallback to subport
         # Convoluted if statement to make mypy happy
         if update == "":
-            subports = self.subports()
-            if subports is not None:
+            if self.subports() is not None:
                 update = format_subprocess(
-                    [f"{self._path}/port", "livecheck", subports[-1]]
+                    [f"{self._path}/port", "livecheck", self.subports()[-1]]
                 ).split(" ")[-1][:-1]
 
         # If there's no livecheck output again, fallback to current version
@@ -216,16 +187,22 @@ class Port:
         Returns:
             A list representing all the subports of the port.
         """
-        if "Sub-ports" not in self._info:
-            return None
-
         # Split subport section by colon and comma
         # This needs to be made more efficient
-        subport_list = re.split(
-            "[:,]", " ".join([s for s in self._info.splitlines() if "Sub-ports" in s])
+        # TODO: Refactor so that as soon as a line containing sub-ports is found, don't bother
+        # with other iterations in for list comprehension
+        return (
+            None
+            if "Sub-ports" not in self._info
+            else [
+                i.replace(" ", "")
+                for i in re.split(
+                    "[:,]",
+                    " ".join([s for s in self._info.splitlines() if "Sub-ports" in s]),
+                )
+                if i != "Sub-ports"
+            ]
         )
-
-        return [i.replace(" ", "") for i in subport_list if i != "Sub-ports"]
 
     @beartype
     def checksums(self, _name: Optional[str] = None) -> Tuple[str, str, str, str]:
@@ -260,11 +237,10 @@ class Port:
         except StopIteration:
             # Tries to determine the subport
             # This is since the distfiles cmd only works for subports
-            subports = self.subports()
-            if subports is None:
+            if self.subports() is None:
                 raise Exception(f"port distfiles {_name} provides no output")
             # Repeat the process with the subport
-            return self.checksums(subports[-1])
+            return self.checksums(self.subports()[-1])
 
         website_index = distfiles.index(website)
 
@@ -292,13 +268,15 @@ class Port:
         Returns:
             The category of the port e.g. sysutils.
         """
-        if self._index():
-            category_list = format_subprocess(
-                [f"{self._path}/port", "info", "--index", "--category", self.name]
-            ).split(" ")
-        else:
+        # Remove leftmost bracket and rightmost comma (if multiple categories) or bracket (if only one)
+        if self._parsedInfo[1][0] != "(" or self._parsedInfo[1][-1] not in (
+            ")",
+            ",",
+        ):
             category_list = format_subprocess(
                 [f"{self._path}/port", "info", "--category", self.name]
             ).split(" ")
-        # Remove comma, and only take the first category
-        return category_list[1][:-1] if len(category_list) > 2 else category_list[1]
+            # Remove comma, and only take the first category
+            return category_list[1][:-1] if len(category_list) > 2 else category_list[1]
+        else:
+            return self._parsedInfo[1][1:-1]

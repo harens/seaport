@@ -35,9 +35,27 @@ from seaport.portfile import Port
 
 # TODO: Maybe put this somewhere better?
 def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
+    """Generates an example gping v0.1 port for testing."""
+
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port"]
+    )
+
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", name],
+        stdout=[
+            f"{name} @0.1 (quack)\nVariants:             universal\n\nDescription:          ping, but with a graph.\nHomepage:             https://github.com/orf/gping\n\nBuild Dependencies:   rust, cargo\nPlatforms:            darwin\nLicense:              MIT\nMaintainers:          Email: harens@macports.org, GitHub: harens\nPolicy: openmaintainer"
+        ],
+        occurrences=4,
+    )
+
+    return Port(name)
+
+
+def setup_backup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
     """Generates an example gping v0.1 port for testing.
 
-    Since the docstrings use --index, the setup_port functions doesn't for greater coverage.
+    However, this port tests what happens if port info parsing fails.
     """
 
     fake_process.register_subprocess(
@@ -45,28 +63,47 @@ def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
     )
 
     fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--index", name],
-        stdout=["example output"],
-        occurrences=4,
-    )
-
-    fake_process.register_subprocess(
         ["/opt/local/bin/port", "info", name],
-        stdout=["different output"],
-        occurrences=4,
+        stdout=[f"failed parsing port info output"],
     )
 
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "info", "--version", name],
-        stdout=["version: 0.1"],
+        stdout=["version: 12"],
     )
 
     fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--version", "--index", name],
-        stdout=["version: 0.1"],
+        ["/opt/local/bin/port", "info", "--revision", name],
+        stdout=["revision: 3"],
+    )
+
+    fake_process.register_subprocess(
+        ["/opt/local/bin/port", "info", "--category", name],
+        stdout=["category: bananas, somethingElse"],
     )
 
     return Port(name)
+
+
+def test_backup_category(fake_process: FakeProcess) -> None:
+    """Tests determining the main category when the standard port info parse fails."""
+    backupPort = setup_backup_port(fake_process)
+
+    assert backupPort.primary_category() == "bananas"
+
+
+def test_backup_version(fake_process: FakeProcess) -> None:
+    """Tests determining the version number when the standard port info parse fails."""
+    backupPort = setup_backup_port(fake_process)
+
+    assert backupPort.version == "12"
+
+
+def test_backup_revision(fake_process: FakeProcess) -> None:
+    """Tests determining the revision number when the standard port info parse fails."""
+    backupPort = setup_backup_port(fake_process)
+
+    assert backupPort.revision == "3"
 
 
 def test_outdated_livecheck(fake_process: FakeProcess) -> None:
@@ -84,15 +121,10 @@ def test_outdated_livecheck(fake_process: FakeProcess) -> None:
     assert port.livecheck() == "0.2"
 
 
-def test_nonindex_category(fake_process: FakeProcess) -> None:
+def test_category(fake_process: FakeProcess) -> None:
     port = setup_port(fake_process)
 
-    fake_process.register_subprocess(
-        ["/opt/local/bin/port", "info", "--category", "gping"],
-        stdout=["category: net, something-else"],
-    )
-
-    assert port.primary_category() == "net"
+    assert port.primary_category() == "quack"
 
 
 def test_failed_finding_checksums(

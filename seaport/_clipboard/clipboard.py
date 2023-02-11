@@ -75,15 +75,6 @@ def clip(
 
     old_checks = port.checksums()
 
-    if not port._index():
-        # Likely something's gone wrong with port --index info
-        # Probably lots of writing to portfiles
-        click.secho(
-            f"😬 `port --index info {port.name}` doesn't match `port info {port.name}`",
-            fg="yellow",
-        )
-        click.echo("🐌 Going into slow but careful mode...")
-
     # Determine new version
     bump = new_version(port, bump)
 
