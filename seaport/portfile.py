@@ -32,16 +32,23 @@
 
 import re
 import subprocess
+import sys
 from typing import Optional
 
 from beartype import beartype
-from beartype.typing import Final, List, Tuple
+from beartype.typing import List, Tuple
 
 from seaport._clipboard.format import format_subprocess
 
+# Don't count code coverage since different python versions
+# won't run different parts of code
+if sys.version_info >= (3, 8):  # pragma: no cover
+    from beartype.typing import Final
+else:  # pragma: no cover
+    from typing_extensions import Final
+
+
 # TODO: Set no output (especially for errors)
-
-
 class Port:
     """Scrapes portfile info for usage in Python modules.
 
@@ -176,7 +183,8 @@ class Port:
 
         # If there's no livecheck output again, fallback to current version
         # Implies no livecheck available or already up-to-date
-        return update if update != "" else self.version
+        # N.B. str is required for py 3.7 type checking
+        return update if update != "" else str(self.version)
 
     @beartype
     def subports(self) -> Optional[List[str]]:
@@ -293,6 +301,12 @@ class Port:
                 [f"{self._path}/port", "info", "--category", self.name]
             ).split(" ")
             # Remove comma, and only take the first category
-            return category_list[1][:-1] if len(category_list) > 2 else category_list[1]
+            # N.B. str seems to be required for py37 type checking
+            return (
+                str(category_list[1][:-1])
+                if len(category_list) > 2
+                else str(category_list[1])
+            )
         else:
-            return self._parsedInfo[1][1:-1]
+            # N.B. str is required for python type checking
+            return str(self._parsedInfo[1][1:-1])

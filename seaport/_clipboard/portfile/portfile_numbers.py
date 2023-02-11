@@ -132,7 +132,8 @@ def new_version(port: Port, stated: Optional[str], new: bool = False) -> str:
     # If it's a new port, essentially ignore version checks
     # Returns the current version from the portfile
     if new:
-        return port.version
+        # N.B. str seems to be required for py3.7 type checking
+        return str(port.version)
 
     # Determines new version number if none manually specified
     if stated is None:  # None used rather than "is not" to make mypy happy
