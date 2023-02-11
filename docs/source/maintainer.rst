@@ -21,4 +21,4 @@ Credit to `these <https://stackoverflow.com/a/19770395>`_ `two <https://stackove
 
     export LC_CTYPE=C
     export LANG=C
-    grep -rl 'Copyright (c) 2021' . | xargs sed -i "" -e 's/Copyright (c) 2021/Copyright (c) 2022/g'
+    grep -rl 'Copyright (c) 2022' . | xargs sed -i "" -e 's/Copyright (c) 2022/Copyright (c) 2023/g'
