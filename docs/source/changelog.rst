@@ -1,8 +1,30 @@
 Changelog
 **********
 
+v0.9.0 (2023-02-12)
+=====================
+
+🚨 BREAKING CHANGE
+--------------------
+
+- The :code:`len` method of the Port API has been removed.
+
+⚡️ Features
+------------
+
+- Sped up the Port API by reducing the number of calls to the port command.
+- Sudo no longer required if portfile is already writable or just linting.
+- Added a :code:`repr` method to the Port API.
+
+🎭 Behind the Scenes
+---------------------
+
+- :code:`typing_extensions` is now required for Python <3.9.
+- Simplified checksum calculations.
+- Checks that website starts with http.
+
 v0.8.0 (2023-02-07)
-===========================
+=====================
 
 ⚡️ Features
 ------------
