@@ -27,6 +27,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import pytest
+from beartype import beartype
 from pytest_mock import MockFixture
 from pytest_subprocess import FakeProcess
 
@@ -34,6 +35,7 @@ from seaport.portfile import Port
 
 
 # TODO: Maybe put this somewhere better?
+@beartype
 def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
     """Generates an example gping v0.1 port for testing."""
 
@@ -52,6 +54,7 @@ def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
     return Port(name)
 
 
+@beartype
 def setup_backup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
     """Generates an example gping v0.1 port for testing.
 
@@ -85,6 +88,7 @@ def setup_backup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
     return Port(name)
 
 
+@beartype
 def test_backup_category(fake_process: FakeProcess) -> None:
     """Tests determining the main category when the standard port info parse fails."""
     backupPort = setup_backup_port(fake_process)
@@ -121,12 +125,14 @@ def test_outdated_livecheck(fake_process: FakeProcess) -> None:
     assert port.livecheck() == "0.2"
 
 
+@beartype
 def test_category(fake_process: FakeProcess) -> None:
     port = setup_port(fake_process)
 
     assert port.primary_category() == "quack"
 
 
+@beartype
 def test_failed_finding_checksums(
     fake_process: FakeProcess, session_mocker: MockFixture
 ) -> None:

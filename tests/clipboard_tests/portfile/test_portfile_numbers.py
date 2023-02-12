@@ -29,6 +29,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import pytest
+from beartype import beartype
 from pytest_mock import MockFixture
 from pytest_subprocess import FakeProcess
 
@@ -36,6 +37,7 @@ from seaport._clipboard.portfile.portfile_numbers import new_version
 from tests.test_portfile import setup_port
 
 
+@beartype
 def test_livecheck(fake_process: FakeProcess) -> None:
     """Test new version check when using livecheck."""
     port = setup_port(fake_process)
@@ -50,6 +52,7 @@ def test_livecheck(fake_process: FakeProcess) -> None:
     assert new_version(port, None) == "0.2"
 
 
+@beartype
 def test_latest_version(fake_process: FakeProcess) -> None:
     """If the port is already up to date."""
     port = setup_port(fake_process)
@@ -58,6 +61,7 @@ def test_latest_version(fake_process: FakeProcess) -> None:
         new_version(port, "0.1")
 
 
+@beartype
 def test_dev_version_nondev_port(
     fake_process: FakeProcess, session_mocker: MockFixture
 ) -> None:
@@ -76,6 +80,7 @@ def test_dev_version_nondev_port(
     assert new_version(port, "0.2-alpha") == "0.2-alpha"
 
 
+@beartype
 def test_dev_version_dev_port(fake_process: FakeProcess) -> None:
     """New dev version of a port, but the port is a dev port."""
     port = setup_port(fake_process, "gping-devel")
