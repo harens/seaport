@@ -58,7 +58,7 @@ from seaport._pull_request.portfile import new_contents
 )  # TODO: Rewrite (preferably) user_path or this function so that if gh isn't found, this flag is recommended
 @click.option(
     "--gh",
-    help="Manually select the path to find gh (GitHub CLI)",
+    help=f"Manually select the path to find gh (GitHub CLI). Default: {user_path(False, True)}/gh",
     type=click.Path(exists=True, executable=True, dir_okay=False),
 )
 @click.pass_context

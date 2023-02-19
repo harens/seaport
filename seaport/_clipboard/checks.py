@@ -74,6 +74,7 @@ def user_path(
     if manual:
         return manual.split("bin")[0] + "bin"
 
+    # TODO: Run a small check to be certain that this port is the right port
     port_path = format_subprocess(["/usr/bin/which", "port"])
     port_prefix = port_path.split("bin")[0] + "bin"
 
@@ -82,6 +83,7 @@ def user_path(
 
     if third_party:
         # Cannot use port_path in case not installed by MacPorts (e.g. Homebrew)
+        # TODO: Run a small check to be certain that this is the right seaport
         seaport_path = format_subprocess(["/usr/bin/which", "seaport"])
 
         if "Python" not in seaport_path and "virtualenvs" not in seaport_path:
