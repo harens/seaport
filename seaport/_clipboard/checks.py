@@ -30,6 +30,8 @@
 
 """Defensive programming functions."""
 
+from typing import Optional
+
 from beartype import beartype
 
 from seaport._clipboard.format import format_subprocess
@@ -39,8 +41,10 @@ from seaport._clipboard.format import format_subprocess
 # It also kind of defeats the purpose of the bandit error it's meant to solve
 # TODO: This test will fail if non-default macports path is used
 @beartype
-def user_path(port: bool = False, third_party: bool = False) -> str:
-    """Determines the path to prevent starting a process with a partial executable path.
+def user_path(
+    port: bool = False, third_party: bool = False, manual: Optional[str] = None
+) -> str:
+    """Determines the bin path to prevent starting a process with a partial executable path.
 
     Examples:
         >>> from seaport._clipboard.checks import user_path
@@ -50,10 +54,14 @@ def user_path(port: bool = False, third_party: bool = False) -> str:
         >>> # If it's a standard system command
         >>> user_path()
         '/usr/bin'
+        >>> # Manually chose a custom path
+        >>> user_path(manual="/custom/path/bin/exe")
+        '/custom/path/bin'
 
     Args:
         port: Whether to output the path of the port cmd
         third_party: Whether the dependency isn't installed by default
+        manual: Manually select the path to return
 
     Returns:
         A string representing the path
@@ -62,6 +70,9 @@ def user_path(port: bool = False, third_party: bool = False) -> str:
     See https://bandit.readthedocs.io/en/latest/plugins/b607_start_process_with_partial_path.html
     """
     # no forward slash at end for Bandit B607
+
+    if manual:
+        return manual.split("bin")[0] + "bin"
 
     port_path = format_subprocess(["/usr/bin/which", "port"])
     port_prefix = port_path.split("bin")[0] + "bin"

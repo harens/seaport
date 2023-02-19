@@ -63,6 +63,7 @@ def clip(
     write: bool,
     location: Optional[str] = None,
     new: bool = False,
+    gh: Optional[str] = None,
 ) -> None:
     """Bumps the version number and checksum of NAME.
 

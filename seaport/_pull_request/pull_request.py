@@ -55,6 +55,11 @@ from seaport._pull_request.portfile import new_contents
     "--new",
     is_flag=True,
     help="Send a PR for a new portfile from the local portfile repo.",
+)  # TODO: Rewrite (preferably) user_path or this function so that if gh isn't found, this flag is recommended
+@click.option(
+    "--gh",
+    help="Manually select the path to find gh (GitHub CLI)",
+    type=click.Path(exists=True, executable=True, dir_okay=False),
 )
 @click.pass_context
 def pr(
@@ -68,6 +73,7 @@ def pr(
     lint: bool,
     install: bool,
     new: bool,
+    gh: Optional[str],
 ) -> None:
     """Bumps the version number and checksum of NAME.
 
@@ -90,7 +96,7 @@ def pr(
     # check false if macports-ports already exists (error 127)
     subprocess.run(
         [
-            f"{user_path(False, True)}/gh",
+            f"{user_path(False, True, gh)}/gh",
             "repo",
             "fork",
             "macports/macports-ports",
@@ -162,7 +168,7 @@ def pr(
         )
         subprocess.run(
             [
-                f"{user_path(False, True)}/gh",
+                f"{user_path(False, True, gh)}/gh",
                 "pr",
                 "create",
                 "--title",
