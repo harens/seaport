@@ -42,6 +42,7 @@ from seaport._clipboard.checks import user_path
 from seaport._clipboard.clipboard import clip
 from seaport._pull_request.clone import pr_variables, sync_fork
 from seaport._pull_request.portfile import new_contents
+from seaport.portfile import Port
 
 
 @click.command()
@@ -86,6 +87,9 @@ def pr(
     # Invoke the clipboard cmd
     # That's the command that determines the new contents
     ctx.forward(clip)
+
+    # Sets the correct capitalisation of name
+    name, _ = Port.rightcapitalised(name, user_path(True))
 
     # Retrieve new version number and contents
     # Assumes first category is where to put the portfile

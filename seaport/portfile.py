@@ -81,18 +81,14 @@ class Port:
         # TODO: Refactor this
         # TODO: This also kind of defeats the purpose of that bandit error, so find a better way to determine the path
         # no forward slash at end for Bandit B607
-        self.name: Final[str] = name
+
         self._path: Final[str] = format_subprocess(["/usr/bin/which", "port"]).replace(
             "/port", ""
         )
 
-        try:
-            self._info: Final[str] = format_subprocess(
-                [f"{self._path}/port", "info", self.name]
-            )
-        except subprocess.CalledProcessError:
-            # TODO: Set a more specific exception
-            raise Exception(f"{self.name} doesn't exist, run portindex if port is new")
+        capitalised_name, info = self.rightcapitalised(name, self._path)
+        self.name: Final[str] = capitalised_name
+        self._info: Final[str] = info
 
         self._parsedInfo: Final[List[str]] = self._info[
             self._info.find("@") + 1 :
@@ -120,6 +116,36 @@ class Port:
             else 0
             if len(versionParse) == 1
             else int(versionParse[1])
+        )
+
+    @staticmethod
+    def rightcapitalised(
+        input_name: str, port_path: str = "/opt/local/bin"
+    ) -> Tuple[str, str]:
+        """Get the correct capitalisation of a port.
+
+        Args:
+            input_name: The potentially wrong-capitalised name of a port
+            port_path: The path to the port binary (default /opt/local/bin)
+
+        Returns:
+            Tuple[str, str]: A tuple representing the right-capitalised name and the scraped
+                port info.
+
+        """
+        try:
+            portInfo: Final[str] = format_subprocess(
+                [f"{port_path}/port", "info", input_name]
+            )
+        except subprocess.CalledProcessError:
+            raise RuntimeError(
+                f"{input_name} doesn't exist, run portindex if port is new"
+            )
+
+        # If @ not in output, then parsing probably failed. Fall back to original name
+        return (
+            portInfo.split("@")[0].strip() if "@" in portInfo else input_name,
+            portInfo,
         )
 
     def __str__(self) -> str:

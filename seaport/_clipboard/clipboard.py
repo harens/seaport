@@ -74,6 +74,9 @@ def clip(
 
     port = Port(name)
 
+    # Sets correct capitalisation
+    name = port.name
+
     old_checks = port.checksums()
 
     # Determine new version
