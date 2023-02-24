@@ -30,16 +30,39 @@
 
 """Defensive programming functions."""
 
-from typing import Optional
+import sys
+from typing import Any, Callable, Optional, TypeVar
 
 from beartype import beartype
 
 from seaport._clipboard.format import format_subprocess
 
+# Don't count code coverage since different python versions
+# won't run different parts of code
+if "pytest" in sys.modules:  # pragma: no cover
+    # Caching the result breaks tests, so disable caching during testing.
+
+    F = TypeVar("F", bound=Callable[..., Any])
+
+    @beartype
+    def cache(func: F) -> F:
+        """A decorator that does nothing."""
+        return func
+
+elif sys.version_info >= (3, 9):  # pragma: no cover
+    from functools import cache
+else:  # pragma: no cover
+    from functools import lru_cache
+
+    # mypy complains due to the type signature of cache for pytest
+    cache = lru_cache(maxsize=None)  # type: ignore[assignment]
 
 # TODO: This will need major refactoring (it's a mess)
 # It also kind of defeats the purpose of the bandit error it's meant to solve
 # TODO: This test will fail if non-default macports path is used
+
+
+@cache
 @beartype
 def user_path(
     port: bool = False, third_party: bool = False, manual: Optional[str] = None
