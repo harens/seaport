@@ -93,7 +93,9 @@ def clip(
     new_website = old_checks[3].replace(port.version, bump) if url is None else url
 
     # Parameter is new website (old website with old version replaced with new version)
-    new_sha256, new_rmd160, new_size = new_checksums(new_website)
+    new_sha256, new_rmd160, new_size = new_checksums(
+        new_website, port if install or test else None
+    )
 
     click.secho("🔎 Checksums:", fg="cyan")
     click.echo(f"Old rmd160: {old_checks[0]}")
