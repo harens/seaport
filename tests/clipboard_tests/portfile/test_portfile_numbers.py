@@ -54,7 +54,7 @@ def test_livecheck(fake_process: FakeProcess) -> None:
 
 @beartype
 def test_latest_version(fake_process: FakeProcess) -> None:
-    """If the port is already up to date."""
+    """If the port is already up-to-date."""
     port = setup_port(fake_process)
 
     with pytest.raises(SystemExit):
