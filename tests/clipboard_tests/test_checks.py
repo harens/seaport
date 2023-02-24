@@ -41,24 +41,40 @@ from seaport._clipboard.checks import user_path
 def test_user_path(fake_process: FakeProcess) -> None:
     # Port prefix
     fake_process.register_subprocess(
-        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"], occurrences=5
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"]
     )
 
     assert user_path(True) == "/opt/local/bin"
 
+
+@beartype
+def test_first_party_path(fake_process: FakeProcess) -> None:
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"]
+    )
+
     # Default prefix (first party tools)
     assert user_path() == "/usr/bin"
 
-    # Third party tool prefixes
 
-    # If installed by MacPorts
+@beartype
+def test_macports_install_path(fake_process: FakeProcess) -> None:
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"]
+    )
+
     fake_process.register_subprocess(
         ["/usr/bin/which", "seaport"], stdout=["/opt/local/bin/seaport\n"]
     )
 
     assert user_path(False, True) == "/opt/local/bin"
 
-    # If installed by Homebrew
+
+@beartype
+def test_homebrew_install_path(fake_process: FakeProcess) -> None:
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"]
+    )
 
     fake_process.register_subprocess(
         ["/usr/bin/which", "seaport"], stdout=["/usr/local/bin/seaport\n"]
@@ -66,8 +82,14 @@ def test_user_path(fake_process: FakeProcess) -> None:
 
     assert user_path(False, True) == "/usr/local/bin"
 
-    # Poetry example (should default to MacPorts)
 
+@beartype
+def test_poetry_install_path(fake_process: FakeProcess) -> None:
+    fake_process.register_subprocess(
+        ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"]
+    )
+
+    # Poetry example (should default to MacPorts)
     fake_process.register_subprocess(
         ["/usr/bin/which", "seaport"],
         stdout=[
