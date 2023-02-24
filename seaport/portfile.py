@@ -49,6 +49,7 @@ else:  # pragma: no cover
 
 
 # TODO: Set no output (especially for errors)
+@beartype
 class Port:
     """Scrapes portfile info for usage in Python modules.
 
@@ -74,7 +75,6 @@ class Port:
         name (str): The name of the port e.g. gping
     """
 
-    @beartype
     def __init__(self, name: str) -> None:
         """Set optional attributes and check if port exists."""
         # TODO: Figure out how to find path without subprocess
@@ -122,7 +122,6 @@ class Port:
             else int(versionParse[1])
         )
 
-    @beartype
     def __str__(self) -> str:
         """Outputs the name and version of the port.
 
@@ -133,7 +132,6 @@ class Port:
         """
         return f"{self.name} {self.version}"
 
-    @beartype
     def __repr__(self) -> str:
         """Outputs the attributes that a port was defined with.
 
@@ -145,7 +143,6 @@ class Port:
         return f"Port(name={self.name})"
 
     # TODO: These livecheck tests will fail when I least expect it
-    @beartype
     def livecheck(self) -> str:
         """Runs port livecheck to check for any new versions.
 
@@ -186,7 +183,6 @@ class Port:
         # N.B. str is required for py 3.7 type checking
         return update if update != "" else str(self.version)
 
-    @beartype
     def subports(self) -> Optional[List[str]]:
         """Determines a list of subports of a port.
 
@@ -225,7 +221,6 @@ class Port:
             ]
         )
 
-    @beartype
     def checksums(self, _name: Optional[str] = None) -> Tuple[str, str, str, str]:
         """Determines the current checksums of a portfile.
 
@@ -277,7 +272,6 @@ class Port:
             website,
         )
 
-    @beartype
     def primary_category(self) -> str:
         """Determines the first category of a port.
 
