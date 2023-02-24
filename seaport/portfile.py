@@ -93,7 +93,7 @@ class Port:
         self._parsedInfo: Final[List[str]] = self._info[
             self._info.find("@") + 1 :
         ].split()
-        versionParse: Final[List[str]] = self._parsedInfo[0].split("_")
+        version_parse: Final[List[str]] = self._parsedInfo[0].split("_")
 
         # Parse saved port info, falling back to calling the explicit function
         # As a quick sanity check, see that the first digit of the version number is indeed a digit
@@ -102,8 +102,8 @@ class Port:
             format_subprocess(
                 [f"{self._path}/port", "info", "--version", self.name]
             ).split(" ")[1]
-            if len(versionParse) not in (1, 2) or not versionParse[0][0].isdigit()
-            else versionParse[0]
+            if len(version_parse) not in (1, 2) or not version_parse[0][0].isdigit()
+            else version_parse[0]
         )
 
         self.revision: Final[int] = (
@@ -112,10 +112,10 @@ class Port:
                     [f"{self._path}/port", "info", "--revision", self.name]
                 ).split(" ")[1]
             )
-            if len(versionParse) not in (1, 2) or not versionParse[0][0].isdigit()
+            if len(version_parse) not in (1, 2) or not version_parse[0][0].isdigit()
             else 0
-            if len(versionParse) == 1
-            else int(versionParse[1])
+            if len(version_parse) == 1
+            else int(version_parse[1])
         )
 
     @staticmethod
@@ -247,12 +247,13 @@ class Port:
             ]
         )
 
+    # noinspection HttpUrlsUsage
     def checksums(self, _name: Optional[str] = None) -> Tuple[str, str, str, str]:
         """Determines the current checksums of a portfile.
 
-        For python ports, their pyXY- subport is used to determine the checksums.
-        Note that this method only works for ports with the standard rmd/sha/size setup (not the older format), and it can also be
-        quite slow since it's scraping `port distfiles NAME`
+        For python ports, their pyXY- subport is used to determine the checksums. Note that this method only works
+        for ports with the standard rmd/sha/size setup (not the older format), and it can also be quite slow since
+        it's scraping `port distfiles NAME`
 
         Examples:
             >>> # Determines rmd160/sha256/size/website

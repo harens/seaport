@@ -84,7 +84,7 @@ def undo_revision(text: str) -> str:
         click.echo("No changes necessary")
         return text
     # If there are multiple revision numbers, we don't know which one to change
-    # If all of the revision numbers are 0, this is accounted for in the last if statement
+    # If all the revision numbers are 0, this is accounted for in the last if statement
     if total > 1:
         click.secho(
             "Multiple revision numbers found. Unsure which to reduce to 0", fg="red"

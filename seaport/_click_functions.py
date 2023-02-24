@@ -53,7 +53,7 @@ def get_names(ctx: Any, param: click.Argument, incomplete: str) -> List[str]:
 
     Args:
         ctx: The current command context
-        args: The list of arguments passed in
+        param: The list of arguments passed in
         incomplete: The partial word that is being completed
 
     Returns:
@@ -92,7 +92,8 @@ def main_cmd(function: F) -> F:
     # Some versions could be v1.2.0-post for example
     function = click.option(
         "--bump",
-        help="Manually set the version number to bump it to. By default, it uses the value outputted from the livecheck. This flag can be useful if there's no livecheck available or if you want to override it.",
+        help="Manually set the version number to bump it to. By default, it uses the value outputted from the "
+        "livecheck. This flag can be useful if there's no livecheck available or if you want to override it.",
         type=str,
     )(function)
     function = click.option(
@@ -106,7 +107,8 @@ def main_cmd(function: F) -> F:
     function = click.option(
         "--install/--no-install",
         default=False,
-        help="Installs the port via the updated portfile and allows testing of basic functionality. After this has been completed, the port is uninstalled from the user's system.",
+        help="Installs the port via the updated portfile and allows testing of basic functionality. After this has "
+        "been completed, the port is uninstalled from the user's system.",
     )(function)
     function = click.option(
         "--lint/--no-lint", default=False, help="Runs port lint --nitpick."

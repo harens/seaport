@@ -46,7 +46,10 @@ def setup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
     fake_process.register_subprocess(
         ["/opt/local/bin/port", "info", name],
         stdout=[
-            f"{name} @0.1 (quack)\nVariants:             universal\n\nDescription:          ping, but with a graph.\nHomepage:             https://github.com/orf/gping\n\nBuild Dependencies:   rust, cargo\nPlatforms:            darwin\nLicense:              MIT\nMaintainers:          Email: harens@macports.org, GitHub: harens\nPolicy: openmaintainer"
+            f"{name} @0.1 (quack)\nVariants:             universal\n\nDescription:          ping, but with a "
+            f"graph.\nHomepage:             https://github.com/orf/gping\n\nBuild Dependencies:   rust, "
+            f"cargo\nPlatforms:            darwin\nLicense:              MIT\nMaintainers:          Email: "
+            f"harens@macports.org, GitHub: harens\nPolicy: openmaintainer"
         ],
         occurrences=4,
     )
@@ -91,23 +94,23 @@ def setup_backup_port(fake_process: FakeProcess, name: str = "gping") -> Port:
 @beartype
 def test_backup_category(fake_process: FakeProcess) -> None:
     """Tests determining the main category when the standard port info parse fails."""
-    backupPort = setup_backup_port(fake_process)
+    backup_port = setup_backup_port(fake_process)
 
-    assert backupPort.primary_category() == "bananas"
+    assert backup_port.primary_category() == "bananas"
 
 
 def test_backup_version(fake_process: FakeProcess) -> None:
     """Tests determining the version number when the standard port info parse fails."""
-    backupPort = setup_backup_port(fake_process)
+    backup_port = setup_backup_port(fake_process)
 
-    assert backupPort.version == "12"
+    assert backup_port.version == "12"
 
 
 def test_backup_revision(fake_process: FakeProcess) -> None:
     """Tests determining the revision number when the standard port info parse fails."""
-    backupPort = setup_backup_port(fake_process)
+    backup_port = setup_backup_port(fake_process)
 
-    assert backupPort.revision == 3
+    assert backup_port.revision == 3
 
 
 def test_outdated_livecheck(fake_process: FakeProcess) -> None:

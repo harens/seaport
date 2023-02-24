@@ -82,7 +82,8 @@ def pr(
 
     The flags in clip are also valid for this subcommand.
 
-    The pull request template is automatically filled in depending on what flags the command was run with (e.g. if --lint was used, this would be noted in the verification section of the template).
+    The pull request template is automatically filled in depending on what flags the command was run with (e.g. if
+    --lint was used, this would be noted in the verification section of the template).
     """
     # Invoke the clipboard cmd
     # That's the command that determines the new contents

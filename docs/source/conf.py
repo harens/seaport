@@ -15,13 +15,10 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
 
-from datetime import datetime
-
 # -- Project information -----------------------------------------------------
 
 project = "seaport"
 author = "Haren S"
-copyright = f"{datetime.now().year}, {author}"
 
 # -- General configuration ---------------------------------------------------
 
@@ -46,7 +43,6 @@ templates_path = ["_templates"]
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-
 
 # -- Options for HTML output -------------------------------------------------
 
