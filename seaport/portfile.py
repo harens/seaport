@@ -67,7 +67,7 @@ class Port:
         >>> from seaport.portfile import Port
         >>> try:
         ...     port = Port("non-existent-port")
-        ... except Exception:
+        ... except RuntimeError:
         ...     pass
         >>> # This raises an exception
 
@@ -257,7 +257,7 @@ class Port:
             # This is since the distfiles cmd only works for subports
             subports = self.subports()
             if subports is None:
-                raise Exception(f"port distfiles {_name} provides no output")
+                raise RuntimeError(f"port distfiles {_name} provides no output")
             # Repeat the process with the subport
             return self.checksums(subports[-1])
 
