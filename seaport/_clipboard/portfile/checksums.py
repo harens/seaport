@@ -119,7 +119,7 @@ def new_checksums(
         sha256 = hashlib.sha256(data).hexdigest()
         rmd160 = hashlib.new("ripemd160", data).hexdigest()
 
-    # TODO: Maybe find a way of refactoring this using Port (expecially the checksum method)
+    # TODO: Maybe find a way of refactoring this using Port (especially the checksum method)
     # Maybe move logic to Port class.
     if distfile:
         # If it's a python top level port, itss distfile directory will be for a subport
