@@ -184,21 +184,21 @@ files = [
 
 [[package]]
 name = "commitizen"
-version = "3.1.1"
+version = "3.2.0"
 description = "Python commitizen client tool"
 category = "dev"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "commitizen-3.1.1-py3-none-any.whl", hash = "sha256:7ea8265a56f16df1bbb78ca4af3f162689437548d14304d10815b4c6da4dcda4"},
-    {file = "commitizen-3.1.1.tar.gz", hash = "sha256:337d721555b66f803d60a0b0bafe0d3cf68a584b1f85ef0c43c45d279dc6737b"},
+    {file = "commitizen-3.2.0-py3-none-any.whl", hash = "sha256:7a694374d73590a2120b018516395ac6a2a8ee9c4a6eb743e82bad542c500525"},
+    {file = "commitizen-3.2.0.tar.gz", hash = "sha256:2c2b9b72b66bfa82cf8041ca2577443cbc96e964c3ef676b11d837e2aa8ea487"},
 ]
 
 [package.dependencies]
 argcomplete = ">=1.12.1,<3.1"
 charset-normalizer = ">=2.1.0,<4"
 colorama = ">=0.4.1,<0.5.0"
-decli = ">=0.5.2,<0.6.0"
+decli = ">=0.6.0,<0.7.0"
 importlib_metadata = ">=4.13,<5"
 jinja2 = ">=2.10.3"
 packaging = ">=19"
@@ -277,14 +277,14 @@ toml = ["tomli"]
 
 [[package]]
 name = "decli"
-version = "0.5.2"
+version = "0.6.0"
 description = "Minimal, easy-to-use, declarative cli tool"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "decli-0.5.2-py3-none-any.whl", hash = "sha256:d3207bc02d0169bf6ed74ccca09ce62edca0eb25b0ebf8bf4ae3fb8333e15ca0"},
-    {file = "decli-0.5.2.tar.gz", hash = "sha256:f2cde55034a75c819c630c7655a844c612f2598c42c21299160465df6ad463ad"},
+    {file = "decli-0.6.0-py3-none-any.whl", hash = "sha256:d5ed1d509f5a6cf765a4d7350f7ffb0be0c1770840cbd38b05fb0aab642645e8"},
+    {file = "decli-0.6.0.tar.gz", hash = "sha256:2915a55525ef2b1a0ce88b8ccba62ac22df5b6ff3ed2094448e0f951f08e7ba5"},
 ]
 
 [[package]]
@@ -1342,4 +1342,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4.0"
-content-hash = "a8e0457f67362d17845e46a073f1cb414a7e567f182b6a8d706ded659a41fbdb"
+content-hash = "84ef91ddb1a3bda3e01a1f91807784b814a25b675af997c03cb79bb28b501d2c"
