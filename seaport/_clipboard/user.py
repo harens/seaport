@@ -41,49 +41,30 @@ from seaport._clipboard.checks import user_path
 
 
 @beartype
-def clean(
+def revert_contents(
     original_text: str,
     location: str,
-    port_name: str,
-    write: bool = False,
-    sudo: bool = False,
 ) -> None:
     """Returns the user's local portfile repo to the original state.
+
+    Should only be used when --write is not used.
 
     Args:
         original_text: What the contents of the portfile originally was
         location: Where the portfile is located
-        port_name: The name of the portfile
-        write: Whether to keep the updated portfile contents
-        sudo: Whether any testing or building was done.
 
     """
-    click.secho("🧽 Cleanup", fg="cyan")
-
-    # Only revert the portfile contents if the user doesn't use --write
-    if not write:
-        # Change contents of local portfile back to original
-        tmp_original = tempfile.NamedTemporaryFile(mode="w")
-        tmp_original.write(original_text)
-        tmp_original.seek(0)
-        subprocess.run(
-            ([] if os.access(location, os.W_OK) else [f"{user_path()}/sudo"])
-            + ["cp", tmp_original.name, location],
-            check=True,
-        )
-        tmp_original.close()
-
-    if sudo:
-        subprocess.run(
-            [
-                f"{user_path()}/sudo",
-                f"{user_path(True)}/port",
-                "clean",
-                "--all",
-                port_name,
-            ],
-            check=True,
-        )
+    click.secho("🧽 Reverting portfile contents", fg="cyan")
+    # Change contents of local portfile back to original
+    tmp_original = tempfile.NamedTemporaryFile(mode="w")
+    tmp_original.write(original_text)
+    tmp_original.seek(0)
+    subprocess.run(
+        ([] if os.access(location, os.W_OK) else [f"{user_path()}/sudo"])
+        + ["cp", tmp_original.name, location],
+        check=True,
+    )
+    tmp_original.close()
 
 
 @beartype

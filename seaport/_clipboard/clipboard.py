@@ -44,7 +44,7 @@ from seaport._clipboard.additional import perform_install, perform_lint, perform
 from seaport._clipboard.checks import user_path
 from seaport._clipboard.portfile.checksums import new_checksums, replace_checksums
 from seaport._clipboard.portfile.portfile_numbers import new_version
-from seaport._clipboard.user import clean, user_clipboard
+from seaport._clipboard.user import revert_contents, user_clipboard
 from seaport.portfile import Port
 
 
@@ -69,9 +69,6 @@ def clip(
 
     It then copies the result to your clipboard.
     """
-    # Tasks that definitely require sudo
-    sudo = test or install
-
     port = Port(name)
 
     # Sets correct capitalisation
@@ -122,7 +119,7 @@ def clip(
         (new_rmd160, new_sha256, new_size, bump),
     )
 
-    if sudo or write or lint:
+    if test or install or write or lint:
         # Temporary files created to get around sudo write problem
         tmp_version = tempfile.NamedTemporaryFile(mode="w")
         tmp_version.write(new_contents)
@@ -148,7 +145,8 @@ def clip(
         if lint:
             # If the lint is not successful
             if not perform_lint(name):
-                clean(original, file_location, name)
+                if not write:
+                    revert_contents(original, file_location)
                 sys.exit(1)
 
         if test:
@@ -159,13 +157,15 @@ def clip(
                 result = perform_test(name)
             # If the tests fail
             if not result:
-                clean(original, file_location, name)
+                if not write:
+                    revert_contents(original, file_location)
                 sys.exit(1)
 
         if install:
             perform_install(name)
 
-        clean(original, file_location, name, write, sudo)
+        if not write:
+            revert_contents(original, file_location)
 
     # Clipboard functions at the very end
     # to reduce the chance of user's clipboard being changed

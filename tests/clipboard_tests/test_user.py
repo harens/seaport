@@ -33,7 +33,7 @@ from pytest import CaptureFixture
 from pytest_mock import MockFixture
 from pytest_subprocess import FakeProcess
 
-from seaport._clipboard.user import clean
+from seaport._clipboard.user import revert_contents
 
 
 @beartype
@@ -54,17 +54,8 @@ def test_clean(
         ["/some/path/sudo", "cp", "tempfilename", "somewhere"], stdout=["Copied\n"]
     )
 
-    fake_process.register_subprocess(
-        ["/some/path/sudo", "/some/path/port", "clean", "--all", "portname"],
-        stdout=["Cleaned\n"],
-        occurrences=2,
-    )
-
-    clean("original contents", "somewhere", "portname")
+    revert_contents("original contents", "somewhere")
     out, err = capfd.readouterr()
 
-    assert out == "🧽 Cleanup\n"
+    assert out == "🧽 Reverting portfile contents\n"
     assert not err
-
-    # If writing to local portfile (basically only do the port clean)
-    clean("original contents", "somewhere", "portname", True)
