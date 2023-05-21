@@ -132,7 +132,7 @@ def perform_install(name: str) -> None:
         check=True,
     )
     click.secho(
-        "Paused to allow user to test basic functionality in a different terminal",
+        "Paused to allow you to test basic functionality in a different terminal",
         fg="cyan",
     )
     if click.confirm("Do you want to uninstall the port?"):
