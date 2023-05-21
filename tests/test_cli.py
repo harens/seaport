@@ -109,7 +109,19 @@ def test_no_sudo() -> None:
 
 
 @beartype
-def test_test_only() -> None:
+def test_test_only_mainport() -> None:
+    runner = CliRunner()
+    result = runner.invoke(seaport, ["clip", "ioping", "--bump", "1.2", "--test"])
+    assert (
+        "📋 The contents of the portfile have been copied to your clipboard!"
+        in result.output
+    )
+    assert result.exit_code == 0
+    assert "1.2" in format_subprocess(["pbpaste"])
+
+
+@beartype
+def test_test_only_subports() -> None:
     runner = CliRunner()
     result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0", "--test"])
     assert (
@@ -153,7 +165,19 @@ def test_lint_fail(session_mocker: MockFixture) -> None:
     )
 
     runner = CliRunner()
-    result = runner.invoke(seaport, ["clip", "gping", "--bump", "1.1.0", "--lint"])
+    result = runner.invoke(seaport, ["clip", "gping", "--bump", "1.7.0", "--lint"])
+    assert result.exit_code == 1
+
+
+@beartype
+def test_tests_fail(session_mocker: MockFixture) -> None:
+    session_mocker.patch(
+        "seaport._clipboard.clipboard.perform_test",
+        return_value=False,
+    )
+
+    runner = CliRunner()
+    result = runner.invoke(seaport, ["clip", "ioping", "--bump", "1.2", "--test"])
     assert result.exit_code == 1
 
 
