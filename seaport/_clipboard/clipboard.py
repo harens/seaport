@@ -145,8 +145,8 @@ def clip(
         if lint:
             # If the lint is not successful
             if not perform_lint(name):
-                if not write:
-                    revert_contents(original, file_location)
+                # If user doesn't wish to continue after failed lint, contents should revert to original
+                revert_contents(original, file_location)
                 sys.exit(1)
 
         if test:
@@ -157,8 +157,8 @@ def clip(
                 result = perform_test(name)
             # If the tests fail
             if not result:
-                if not write:
-                    revert_contents(original, file_location)
+                # If tests fail, contents should revert to original working version?
+                revert_contents(original, file_location)
                 sys.exit(1)
 
         if install:
