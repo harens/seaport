@@ -1,6 +1,19 @@
 Changelog
 **********
 
+v0.10.0 (2023-05-21)
+======================
+
+⚡️ Features
+------------
+- The downloaded distfile used for determining checksums is cached so that MacPorts can use it for
+  :code:`port install/test/etc`.
+- :code:`port clean` is no longer run at the end. The user might want to keep the distfiles for further tests or
+  builds, and can run :code:`port clean` themselves if required.
+- :code:`--gh` flag added to the pr command. It allows users to explicitly set the path to GitHub CLI.
+- The port name is now capitalised correctly regardless of what the user types in.
+- Paths for various system commands (e.g. MacPorts, GitHub CLI, etc.) are cached.
+
 v0.9.0 (2023-02-12)
 =====================
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "seaport"
-version = "0.9.0"
+version = "0.10.0"
 description = "The modern MacPorts portfile updater"
 authors = ["harens <harensdeveloper@gmail.com>"]
 maintainers = ["harens <harensdeveloper@gmail.com>"]
@@ -71,7 +71,7 @@ max-line-length = "88"
 target-version = ["py37"]
 
 [tool.commitizen]
-version = "0.9.0"
+version = "0.10.0"
 tag_format = "v$version"
 version_files = [
   "pyproject.toml:version",
