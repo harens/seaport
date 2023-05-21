@@ -1,6 +1,17 @@
 Changelog
 **********
 
+v0.10.1 (2023-05-21)
+======================
+
+⚡️ Features
+------------
+- If the tests or lint fails, the port contents are reverted to their original state.
+
+🐛 Bugfixes
+------------
+- Fixed bug where seaport would ignore :code:`port lint` if there was only one warning/error.
+
 v0.10.0 (2023-05-21)
 ======================
 
