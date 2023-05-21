@@ -64,14 +64,12 @@ def perform_lint(name: str) -> bool:
     errors = int(output_list[output_list.index("errors") - 1])
     warnings = int(output_list[output_list.index("warnings") - 1])
 
-    if errors > 1:
+    if errors >= 1:
         # Fail if there are any errors
         return False
-    if warnings > 1:
+    if warnings >= 1:
         # Ask whether the user wishes to continue
-        if not click.confirm(
-            f"There are {warnings} warnings. Do you wish to continue?"
-        ):
+        if not click.confirm(f"Warnings are present. Do you wish to continue?"):
             return False
     return True
 
