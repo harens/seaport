@@ -31,15 +31,21 @@
 """Defensive programming functions."""
 
 import sys
-from typing import Any, Callable, Optional, TypeVar
 
 from beartype import beartype
+from beartype.typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
 
 from seaport._clipboard.format import format_subprocess
 
 # Don't count code coverage since different python versions
 # won't run different parts of code
-if "pytest" in sys.modules:  # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
+    # What mypy should type-check against
+    if sys.version_info >= (3, 9):
+        from functools import cache
+    else:
+        from functools import lru_cache as cache
+elif "pytest" in sys.modules:  # pragma: no cover
     # Caching the result breaks tests, so disable caching during testing.
 
     F = TypeVar("F", bound=Callable[..., Any])
