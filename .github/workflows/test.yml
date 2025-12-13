@@ -52,11 +52,8 @@ jobs:
     - name: Set up MacPorts  # Only required for pytest
       if: matrix.test-file == 'pytest'
       uses: GiovanniBussi/macports-ci-action@master
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip poetry
-        poetry --version
-        poetry install
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
     - name: Test ${{ matrix.test-file }}
       run: bash ./scripts/tests/${{ matrix.test-file }}.sh
     - name: Upload coverage to Codecov  # Again only required for pytest

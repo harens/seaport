@@ -35,16 +35,15 @@ First, clone the project and install all the dependencies. This also installs a 
 
     git clone https://github.com/harens/seaport
     cd seaport
-    poetry install && poetry shell
-    pre-commit install
-    seaport --help
+    uv run pre-commit install
+    uv run seaport --help
 
 🚀 Commits
 ***********
 
 As of v0.6.1, seaport uses `commitizen <https://commitizen-tools.github.io/commitizen/>`_ to help manage commits.
 
-To make a commit, stage the relevant changes, and then run :code:`cz c`.
+To make a commit, stage the relevant changes, and then run :code:`uv run cz c`.
 
 🚧 Removing trailing whitespace
 ================================

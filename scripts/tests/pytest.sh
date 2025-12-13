@@ -30,7 +30,7 @@
 
 # TODO: Break up github actions into different tests.
 
-export PREFIX="poetry run python -m "
+export PREFIX="uv run python -m "
 
 # Important that seaport comes before tests
 # This is since mocking in tests messes up docstring tests

@@ -84,17 +84,15 @@ def test_homebrew_install_path(fake_process: FakeProcess) -> None:
 
 
 @beartype
-def test_poetry_install_path(fake_process: FakeProcess) -> None:
+def test_uv_install_path(fake_process: FakeProcess) -> None:
     fake_process.register_subprocess(
         ["/usr/bin/which", "port"], stdout=["/opt/local/bin/port\n"]
     )
 
-    # Poetry example (should default to MacPorts)
+    # uv example (should default to MacPorts)
     fake_process.register_subprocess(
         ["/usr/bin/which", "seaport"],
-        stdout=[
-            "~/Library/Caches/pypoetry/virtualenvs/seaport-kpP_O3aU-py3.8/bin/seaport\n"
-        ],
+        stdout=["~/Library/Caches/uv/python/cpython-3.14/bin/seaport\n"],
     )
 
     assert user_path(False, True) == "/opt/local/bin"

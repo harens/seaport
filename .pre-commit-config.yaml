@@ -1,11 +1,8 @@
-default_language_version:
-  python: python3.8
-
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
@@ -13,7 +10,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/myint/autoflake
-    rev: v2.0.1
+    rev: v2.3.1
     hooks:
       - id: autoflake
         args:
@@ -26,7 +23,7 @@ repos:
     hooks:
       - id: commitizen
         name: commitizen
-        entry: poetry run cz check
+        entry: uv run cz check
         args: [--allow-abort, --commit-msg-file]
         stages: [commit-msg]
         language: system
@@ -35,7 +32,7 @@ repos:
     hooks:
       - id: pyupgrade
         name: pyupgrade
-        entry: poetry run pyupgrade --py37-plus
+        entry: uv run pyupgrade --py37-plus
         types: [python]
         language: system
 
@@ -43,7 +40,7 @@ repos:
     hooks:
       - id: isort
         name: isort
-        entry: poetry run isort
+        entry: uv run isort
         types: [python]
         language: system
 
@@ -51,6 +48,6 @@ repos:
     hooks:
       - id: black
         name: black
-        entry: poetry run black
+        entry: uv run black
         types: [python]
         language: system

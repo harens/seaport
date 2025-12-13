@@ -8,7 +8,7 @@ Have you updated the :code:`contributing.rst` file by cross-referencing with :co
 
 If so, run :code:`cz bump -s --increment LEVEL`, where LEVEL could be major, minor or patch.
 
-Deploy to PyPi by running :code:`poetry build` and :code:`poetry publish`. Also update the Homebrew formula.
+Deploy to PyPi by running :code:`uv build` and :code:`uv publish`. Also update the Homebrew formula.
 
 📆 Updating Copyright Year
 ****************************
