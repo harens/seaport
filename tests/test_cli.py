@@ -83,7 +83,7 @@ def test_url() -> None:
             "clip",
             "py-rich",
             "--bump",
-            "9.7.0",
+            "9.8.0",
             "--url",
             "https://files.pythonhosted.org/packages/source/r/rich/rich-9.8.0.tar.gz",
         ],
@@ -93,19 +93,19 @@ def test_url() -> None:
         in result.output
     )
     assert result.exit_code == 0
-    assert "9.7.0" in format_subprocess(["pbpaste"])
+    assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
 @beartype
 def test_no_sudo() -> None:
     runner = CliRunner()
-    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.7.0"])
+    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0"])
     assert (
         "📋 The contents of the portfile have been copied to your clipboard!"
         in result.output
     )
     assert result.exit_code == 0
-    assert "9.7.0" in format_subprocess(["pbpaste"])
+    assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
 @beartype
@@ -135,13 +135,13 @@ def test_test_only_subports() -> None:
 @beartype
 def test_lint_only() -> None:
     runner = CliRunner()
-    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.7.0", "--lint"])
+    result = runner.invoke(seaport, ["clip", "py-rich", "--bump", "9.8.0", "--lint"])
     assert (
         "📋 The contents of the portfile have been copied to your clipboard!"
         in result.output
     )
     assert result.exit_code == 0
-    assert "9.7.0" in format_subprocess(["pbpaste"])
+    assert "9.8.0" in format_subprocess(["pbpaste"])
 
 
 @beartype
