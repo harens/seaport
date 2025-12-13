@@ -119,55 +119,66 @@ def clip(
         (new_rmd160, new_sha256, new_size, bump),
     )
 
-    if test or install or write or lint:
-        # Temporary files created to get around sudo write problem
-        tmp_version = tempfile.NamedTemporaryFile(mode="w")
-        tmp_version.write(new_contents)
-        tmp_version.seek(0)
+    portfile_modified = False
+    try:
+        if test or install or write or lint:
+            # Temporary files created to get around sudo write problem
+            tmp_version = tempfile.NamedTemporaryFile(mode="w")
+            tmp_version.write(new_contents)
+            tmp_version.seek(0)
 
-        click.secho("💾 Editing local portfile repo", fg="cyan")
-        if not write:
-            # Changes only reverted if the user doesn't use the --write flag
-            click.secho("📝 Changes will be reverted after completion", fg="cyan")
+            click.secho("💾 Editing local portfile repo", fg="cyan")
+            if not write:
+                # Changes only reverted if the user doesn't use the --write flag
+                click.secho("📝 Changes will be reverted after completion", fg="cyan")
 
-        subprocess.run(
-            ([] if os.access(file_location, os.W_OK) else [f"{user_path()}/sudo"])
-            + ["cp", tmp_version.name, file_location],
-            check=True,
-        )
-
-        if write:
-            click.secho(
-                "📝 The portfile's contents have been updated",
-                fg="cyan",
+            subprocess.run(
+                ([] if os.access(file_location, os.W_OK) else [f"{user_path()}/sudo"])
+                + ["cp", tmp_version.name, file_location],
+                check=True,
             )
+            portfile_modified = True
 
-        if lint:
-            # If the lint is not successful
-            if not perform_lint(name):
-                # If user doesn't wish to continue after failed lint, contents should revert to original
+            if write:
+                click.secho(
+                    "📝 The portfile's contents have been updated",
+                    fg="cyan",
+                )
+
+            if lint:
+                # If the lint is not successful
+                if not perform_lint(name):
+                    # If user doesn't wish to continue after failed lint, contents should revert to original
+                    revert_contents(original, file_location)
+                    portfile_modified = False
+                    sys.exit(1)
+
+            if test:
+                subport = port.subports()
+                if subport is not None:
+                    result = perform_test(name, subport[-1])
+                else:
+                    result = perform_test(name)
+                # If the tests fail
+                if not result:
+                    # If tests fail, contents should revert to original working version?
+                    revert_contents(original, file_location)
+                    portfile_modified = False
+                    sys.exit(1)
+
+            if install:
+                perform_install(name)
+
+            if not write:
                 revert_contents(original, file_location)
-                sys.exit(1)
+                portfile_modified = False
 
-        if test:
-            subport = port.subports()
-            if subport is not None:
-                result = perform_test(name, subport[-1])
-            else:
-                result = perform_test(name)
-            # If the tests fail
-            if not result:
-                # If tests fail, contents should revert to original working version?
-                revert_contents(original, file_location)
-                sys.exit(1)
-
-        if install:
-            perform_install(name)
-
-        if not write:
+        # Clipboard functions at the very end
+        # to reduce the chance of user's clipboard being changed
+        # after adding contents
+        user_clipboard(new_contents)
+    except BaseException:
+        if portfile_modified:
             revert_contents(original, file_location)
-
-    # Clipboard functions at the very end
-    # to reduce the chance of user's clipboard being changed
-    # after adding contents
-    user_clipboard(new_contents)
+            portfile_modified = False
+        raise
