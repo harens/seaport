@@ -49,7 +49,7 @@ def get_names(ctx: Any, param: click.Argument, incomplete: str) -> List[str]:
         >>> from click.core import Argument
         >>> # User has typed in py-base9
         >>> get_names("example_ctx", Argument(["example_args"]), "py-ric")
-        ['py-rich', 'py-rich-click']
+        ['py-rich', 'py-rich-click', 'py-rich-theme-manager', 'py-rich_rst']
 
     Args:
         ctx: The current command context

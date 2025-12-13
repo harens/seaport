@@ -219,7 +219,7 @@ class Port:
             >>> from seaport.portfile import Port
             >>> port = Port("py-base91")
             >>> port.subports()
-            ['py38-base91', 'py39-base91']
+            ['py39-base91']
 
             >>> # Subports not available
             >>> from seaport.portfile import Port
