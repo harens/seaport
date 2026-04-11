@@ -106,7 +106,6 @@ def pr(
             "fork",
             "macports/macports-ports",
             "--clone=true",
-            "--remote=true",
         ],
         check=False,
     )
